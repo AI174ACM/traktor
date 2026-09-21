@@ -1,0 +1,22 @@
+{
+ "name": "Трактор 26/27",
+ "short_name": "Трактор",
+ "lang": "ru",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#ECEEF1",
+ "theme_color": "#ECEEF1",
+ "icons": [
+  {
+   "src": "icon-180.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
