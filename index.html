@@ -79,6 +79,8 @@ button.row{cursor:pointer;transition:transform .35s var(--spring)}
 .stripe{width:5px;align-self:stretch;border-radius:3px;flex:none}
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 100px);transform:translateX(-50%) translateY(10px);background:var(--ink);color:#fff;font:700 13px Manrope,sans-serif;padding:9px 14px;border-radius:999px;opacity:0;transition:opacity .25s,transform .25s;z-index:20;pointer-events:none}
 #toast.on{opacity:1;transform:translateX(-50%)}
+.pre{margin:0;white-space:pre-wrap;word-break:break-word;font:500 13.5px/1.5 Manrope,sans-serif;color:var(--ink)}
+.row .t b.hd{color:var(--muted);font-weight:600}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.act{appearance:none;border:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px;text-align:left;cursor:pointer}.act b{font-weight:800;font-size:15px}.act span{font-size:12.5px;color:var(--muted)}
 .fio{width:100%;min-width:0;font:600 14px Manrope,sans-serif;padding:9px 11px;border:1px solid #DDDBD5;border-radius:12px;background:#FAF9F7;color:var(--ink)}
 .fio:focus{outline:2px solid var(--accent);border-color:transparent}
@@ -319,11 +321,14 @@ function docsSheet(){ const all=docsAll(); if(!all.length) return `<div class="l
   <div class="note">Источник — закрытая таблица «Документы ИП Мельников». Новая строка в таблице появляется здесь без выкладки.</div>`; }
 function docSecSheet(sec){ const all=docsAll().filter(d=>d.sec===sec); const docs=[...new Set(all.map(d=>d.doc))];
   return `<div class="lt"><h1>${sec}</h1><p>${docs.length} документов</p></div><div class="g list">${docs.map(d=>{ const rows=all.filter(x=>x.doc===d); const empty=rows.filter(x=>!x.value.trim()).length; return `<button class="row" data-open="doc:${sec}|${d}"><span class="stripe" style="background:${SECC[sec]||'var(--faint)'}"></span><div class="t"><b>${d}</b><span>${rows.length} полей${empty?' · '+empty+' не заполнено':''}</span></div>${empty===rows.length?'<span class="chip warn">пусто</span>':''}${chev}</button>`; }).join('')}</div>`; }
-function docText(sec,doc){ const rows=docsAll().filter(x=>x.sec===sec&&x.doc===doc&&x.value.trim()); return doc+'\n'+rows.map(r=>r.field+': '+r.value).join('\n'); }
-function docSheet(id){ const [sec,doc]=id.split('|'); const rows=docsAll().filter(x=>x.sec===sec&&x.doc===doc);
+const HEAD_FIELDS=['Полное наименование','ИНН','ОГРНИП','Юридический адрес','Фактический адрес','Телефон','E-mail'];
+function docRows(sec,doc){ const all=docsAll(); let rows=all.filter(x=>x.sec===sec&&x.doc===doc); if(sec==='Реквизиты'&&doc!=='ИП Мельников'){ const head=all.filter(x=>x.sec==='Реквизиты'&&x.doc==='ИП Мельников'&&HEAD_FIELDS.includes(x.field)); rows=head.map(x=>Object.assign({},x,{head:true})).concat(rows); } return rows; }
+function docText(sec,doc){ const rows=docRows(sec,doc).filter(r=>r.value.trim()); const title=(sec==='Реквизиты'&&doc!=='ИП Мельников')?'Реквизиты ИП Мельников · '+doc:doc; return title+'\n'+rows.map(r=>r.field+': '+r.value).join('\n'); }
+function docSheet(id){ const [sec,doc]=id.split('|'); const rows=docRows(sec,doc);
   return `<div class="lt"><h1>${doc}</h1><p>${sec} · нажмите поле, чтобы скопировать</p></div>
   <div class="acts" style="margin:0 0 12px"><button class="g act" id="doc-copy" data-sec="${sec}" data-doc="${doc}"><b>Скопировать всё</b><span>в буфер обмена</span></button><button class="g act" id="doc-share" data-sec="${sec}" data-doc="${doc}"><b>Отправить</b><span>через меню телефона</span></button></div>
   <div class="g list">${rows.map(r=>`<button class="row" data-copy="${r.value.replace(/"/g,'&quot;')}"><div class="t"><span style="margin-top:0">${r.field}</span><b style="white-space:normal;font-weight:700">${r.value.trim()||'<span style="color:var(--warn)">не заполнено</span>'}</b>${r.note?`<span>${r.note}</span>`:''}</div></button>`).join('')}</div>
+  <div class="sec">Так это уйдёт при отправке</div><div class="g pad" style="margin-top:10px"><pre class="pre">${docText(sec,doc)}</pre></div>
   <div class="note">${sec==='Личные'?'Личные данные видит только владелец.':'Изменить — в таблице «Документы ИП Мельников».'}</div>`; }
 function officeSheet(){ const inc=monthKeys.map(k=>({k,v:sum(CAL.filter(g=>mkey(g.date)===k)).office, p:sum(CAL.filter(g=>mkey(g.date)===k&&g.played)).office})); const exp=147000; let bal=0;
   return `<div class="lt"><h1>Фонд «Офис»</h1><p>приход с матчей · расход ${fmtS(exp)} в месяц</p></div><div class="stack"><div class="g pad"><div class="kv"><span>Левина, чистыми</span><b>75 000</b></div><div class="kv"><span>Мошарова, чистыми</span><b>30 000</b></div><div class="kv"><span>Аренда, ХК «Трактор», пожертвование</span><b>≈ 42 000</b></div><div class="kv of"><span>Итого в месяц, круглый год</span><b>${fmt(exp)}</b></div><div class="sub">при оплате самозанятым +7 % сверху: 154 350. Остаток фонда переходит на лето.</div></div></div>
@@ -333,12 +338,15 @@ function officeSheet(){ const inc=monthKeys.map(k=>({k,v:sum(CAL.filter(g=>mkey(
 const VIEWS = ROLE==='producer' ? {home:()=>todoSheet().replace('<div class="lt"><h1>Табель</h1>','<div class="lt"><h1>Табель матчей</h1>'), cal:calView} : {home,cal:calView,contracts,people,money};
 if(ROLE==='producer'){ document.querySelectorAll('.tab').forEach(b=>{ if(!(b.dataset.tab in VIEWS)) b.remove(); else if(b.dataset.tab==='home') b.querySelector('span').textContent='Табель'; }); }
 function show(tab){ document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab)); Object.keys(VIEWS).forEach(k=>{const v=$('#v-'+k); v.hidden=k!==tab; if(k===tab){v.innerHTML=VIEWS[k](); v.classList.remove('in'); void v.offsetWidth; v.classList.add('in'); v.scrollTop=0;}}); try{localStorage.setItem('tr.tab',tab);}catch(e){} }
-function openSheet(key){ const [kind,...rest]=key.split(':'); const id=rest.join(':'); let body='';
+const STACK=[];
+function openSheet(key,replace){ if(replace||STACK[STACK.length-1]===key) STACK[STACK.length-1]=key; else STACK.push(key); renderSheet(key); }
+function goBack(){ STACK.pop(); if(STACK.length) renderSheet(STACK[STACK.length-1]); else $('#sheet').classList.remove('open'); }
+function renderSheet(key){ const [kind,...rest]=key.split(':'); const id=rest.join(':'); let body='';
   if(kind==='game'){ const [iso,lg]=id.split(':'); body=gameSheet(CAL.find(g=>g.iso===iso&&g.league===lg)); } else if(kind==='day') body=daySheet(id); else if(kind==='person') body=personSheet(+id); else if(kind==='month') body=monthSheet(id); else if(kind==='contract') body=contractSheet(id); else if(kind==='office') body=officeSheet(); else if(kind==='todo'||kind==='tabel') body=todoSheet(); else if(kind==='tp') body=tabelProject(id); else if(kind==='tm'){ const [iso,lg]=id.split(':'); curTab=iso+'|'+lg; body=tabelMatch(iso,lg); } else if(kind==='pm'){ const [pi,mk]=id.split(':'); body=personMonthSheet(+pi,mk); } else if(kind==='other') body=otherSheet(); else if(kind==='docs') body=docsSheet(); else if(kind==='docsec') body=docSecSheet(id); else if(kind==='doc') body=docSheet(id);
   $('#sheet-body').innerHTML=`<button class="back" id="back"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg>Назад</button>`+body; $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=0; }
 document.addEventListener('click',e=>{ const t=e.target.closest('[data-tab],[data-open],[data-cal],#back'); if(!t) return;
-  if(t.id==='back'){$('#sheet').classList.remove('open');return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=calView(); return; }
-  if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){$('#sheet').classList.remove('open');show(t.dataset.tab);} });
+  if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=calView(); return; }
+  if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
 let curTab=null;
 function toast(msg){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; document.body.appendChild(el); } el.textContent=msg; el.className='on'; clearTimeout(el._t); el._t=setTimeout(()=>{el.className='';},1400); }
 document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); if(c){ const v=c.dataset.copy; if(v){ (navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать')); } return; }
@@ -346,8 +354,8 @@ document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); 
   const sh=e.target.closest('#doc-share'); if(sh){ const txt=docText(sh.dataset.sec,sh.dataset.doc); if(navigator.share) navigator.share({text:txt}).catch(()=>{}); else (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Скопировано, отправка недоступна')).catch(()=>{}); } });
 document.addEventListener('input',e=>{ const el=e.target; if(!el.dataset||!el.dataset.tab||!curTab) return; const en=TAB[curTab]=TAB[curTab]||{names:{},adv:{},otv:false,confirmed:false}; en.names=en.names||{}; en.adv=en.adv||{};
   const id=el.dataset.id; if(id==='otv') en.otv=el.checked; else if(id.startsWith('adv:')) en.adv[id.slice(4)]=el.checked; else en.names[id]=el.value; saveTab(); });
-document.addEventListener('click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(!b||!curTab) return; const en=TAB[curTab]=TAB[curTab]||{names:{},adv:{},otv:false,confirmed:false}; en.confirmed=(b.id==='tab-confirm'); saveTab(); const [iso,lg]=curTab.split('|'); b.textContent='Сохраняю…'; pushTab(curTab).then(ok=>{ if(!ok && window.DATA_URL) alert('Не удалось отправить в базу, сохранено на телефоне. Повторите позже.'); openSheet('tm:'+iso+':'+lg); }); });
-let sx=0; $('#sheet').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true}); $('#sheet').addEventListener('touchend',e=>{ if(sx<40&&e.changedTouches[0].clientX-sx>90) $('#sheet').classList.remove('open'); },{passive:true});
+document.addEventListener('click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(!b||!curTab) return; const en=TAB[curTab]=TAB[curTab]||{names:{},adv:{},otv:false,confirmed:false}; en.confirmed=(b.id==='tab-confirm'); saveTab(); const [iso,lg]=curTab.split('|'); b.textContent='Сохраняю…'; pushTab(curTab).then(ok=>{ if(!ok && window.DATA_URL) alert('Не удалось отправить в базу, сохранено на телефоне. Повторите позже.'); openSheet('tm:'+iso+':'+lg,true); }); });
+let sx=0; $('#sheet').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true}); $('#sheet').addEventListener('touchend',e=>{ if(sx<40&&e.changedTouches[0].clientX-sx>90) goBack(); },{passive:true});
 let start='home'; try{start=localStorage.getItem('tr.tab')||'home';}catch(e){} show(VIEWS[start]?start:'home');
 }
 
