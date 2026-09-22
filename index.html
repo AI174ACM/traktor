@@ -60,6 +60,7 @@ button.row{cursor:pointer;transition:transform .35s var(--spring)}
 .chev{color:var(--faint);width:7px;height:12px;flex:none}
 .row.now{background:var(--accent-bg);box-shadow:inset 4px 0 0 var(--accent)}
 .tile.now{box-shadow:inset 4px 0 0 var(--accent)}
+.tile.docs{box-shadow:inset 4px 0 0 var(--crew)}
 .av{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font:800 14px Manrope,sans-serif}
 .chip{display:inline-flex;align-items:center;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;white-space:nowrap}
 .chip.good{background:var(--good-bg);color:var(--good)}.chip.warn{background:var(--warn-bg);color:var(--warn)}.chip.info{background:var(--soft);color:var(--muted)}.chip.ak{background:var(--accent-bg);color:var(--accent)}
@@ -192,7 +193,7 @@ function home(){
     ${(()=>{const n=todo().length; return n?`<button class="g tile" data-open="tabel" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--warn)"></span><div style="flex:1"><b style="display:block;font-weight:800">Табель ждёт подтверждения</b><span style="font-size:12.5px;color:var(--muted)">${n} сыгранных матчей без подтверждённого состава</span></div>${chev}</button>`:'';})()}
     <div class="grid2">
       <button class="g tile" data-open="other"><div class="lbl">Не по матчам</div><div class="num big" style="font-size:22px">${fmtS(['TTV','SERIAL','GRAPH'].reduce((s,c)=>s+DIRS[c].price*(1+VAT)*DIRS[c].plan,0))} ₽</div><div class="sub">Трактор ТВ, сериал, графика · план</div></button>
-      <button class="g tile" data-open="docs"><div class="lbl">Документы</div><div class="num big" style="font-size:22px">${[...new Set(docsAll().map(d=>d.doc))].length||'—'}</div><div class="sub">реквизиты, ИП, личные, люди</div></button>
+      <button class="g tile docs" data-open="docs"><div class="lbl" style="color:var(--crew)">Документы</div><div class="num big" style="font-size:22px">${[...new Set(docsAll().map(d=>d.doc))].length||'—'}</div><div class="sub">реквизиты, ИП, личные, люди</div></button>
     </div>
   </div>
   <div class="note">Матчи до сегодняшнего дня считаются сыгранными по календарю; табель ещё не подтверждён. Плей-офф, ЖХЛ (нет календаря) и матчи МХЛ на ОТВ не учтены.</div>`;
