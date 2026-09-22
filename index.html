@@ -174,7 +174,10 @@ function resolveName(s){ s=(s||'').trim(); if(!s) return ''; const sur=s.split(/
 function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWith('приостановлено') && g!==firstKhl)); const e=g&&TAB[tabKey(g)]; if(!e||!e.confirmed) return rows;
   if(e.otv && dir==='TR_MHL') return [];
   return rows.filter(r=>!(/смены рекламы/.test(r.rule) && !(e.adv||{})[dir+'|'+r.pos])).map(r=>{ const n=(e.names||{})[dir+'|'+r.pos]; return n?Object.assign({},r,{who:resolveName(n)}):r; }); }
-function extraPeople(){ const s=new Set(); Object.values(TAB).forEach(e=>{ if(!e.confirmed) return; Object.values(e.names||{}).forEach(n=>{ const r=resolveName(n); if(r && !PEOPLE.some(p=>p.name===r)) s.add(r); }); }); return [...s].map(n=>({name:n,st:'по табелю',form:'уточнить',note:'внесён из табеля',extra:true})); }
+const NOT_PERSON=new Set(['Мельников','Фонд «Офис»','ХК «Трактор»','']);
+function extraPeople(){ const s=new Set(); Object.values(TAB).forEach(e=>{ if(!e.confirmed) return; Object.values(e.names||{}).forEach(n=>{ const r=resolveName(n); if(r && !PEOPLE.some(p=>p.name===r)) s.add(r); }); }); const out=[...s].map(n=>({name:n,st:'по табелю',form:'уточнить',note:'внесён из табеля',extra:true}));
+  const s2=new Set(); ACC.forEach(a=>{ if(!NOT_PERSON.has(a.who)&&!PEOPLE.some(p=>p.name===a.who)&&!s.has(a.who)) s2.add(a.who); }); PAY.forEach(x=>{ if(x.kind==='out'&&x.who&&!NOT_PERSON.has(x.who)&&!PEOPLE.some(p=>p.name===x.who)&&!s.has(x.who)) s2.add(x.who); });
+  return out.concat([...s2].map(n=>({name:n,st:'по начислениям',form:'',note:'',extra:true}))); }
 function allPeople(){ return PEOPLE.concat(extraPeople()); }
 function payOf(dir,g){ return crew(dir,g).reduce((s,r)=>s+r.rate,0); }
 function econ(dir,g){ const d=DIRS[dir]; const pay=payOf(dir,g); const office=crew(dir,g).filter(r=>r.who==='Фонд «Офис»').reduce((s,r)=>s+r.rate,0);
@@ -187,14 +190,34 @@ function personGames(name, games){ let n=0,s=0; games.forEach(g=>{ let x=0; g.di
 const PAL=['#2E63E8','#1E9E63','#D9761A','#6A55E8','#C2589B','#0FA3B1','#8A8F98','#B8860B','#3F86DD','#E0662F','#1B2B4B','#7A6BE8','#19A3B8','#A64A12','#157A4C','#B3301D','#5E6570','#8B4FC9','#D39A10'];
 const pcolor=i=>PAL[i%PAL.length];
 /* --- экраны --- */
+const PROJ_GROUP={SERIAL:'TTV'}; const SKIP_DIRS=new Set(['OFFICE','ШТАТ','ИП','ЛИЧНОЕ','НАЛ','?','']);
+function projName(d){ return d==='TTV'?'Трактор ТВ и сериал':d==='ДРУГОЕ'?'Разовое (не по договорам)':d==='PROF'?'Профайлы (ИП Романов)':dirName(d); }
+function meMonth(k){
+  const gs=played.filter(g=>mkey(g.date)===k); const m=sum(gs); const rows=[]; if(m.n) rows.push({dir:'MATCH',name:'По матчам · '+m.n,income:m.club,people:m.pay,tax:m.vat+m.usn,me:m.me,kind:'matches'});
+  const dirs=new Set(); ACC.filter(a=>a.k===k).forEach(a=>dirs.add(PROJ_GROUP[a.dir]||a.dir)); PAY.filter(p=>p.inc&&p.k===k).forEach(p=>dirs.add(PROJ_GROUP[p.dir]||p.dir));
+  [...dirs].filter(d=>!SKIP_DIRS.has(d)).forEach(d=>{ const acc=ACC.filter(a=>a.k===k&&(PROJ_GROUP[a.dir]||a.dir)===d); const inc=PAY.filter(p=>p.inc&&p.k===k&&(PROJ_GROUP[p.dir]||p.dir)===d).reduce((s,p)=>s+p.sum,0);
+    const explicit=acc.filter(a=>a.who==='Мельников').reduce((s,a)=>s+a.sum,0); const people=acc.filter(a=>a.who!=='Мельников').reduce((s,a)=>s+a.sum,0);
+    let me=null, tax=0, note=''; if(explicit){ me=explicit; note=acc.find(a=>a.who==='Мельников').note||''; } else if(inc>0){ const bez=inc/1.05; tax=(inc-bez)+bez*USN; me=inc-tax-people; if(!people) note='выплаты людям ещё не разнесены'; } else note='оплаты от клуба ещё нет';
+    rows.push({dir:d,name:projName(d),income:inc,people,tax,me,note,kind:'other'}); });
+  const costs=PAY.filter(p=>p.kind==='out'&&p.k===k&&!p.who&&(p.dir==='ШТАТ'||p.dir==='ИП')).reduce((s,p)=>s+p.sum,0);
+  const earned=rows.reduce((s,r)=>s+(r.me||0),0); return {rows,costs,earned,net:earned-costs};
+}
+function meSheet(){ const ms=monthKeys.map(k=>({k,m:meMonth(k)})).filter(x=>x.m.rows.length||x.m.costs); const tot=ms.reduce((s,x)=>s+x.m.earned,0), cost=ms.reduce((s,x)=>s+x.m.costs,0); const plan=sum(CAL).me;
+  return `<div class="lt"><h1>Мои деньги</h1><p>что остаётся мне после людей, налогов и офиса</p></div><div class="stack">
+  <div class="card" style="border-top-color:var(--me)"><div class="lbl">Заработано с начала сезона</div><span class="mono">${fmtS(tot)} ₽</span><div class="foot"><span>минус расходы ИП ${fmtS(cost)} → чисто <b>${fmtS(tot-cost)} ₽</b></span><span>план по матчам ${fmtS(plan)}</span></div></div>
+  ${ms.slice().reverse().map(({k,m})=>`<div class="g pad"><div class="tile-h"><div class="lbl c">${mname(k)}</div><span class="chip ak">${fmtS(m.earned)} ₽</span></div>
+    ${m.rows.map(r=>`<div class="kv"><span>${r.name}${r.income&&r.kind==='other'?`<br><small style="color:var(--muted)">пришло ${fmtS(r.income)} · людям ${fmtS(r.people)}${r.tax?' · налоги '+fmtS(r.tax):''}</small>`:r.kind==='matches'?`<br><small style="color:var(--muted)">клубу ${fmtS(r.income)} · людям ${fmtS(r.people)} · налоги ${fmtS(r.tax)}</small>`:''}${r.note?`<br><small style="color:var(--warn)">${r.note}</small>`:''}</span><b>${r.me==null?'—':fmt(r.me)}</b></div>`).join('')}
+    ${m.costs?`<div class="kv"><span>Расходы ИП<br><small style="color:var(--muted)">налоги штата, бухгалтер, прочее</small></span><b>− ${fmt(m.costs)}</b></div>`:''}
+    <div class="kv me"><span>Чисто за месяц</span><b>${fmt(m.net)}</b></div></div>`).join('')}
+  </div><div class="note">По матчам — по сыгранным и ставкам. По остальным проектам — приход от клуба минус НДС, УСН и начисления людям и офису; если в базе есть строка «Мельников», берётся она. Профайлы №19 лежат на счету ИП Романова.</div>`; }
 function home(){
   const s=sum(played), all=sum(CAL), cur=mkey(TODAY), m=sum(CAL.filter(g=>mkey(g.date)===cur)), mp=sum(played.filter(g=>mkey(g.date)===cur));
   const next=CAL.find(g=>!g.played); const office=147000;
   return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+DATA.generated:'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
   <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · пять договоров · по матчам</p></div>
   <div class="stack">
-    <div class="card"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
-      <div class="foot"><span>Мне после людей, налогов и офиса <b>${fmtS(s.me)} ₽</b></span><span>${Math.round(s.club/all.club*100)} %</span></div></div>
+    <button class="card tile" data-open="me" style="text-align:left;width:100%"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
+      <div class="foot"><span>Мне со всех проектов <b>${fmtS(monthKeys.reduce((x,k)=>x+meMonth(k).earned,0))} ₽</b> · нажмите</span><span>${Math.round(s.club/all.club*100)} %</span></div></button>
     <button class="g pad tile" data-open="month:${cur}"><div class="tile-h"><div class="lbl c">${mname(cur)}</div><span class="chip ak">${mp.n} из ${m.n} матчей</span></div>
       <div class="num big">${fmtS(m.club)} ₽</div><div class="sub">к выставлению клубу за месяц по матчам, с НДС</div>
       <div class="bar"><i style="width:${m.pay/(m.club||1)*100}%;background:var(--crew)"></i><i style="width:${(m.vat+m.usn)/(m.club||1)*100}%;background:var(--tax)"></i><i style="width:${m.me/(m.club||1)*100}%;background:var(--me)"></i></div>
@@ -251,11 +274,24 @@ function contractSheet(code){
     <div class="sub">план ${d.plan} ${d.unit}${d.league?' · сыграно '+pl:''} · ${d.rule}</div></div>`; }).join('')}</div>
   <div class="sec">Состав и ставки</div>${dirs.map(d=>`<div class="sec" style="margin-top:14px;font-size:15px">${d.name}</div><div class="g list" style="margin-top:8px">${RATES.filter(r=>r.dir===d.code).map(r=>`<div class="row"><div class="t"><b>${r.pos}</b><span>${r.who}${r.rule&&r.rule!=='каждая игра'?' · '+r.rule:''}</span></div><div class="v">${r.rate?fmtS(r.rate):'%'}</div></div>`).join('')}</div>`).join('')}`;
 }
+let peopleMonth=(()=>{ try{ return localStorage.getItem('tr.peopleMonth')||''; }catch(e){ return ''; } })();
+function peopleSeason(){ const PL=allPeople(); return `<div class="g list">${PL.map((p,i)=>{ const a=personGames(p.name,played); const plan=personGames(p.name,CAL); const t=personTotals(p.name);
+    return `<button class="row" data-open="person:${i}"><div class="av" style="background:${pcolor(i)}">${p.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div class="t"><b>${p.name}${debtBalance(p.name)>0?` <span class="chip bad" style="margin-left:6px">долг ${fmtS(debtBalance(p.name))}</span>`:''}</b><span>${p.st}${p.note?' · '+p.note:''}</span></div><div class="v">${t.total?fmtS(t.total):'—'}<small>${a.n?a.n+' матчей':plan.n?'план '+plan.n:'не по матчам'}</small></div>${chev}</button>`; }).join('')}</div>
+  <div class="note">Меняющиеся позиции (операторы, титровальщик) начисляются «кто вышел» и до табеля никому не приписаны.</div>`; }
 function people(){
-  const names=[...new Set(RATES.map(r=>r.who))].filter(w=>PEOPLE.some(p=>p.name===w));
-  const PL=allPeople(); return `<div class="lt"><h1>Люди</h1><p>${PL.length} человек · начислено по сыгранным матчам</p></div><div class="g list">${PL.map((p,i)=>{ const a=personGames(p.name,played); const plan=personGames(p.name,CAL);
-    return `<button class="row" data-open="person:${i}"><div class="av" style="background:${pcolor(i)}">${p.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div class="t"><b>${p.name}${debtBalance(p.name)>0?` <span class="chip bad" style="margin-left:6px">долг ${fmtS(debtBalance(p.name))}</span>`:''}</b><span>${p.st}${p.note?' · '+p.note:''}</span></div><div class="v">${a.s?fmtS(a.s):'—'}<small>${a.n?a.n+' матчей':plan.n?'план '+plan.n:'не по матчам'}</small></div>${chev}</button>`; }).join('')}</div>
-  <div class="note">Меняющиеся позиции (операторы, титровальщик) начисляются «кто вышел» и до табеля никому не приписаны. Некраш, Махиня, Михайлов — наличные и штат, отдельный учёт.</div>`;
+  const PL=allPeople(); const cur=mkey(TODAY); const avail=monthKeys.filter(k=>PL.some(p=>{ const t=personTotals(p.name,k); return t.total||t.paid; }));
+  if(peopleMonth!=='season'&&!avail.includes(peopleMonth)) peopleMonth=avail.includes(cur)?cur:(avail[avail.length-1]||'season');
+  const chips=`<div style="display:flex;gap:6px;overflow-x:auto;padding:2px 0 10px;-webkit-overflow-scrolling:touch">${avail.map(k=>`<button class="chip ${peopleMonth===k?'ak':'info'}" data-pmonth="${k}" style="border:0;cursor:pointer">${mname(k)}</button>`).join('')}<button class="chip ${peopleMonth==='season'?'ak':'info'}" data-pmonth="season" style="border:0;cursor:pointer">Весь сезон</button></div>`;
+  if(peopleMonth==='season') return `<div class="lt"><h1>Люди</h1><p>${PL.length} человек · весь сезон</p></div>${chips}${peopleSeason()}`;
+  const k=peopleMonth; const rows=PL.map((p,i)=>({p,i,t:personTotals(p.name,k)})).filter(x=>x.t.total||x.t.paid).sort((a,b)=>b.t.total-a.t.total);
+  const T=rows.reduce((s,x)=>{ s.total+=x.t.total; s.paid+=x.t.paid; s.off+=x.t.off; s.due+=Math.max(0,x.t.due); return s; },{total:0,paid:0,off:0,due:0});
+  const office=ACC.filter(a=>a.k===k&&a.who==='Фонд «Офис»').reduce((s,a)=>s+a.sum,0)+sum(played.filter(g=>mkey(g.date)===k)).office; const me=meMonth(k);
+  return `<div class="lt"><h1>Люди</h1><p>${mname(k)} · ${rows.length} человек</p></div>${chips}<div class="stack">
+  <div class="g pad"><div class="kv"><span>Начислено всем за ${mname(k).toLowerCase()}</span><b>${fmt(T.total)}</b></div><div class="kv"><span>Выплачено (с картой)</span><b>− ${fmt(T.paid)}</b></div>${T.off?`<div class="kv"><span>Зачтено в долги</span><b>− ${fmt(T.off)}</b></div>`:''}<div class="kv me"><span>Осталось выдать</span><b>${fmt(T.due)}</b></div></div>
+  <div class="g list">${rows.map(({p,i,t})=>`<button class="row" data-open="pm:${i}:${k}"><div class="av" style="background:${pcolor(i)}">${p.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div class="t"><b>${p.name}${debtBalance(p.name)>0?` <span class="chip bad" style="margin-left:6px">долг ${fmtS(debtBalance(p.name))}</span>`:''}</b><span>${[t.n?t.n+' матчей '+fmtS(t.match):'',t.extra&&t.n?'ещё '+fmtS(t.extra):'',t.paid?'выплачено '+fmtS(t.paid):'',t.off?'зачёт '+fmtS(t.off):''].filter(Boolean).join(' · ')||p.st}</span></div><div class="v">${fmtS(t.total)}<small>${t.due>0?'выдать '+fmtS(t.due):t.due<0?'переплата '+fmtS(-t.due):'закрыто'}</small></div>${chev}</button>`).join('')}
+    ${office?`<button class="row of" data-open="office"><div class="t"><b>Фонд «Офис»</b><span>отчисления за месяц</span></div><div class="v" style="color:var(--office)">${fmtS(office)}</div>${chev}</button>`:''}
+    <button class="row" data-open="me" style="background:var(--soft)"><div class="t"><b>Мне</b><span>после людей, налогов и офиса${me.costs?' · расходы ИП '+fmtS(me.costs):''}</span></div><div class="v" style="color:var(--me)">${fmtS(me.earned)}<small>чисто ${fmtS(me.net)}</small></div>${chev}</button></div>
+  </div><div class="note">Нажмите человека — расчёт за месяц: начислено − выплачено − карта − зачёт = на руки. Другой месяц — сверху.</div>`;
 }
 function personSheet(i){
   const p=allPeople()[i]; const a=personGames(p.name,played); const plan=personGames(p.name,CAL);
@@ -288,6 +324,7 @@ function money(){
   <div class="g pad"><div class="tile-h"><div class="lbl c">Сезон по матчам</div><span class="chip good">сыграно ${fmtS(sum(played).club)} ₽</span></div>
     <div class="bar"><i style="width:${(all.pay-all.office)/all.club*100}%;background:var(--crew)"></i><i style="width:${all.office/all.club*100}%;background:var(--office)"></i><i style="width:${(all.vat+all.usn)/all.club*100}%;background:var(--tax)"></i><i style="width:${all.me/all.club*100}%;background:var(--me)"></i></div>
     <div class="kv" style="margin-top:8px"><span>Клуб заплатит, с НДС</span><b>${fmt(all.club)}</b></div><div class="kv"><span>Людям и за технику</span><b>${fmt(all.pay-all.office)}</b></div><div class="kv of"><span>В фонд «Офис»</span><b>${fmt(all.office)}</b></div><div class="kv"><span>НДС к уплате</span><b>${fmt(all.vat)}</b></div><div class="kv"><span>УСН 6 %</span><b>${fmt(all.usn)}</b></div><div class="kv me"><span>Остаётся мне</span><b>${fmt(all.me)}</b></div></div>
+  <button class="g tile" data-open="me" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--me)"></span><div style="flex:1"><b style="display:block;font-weight:800">Мои деньги</b><span style="font-size:12.5px;color:var(--muted)">по месяцам и проектам · факт</span></div>${chev}</button>
   <div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${['TTV','SERIAL','GRAPH'].map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${d.plan} ${d.unit}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним: оклады Трактор ТВ, за серию, правило по графике — считаются отдельно</div></div>
   </div>
   <div class="sec">По месяцам<small>клубу · людям · мне</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played)); const cur=k===mkey(TODAY); const inc=PAY.filter(p=>p.inc&&p.k===k).reduce((s,p)=>s+p.sum,0), outs=PAY.filter(p=>p.kind==='out'&&p.k===k).reduce((s,p)=>s+p.sum,0); return `<button class="row${cur?' now':''}" data-open="month:${k}"><div class="t"><b>${mname(k)}${cur?' <span class="chip ak" style="margin-left:6px">идёт</span>':''}</b><span>${m.n?m.n+' матчей · людям '+fmtS(m.pay-m.office)+' · мне '+fmtS(m.me):'не по матчам'}${inc?' · пришло '+fmtS(inc):''}${outs?' · выплачено '+fmtS(outs):''}</span></div><div class="v">${fmtS(m.club+inc)}<small>${m.n?(mp.n===m.n?'сыграно':mp.n?mp.n+' из '+m.n:'план'):'факт'}</small></div>${chev}</button>`; }).join('')}</div>`;
@@ -405,11 +442,11 @@ const STACK=[];
 function openSheet(key,replace){ if(replace||STACK[STACK.length-1]===key) STACK[STACK.length-1]=key; else STACK.push(key); renderSheet(key); }
 function goBack(){ STACK.pop(); if(STACK.length) renderSheet(STACK[STACK.length-1]); else $('#sheet').classList.remove('open'); }
 function renderSheet(key){ const [kind,...rest]=key.split(':'); const id=rest.join(':'); let body='';
-  if(kind==='game'){ const [iso,lg]=id.split(':'); body=gameSheet(CAL.find(g=>g.iso===iso&&g.league===lg)); } else if(kind==='day') body=daySheet(id); else if(kind==='person') body=personSheet(+id); else if(kind==='month') body=monthSheet(id); else if(kind==='contract') body=contractSheet(id); else if(kind==='office') body=officeSheet(); else if(kind==='todo'||kind==='tabel') body=todoSheet(); else if(kind==='tp') body=tabelProject(id); else if(kind==='tm'){ const [iso,lg]=id.split(':'); curTab=iso+'|'+lg; body=tabelMatch(iso,lg); } else if(kind==='pm'){ const [pi,mk]=id.split(':'); body=personMonthSheet(+pi,mk); } else if(kind==='other') body=otherSheet(); else if(kind==='debts') body=debtsSheet(); else if(kind==='debt') body=debtPersonSheet(id); else if(kind==='debtform') body=debtFormSheet(id); else if(kind==='docs') body=docsSheet(); else if(kind==='docsec') body=docSecSheet(id); else if(kind==='doc') body=docSheet(id);
+  if(kind==='game'){ const [iso,lg]=id.split(':'); body=gameSheet(CAL.find(g=>g.iso===iso&&g.league===lg)); } else if(kind==='day') body=daySheet(id); else if(kind==='person') body=personSheet(+id); else if(kind==='month') body=monthSheet(id); else if(kind==='contract') body=contractSheet(id); else if(kind==='office') body=officeSheet(); else if(kind==='todo'||kind==='tabel') body=todoSheet(); else if(kind==='tp') body=tabelProject(id); else if(kind==='tm'){ const [iso,lg]=id.split(':'); curTab=iso+'|'+lg; body=tabelMatch(iso,lg); } else if(kind==='pm'){ const [pi,mk]=id.split(':'); body=personMonthSheet(+pi,mk); } else if(kind==='other') body=otherSheet(); else if(kind==='me') body=meSheet(); else if(kind==='debts') body=debtsSheet(); else if(kind==='debt') body=debtPersonSheet(id); else if(kind==='debtform') body=debtFormSheet(id); else if(kind==='docs') body=docsSheet(); else if(kind==='docsec') body=docSecSheet(id); else if(kind==='doc') body=docSheet(id);
   $('#sheet-body').innerHTML=`<button class="back" id="back"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg>Назад</button>`+body; $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=0; }
-document.addEventListener('click',e=>{ const t=e.target.closest('[data-tab],[data-open],[data-cal],#back'); if(!t) return;
+document.addEventListener('click',e=>{ const t=e.target.closest('[data-tab],[data-open],[data-cal],[data-pmonth],#back'); if(!t) return;
   if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=calView(); return; }
-  if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
+  if(t.dataset.pmonth){ peopleMonth=t.dataset.pmonth; try{localStorage.setItem('tr.peopleMonth',peopleMonth);}catch(e){} $('#v-people').innerHTML=people(); return; } if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
 let curTab=null;
 document.addEventListener('click',e=>{ if(e.target.closest('#refresh')&&window.__refresh){ e.target.closest('#refresh').textContent='…'; window.__refresh(); } });
 function toast(msg){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; document.body.appendChild(el); } el.textContent=msg; el.className='on'; clearTimeout(el._t); el._t=setTimeout(()=>{el.className='';},1400); }
