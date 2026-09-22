@@ -356,7 +356,7 @@ document.addEventListener('input',e=>{ const el=e.target; if(!el.dataset||!el.da
   const id=el.dataset.id; if(id==='otv') en.otv=el.checked; else if(id.startsWith('adv:')) en.adv[id.slice(4)]=el.checked; else en.names[id]=el.value; saveTab(); });
 document.addEventListener('click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(!b||!curTab) return; const en=TAB[curTab]=TAB[curTab]||{names:{},adv:{},otv:false,confirmed:false}; en.confirmed=(b.id==='tab-confirm'); saveTab(); const [iso,lg]=curTab.split('|'); b.textContent='Сохраняю…'; pushTab(curTab).then(ok=>{ if(!ok && window.DATA_URL) alert('Не удалось отправить в базу, сохранено на телефоне. Повторите позже.'); openSheet('tm:'+iso+':'+lg,true); }); });
 let sx=0; $('#sheet').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true}); $('#sheet').addEventListener('touchend',e=>{ if(sx<40&&e.changedTouches[0].clientX-sx>90) goBack(); },{passive:true});
-let start='home'; try{start=localStorage.getItem('tr.tab')||'home';}catch(e){} show(VIEWS[start]?start:'home');
+show('home');
 }
 
 function gate(msg){ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
