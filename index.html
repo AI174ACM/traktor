@@ -175,7 +175,7 @@ const pcolor=i=>PAL[i%PAL.length];
 function home(){
   const s=sum(played), all=sum(CAL), cur=mkey(TODAY), m=sum(CAL.filter(g=>mkey(g.date)===cur)), mp=sum(played.filter(g=>mkey(g.date)===cur));
   const next=CAL.find(g=>!g.played); const office=147000;
-  return `<div class="proto">Прототип · план по календарю и ставкам · сегодня ${dmy(TODAY)}</div>
+  return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+DATA.generated:'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
   <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · пять договоров · по матчам</p></div>
   <div class="stack">
     <div class="card"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
@@ -349,6 +349,7 @@ document.addEventListener('click',e=>{ const t=e.target.closest('[data-tab],[dat
   if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=calView(); return; }
   if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
 let curTab=null;
+document.addEventListener('click',e=>{ if(e.target.closest('#refresh')&&window.__refresh){ e.target.closest('#refresh').textContent='…'; window.__refresh(); } });
 function toast(msg){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; document.body.appendChild(el); } el.textContent=msg; el.className='on'; clearTimeout(el._t); el._t=setTimeout(()=>{el.className='';},1400); }
 document.addEventListener('click',e=>{ const c=e.target.closest('[data-copy]'); if(c){ const v=c.dataset.copy; if(v){ (navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать')); } return; }
   const cp=e.target.closest('#doc-copy'); if(cp){ const txt=docText(cp.dataset.sec,cp.dataset.doc); (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать')); return; }
@@ -357,7 +358,8 @@ document.addEventListener('input',e=>{ const el=e.target; if(!el.dataset||!el.da
   const id=el.dataset.id; if(id==='otv') en.otv=el.checked; else if(id.startsWith('adv:')) en.adv[id.slice(4)]=el.checked; else en.names[id]=el.value; saveTab(); });
 document.addEventListener('click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(!b||!curTab) return; const en=TAB[curTab]=TAB[curTab]||{names:{},adv:{},otv:false,confirmed:false}; en.confirmed=(b.id==='tab-confirm'); saveTab(); const [iso,lg]=curTab.split('|'); b.textContent='Сохраняю…'; pushTab(curTab).then(ok=>{ if(!ok && window.DATA_URL) alert('Не удалось отправить в базу, сохранено на телефоне. Повторите позже.'); openSheet('tm:'+iso+':'+lg,true); }); });
 let sx=0; $('#sheet').addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true}); $('#sheet').addEventListener('touchend',e=>{ if(sx<40&&e.changedTouches[0].clientX-sx>90) goBack(); },{passive:true});
-show('home');
+window.__rerender=function(){ const cur=document.querySelector('.tab[aria-selected="true"]'); const tab=cur?cur.dataset.tab:'home'; const stack=STACK.slice(); const sc=$('#sheet-body').scrollTop; show(VIEWS[tab]?tab:'home'); if(stack.length){ STACK.length=0; stack.forEach(k=>STACK.push(k)); renderSheet(stack[stack.length-1]); $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=sc; } };
+if(window.__booted){ window.__rerender(); } else { window.__booted=true; show('home'); }
 }
 
 function gate(msg){ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
@@ -386,8 +388,10 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   let cached=null; try{ cached=JSON.parse(localStorage.getItem('tr.data')||'null'); }catch(e){}
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
+  window.__refresh=async function(){ try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
   try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
   catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('tr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
+  let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); });
   if('serviceWorker' in navigator && SW){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 })();
 </script>
