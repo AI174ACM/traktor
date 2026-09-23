@@ -21,6 +21,7 @@ html[data-rot] #app{inset:0 auto auto 0;margin:0;max-width:none;width:100vh;heig
 html[data-rot="90"] #app{transform:rotate(-90deg) translateX(-100%)}
 html[data-rot="270"] #app{transform:rotate(90deg) translateY(-100%)}
 html[data-rot] .views{padding-top:24px}
+input,select,textarea{font-size:max(16px,1em)}
 .views{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;scrollbar-width:none;padding:calc(env(safe-area-inset-top,0px) + 16px) 16px calc(env(safe-area-inset-bottom,0px) + 112px);background:var(--ground)}
 .views::-webkit-scrollbar{display:none}
 .views.in>*{animation:rise .5s var(--spring) both}
@@ -88,7 +89,8 @@ button.row{cursor:pointer;transition:transform .35s var(--spring)}
 .pre{margin:0;white-space:pre-wrap;word-break:break-word;font:500 13.5px/1.5 Manrope,sans-serif;color:var(--ink)}
 .row .t b.hd{color:var(--muted);font-weight:600}
 .acts{display:grid;grid-template-columns:1fr 1fr;gap:10px}.act{appearance:none;border:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px;text-align:left;cursor:pointer}.act b{font-weight:800;font-size:15px}.act span{font-size:12.5px;color:var(--muted)}
-.fio{width:100%;min-width:0;font:600 14px Manrope,sans-serif;padding:9px 11px;border:1px solid #DDDBD5;border-radius:12px;background:#FAF9F7;color:var(--ink)}
+/* 16px — иначе iPhone приближает страницу при фокусе в поле и не возвращает масштаб (Мельников 23.09.2026) */
+.fio{width:100%;min-width:0;font:600 16px Manrope,sans-serif;padding:8px 11px;border:1px solid #DDDBD5;border-radius:12px;background:#FAF9F7;color:var(--ink)}
 .fio:focus{outline:2px solid var(--accent);border-color:transparent}
 .chk{width:20px;height:20px;accent-color:var(--accent);flex:none}
 label.row{cursor:pointer}
