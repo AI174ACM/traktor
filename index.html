@@ -169,7 +169,11 @@ const ACC=(DATA.acc||[]).map(a=>({k:m2k(a[0]),dir:a[1],who:a[2],basis:a[3],sum:a
 const PAY=(DATA.pay||[]).map(p=>({date:p[0],iso:p[0],kind:/приход/.test(p[1])?'in':/^расход/.test(p[1])?'out':/налич/.test(p[1])?'cash':'other',inc:/приход/.test(p[1]),who:p[6]||'',party:p[2],sum:p[3]||0,purpose:p[4],dir:p[5],k:m2k(p[7])||m2k(p[0]),note:p[8]}));
 function accOf(name,k){ return ACC.filter(a=>a.who===name&&(!k||a.k===k)); }
 function paidOf(name,k){ return PAY.filter(p=>p.kind==='out'&&p.who===name&&(!k||p.k===k)); }
-function offOf(name,k){ return DEBTS.filter(d=>d.who===name&&d.op==='зачёт'&&(!k||(d.month?m2k(d.month):m2k(d.date))===k)); }
+/* Месяц зачёта: из колонки «Месяц», иначе из примечания «из выплаты за Сентябрь 2026», иначе по дате операции.
+   Разбор примечания нужен, пока скрипт «Трактор — данные» не пишет колонку «Месяц» (23.09.2026) */
+function noteMonth(note){ const m=String(note||'').match(new RegExp('за\\s+('+MONTHS_F.join('|')+')\\s+(20\\d\\d)','i')); if(!m) return ''; const i=MONTHS_F.findIndex(x=>x.toLowerCase()===m[1].toLowerCase()); return i<0?'':m[2]+'-'+i; }
+function debtMonth(d){ return d.month?m2k(d.month):(noteMonth(d.note)||m2k(d.date)); }
+function offOf(name,k){ return DEBTS.filter(d=>d.who===name&&d.op==='зачёт'&&(!k||debtMonth(d)===k)); }
 function personTotals(name,k){ const gs=k?CAL.filter(g=>mkey(g.date)===k):CAL; const a=personGames(name,gs.filter(g=>g.played)); const extra=accOf(name,k).reduce((s,x)=>s+x.sum,0); const paid=paidOf(name,k).reduce((s,x)=>s+x.sum,0); const card=paidOf(name,k).filter(x=>x.dir==='ШТАТ').reduce((s,x)=>s+x.sum,0); const off=offOf(name,k).reduce((s,x)=>s+x.sum,0); return {match:a.s,n:a.n,extra,total:a.s+extra,paid,card,off,due:a.s+extra-paid-off}; }
 const DIRN={TTV:'Трактор ТВ',SERIAL:'Сериал',GRAPH:'Графика',OFFICE:'Фонд «Офис»','ШТАТ':'Штат и налоги','ИП':'Расходы ИП','НАЛ':'Наличные','ДРУГОЕ':'Не по клубу'}; const dirName=c=>DIRS[c]?DIRS[c].name:(DIRN[c]||c||'');
 function debtRows(name){ return DEBTS.filter(d=>d.who===name); }
