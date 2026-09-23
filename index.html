@@ -602,10 +602,12 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   let cached=null; try{ cached=JSON.parse(localStorage.getItem('tr.data')||'null'); }catch(e){}
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
-  window.__refresh=async function(){ try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
+  /* новая сборка приложения: проверять при «Обновить» и при возврате в приложение — иначе открытое на телефоне остаётся старым кодом (23.09.2026) */
+  function swUpd(){ try{ if('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r=>{ if(r) r.update(); }).catch(()=>{}); }catch(e){} }
+  window.__refresh=async function(){ swUpd(); try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
   try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
   catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('tr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
-  let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); });
+  let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else { swUpd(); if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); } });
   if('serviceWorker' in navigator && SW){ const had=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(had && !window.__reloading){ window.__reloading=true; location.reload(); } }); navigator.serviceWorker.register('sw.js').then(r=>{ try{ r.update(); }catch(e){} }).catch(()=>{}); }
 })();
 </script>
