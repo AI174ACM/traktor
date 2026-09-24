@@ -162,7 +162,9 @@ const DEBTS = (DATA.debts||[]).map(d=>({date:d[0],project:d[1]||'Трактор'
 // Чат по рекламе (Telegram → лист «Реклама_чат»): сообщения Архипова и Левиной, привязанные к матчу «дата|лига»
 const ADCHAT = (DATA.adchat||[]).map(a=>({date:a[0],time:a[1],who:a[2],text:a[3],match:a[4],adv:a[5]==='да',checked:a[6]||''}));
 function adChatFor(g){ const k=g.iso+'|'+g.league; return ADCHAT.filter(a=>a.match===k); }
-function adChatFlag(g){ return adChatFor(g).some(a=>a.adv); }
+function adChatFlag(g){ return adChatFor(g).some(a=>a.adv&&/^да/i.test(a.checked)); } // смена рекламы засчитывается только по разобранным Claude строкам чата
+/* Архипов (монтажёр рекламы): платим только за игру со сменой рекламы — во всех лигах одинаково (Мельников 24.09.2026). Источник: галочка в табеле, иначе разобранный чат */
+function adPaid(g,dir,pos){ if(!g) return true; const e=TAB[tabKey(g)]; const id=dir+'|'+pos; if(e&&e.adv&&(id in e.adv)) return !!e.adv[id]; if(!g.played) return true; return adChatFlag(g); }
 const DEBT_SIGN={'долг':1,'аванс':1,'зачёт':-1,'возврат':-1,'отработал':-1}; // «отработал» — долг погашен работой вне выплат (23.09.2026), из месяца не вычитается
 const m2k=s=>{ const m=/^(\d{4})-(\d\d)/.exec(String(s||'')); return m?`${m[1]}-${+m[2]-1}`:''; };
 const ACC=(DATA.acc||[]).map(a=>({k:m2k(a[0]),dir:a[1],who:a[2],basis:a[3],sum:a[4]||0,form:a[5],status:a[6],note:a[7]}));
@@ -212,11 +214,11 @@ function saveTab(){ try{ localStorage.setItem('tr.tabel2',JSON.stringify(TAB)); 
 function pushTab(key){ if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'tabel',key,entry:TAB[key]})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false); }
 function tabKey(g){ return g.iso+'|'+g.league; }
 function resolveName(s){ s=(s||'').trim(); if(!s) return ''; const sur=s.split(/\s+/)[0].toLowerCase(); const p=PEOPLE.find(p=>p.name.split(/\s+/)[0].toLowerCase()===sur); return p?p.name:s; }
-function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWith('приостановлено') && g!==firstKhl)); const e=g&&TAB[tabKey(g)];
+function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWith('приостановлено') && g!==firstKhl)).filter(r=>!/смены рекламы/.test(r.rule)||adPaid(g,dir,r.pos)); const e=g&&TAB[tabKey(g)];
   /* Подтверждение действует только на направления, которые были в форме: продюсер трансляций не гасит состав медиакуба (23.09.2026) */
   if(!e||!e.confirmed||(e.dirs&&e.dirs.length&&e.dirs.indexOf(dir)<0)) return rows;
   if(e.otv && dir==='TR_MHL') return [];
-  return rows.filter(r=>!(/смены рекламы/.test(r.rule) && !(e.adv||{})[dir+'|'+r.pos])).map(r=>{ const n=(e.names||{})[dir+'|'+r.pos]; return n?Object.assign({},r,{who:resolveName(n)}):r; }); }
+  return rows.map(r=>{ const n=(e.names||{})[dir+'|'+r.pos]; return n?Object.assign({},r,{who:resolveName(n)}):r; }); }
 const NOT_PERSON=new Set(['Мельников','Фонд «Офис»','ХК «Трактор»','']);
 function extraPeople(){ const s=new Set(); Object.values(TAB).forEach(e=>{ if(!e.confirmed) return; Object.values(e.names||{}).forEach(n=>{ const r=resolveName(n); if(r && !PEOPLE.some(p=>p.name===r)) s.add(r); }); }); const out=[...s].map(n=>({name:n,st:'по табелю',form:'уточнить',note:'внесён из табеля',extra:true}));
   const s2=new Set(); ACC.forEach(a=>{ if(!NOT_PERSON.has(a.who)&&!PEOPLE.some(p=>p.name===a.who)&&!s.has(a.who)) s2.add(a.who); }); PAY.forEach(x=>{ if(x.kind==='out'&&x.who&&!NOT_PERSON.has(x.who)&&!PEOPLE.some(p=>p.name===x.who)&&!s.has(x.who)) s2.add(x.who); });
