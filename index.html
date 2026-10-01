@@ -114,7 +114,7 @@ label.row{cursor:pointer}
 .day.zhl{background:var(--zhl-bg)}.day.zhl b{color:var(--zhl)}
 .day.away{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--khl-bg2)}.day.away b{color:var(--khl)}
 .day.two{background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)}.day.two b{color:var(--ink)}
-.day.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.day.today{box-shadow:inset 0 0 0 2px var(--ink)}
 .day.next{box-shadow:inset 0 0 0 2px var(--accent),0 4px 12px rgba(255,90,31,.25)}
 .day.next b{color:var(--accent)}
 .day.past.has{opacity:.72}
@@ -231,7 +231,7 @@ const DIRS = Object.fromEntries(DATA.dirs.map(d=>[d[0],{code:d[0],contract:d[1],
 const CONTRACTS = DATA.contracts.map(c=>({code:c[0],num:c[1],date:c[2],subject:c[3],status:c[4],limit:c[5],days:c[6]}));
 const RATES = DATA.rates.map(r=>({dir:r[0],pos:r[1],rate:r[2],who:r[3],rule:r[4]}));
 const CAL = DATA.cal.map(c=>({date:new Date(c[0]),iso:c[0],league:c[1],team:c[2],opp:c[3],home:c[4]==='дома',dirs:c[5].split(';'),note:c[6],played:c[7]==='сыгран'}));
-const PEOPLE = DATA.people.map(p=>({name:p[0],st:p[1],form:p[2],note:p[3],card:p[4]||0}));
+const PEOPLE = DATA.people.map(p=>({name:p[0],st:p[1],form:p[2],note:p[3],card:p[4]||0,off:p[6]||0})); /* off — «голый» оклад в межсезонье, 3–4 месяца после сезона (Мельников 01.10.2026) */
 const DEBTS = (DATA.debts||[]).map(d=>({date:d[0],project:d[1]||'Трактор',who:d[2],op:d[3],sum:d[4]||0,form:d[5]||'',note:d[6]||'',by:d[7]||'',when:d[8]||'',month:d[9]||''})); // month — за какой месяц зачёт (дата — день операции)
 // Чат по рекламе (Telegram → лист «Реклама_чат»): сообщения Архипова и Левиной, привязанные к матчу «дата|лига»
 // Должности (лист «Должности»): что делать, регламент, штрафы — по человеку, показывается в его карточке
@@ -460,7 +460,7 @@ function calView(){
   return `<div class="lt"><h1>Календарь</h1><p>дни закрашены цветом лиги · нажмите день</p></div>
   <div class="mnav"><button data-cal="-1" aria-label="Предыдущий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg></button><b>${MONTHS_F[mo]} ${y}</b><button data-cal="1" aria-label="Следующий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1.5 1.5l6 6-6 6"/></svg></button></div>
   <div class="cal"><div class="wd">${['пн','вт','ср','чт','пт','сб','вс'].map(w=>`<span>${w}</span>`).join('')}</div><div class="days">${cells}</div></div>
-  <div class="clegend"><span><i style="background:var(--khl-bg)"></i>КХЛ дома</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:var(--card)"></i>КХЛ выезд</span><span><i style="background:var(--mhl-bg)"></i>МХЛ дома</span><span><i style="background:var(--zhl-bg)"></i>ЖХЛ дома</span><span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:var(--card)"></i>сегодня и следующий матч</span><span><i style="background:var(--accent)"></i>событие</span><span><i style="background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)"></i>два матча</span></div>
+  <div class="clegend"><span><i style="background:var(--khl-bg)"></i>КХЛ дома</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:var(--card)"></i>КХЛ выезд</span><span><i style="background:var(--mhl-bg)"></i>МХЛ дома</span><span><i style="background:var(--zhl-bg)"></i>ЖХЛ дома</span><span><i style="box-shadow:inset 0 0 0 2px var(--ink);background:var(--card)"></i>сегодня</span><span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:var(--card)"></i>следующий матч</span><span><i style="background:var(--accent)"></i>событие</span><span><i style="background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)"></i>два матча</span></div>
   <div class="sec">Матчи месяца<small>${ms.n}${PERSON?' · ставка за месяц '+fmtS(myMonth):MONEY?' · клубу '+fmtS(ms.club)+' · мне '+fmtS(ms.me):''}</small></div><div class="g list" style="margin-top:10px">${list||'<div class="row"><div class="t"><span>матчей нет</span></div></div>'}</div>
   ${(()=>{const ev=EVENTS.filter(e=>e.date.getFullYear()===y&&e.date.getMonth()===mo); return ev.length?`<div class="sec">События<small>${ev.length}</small></div><div class="g list" style="margin-top:10px">${ev.map(e=>`<div class="row"><div class="dateb" style="background:var(--warn-bg)"><b style="color:var(--me)">${String(e.date.getDate()).padStart(2,'0')}</b><span>${WD[e.date.getDay()]}</span></div><div class="t"><b>${e.title}</b><span>${e.kind}${e.note?' · '+e.note:''}</span></div><div class="v">${e.sum&&!PERSON?fmtS(e.sum):''}</div></div>`).join('')}</div>`:'';})()}
   <div class="note">Дополнительные события сезона заносятся на лист «События» базы и появляются здесь оранжевой точкой. ЖХЛ появится, когда будет календарь ЖХЛ (в папках его пока нет: есть КХЛ, МХЛ и «Челмет»).</div>`;
@@ -478,9 +478,11 @@ function contractSheet(code){
     /* Оклады в месяц — не расход на единицу: раньше они вычитались из цены одной единицы и «Мне» уходило в минус (Мельников 01.10.2026) */
     const sal=d.league?[]:RATES.filter(r=>r.dir===d.code&&/оклад/.test(r.rule||'')); const salSum=sal.reduce((x,r)=>x+r.rate,0); if(salSum){ e.pay-=salSum; e.me+=salSum; }
     const UA={'единица':'единицу','серия':'серию','игра':'игру'}; const ua=UA[d.unit]||d.unit; const need=salSum&&e.me>0?Math.ceil(salSum/e.me):0;
+    /* Межсезонье: штатный на окладе получает «голый» оклад ещё 3–4 месяца без единиц — этот расход раскладывается на месяцы сезона */
+    const OFFM=+PARAMS['Межсезонье, месяцев']||4; const offP=sal.map(r=>PEOPLE.find(p=>p.name===r.who)).filter(p=>p&&p.off); const offYear=offP.reduce((x,p)=>x+p.off,0)*OFFM; const need2=offYear&&e.me>0?Math.ceil((salSum+offYear/(12-OFFM))/e.me):0;
     return `<div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">${d.name}</div>${d.league?`<span class="chip ${LG[d.league]}">${d.league}</span>`:'<span class="chip info">'+d.unit+'</span>'}</div>
     <div class="kv"><span>Клубу за ${ua}, с НДС</span><b>${fmt(e.club)}</b></div><div class="kv"><span>Людям и техника${salSum?' за '+ua:''}</span><b>${fmt(e.pay-e.office)}</b></div><div class="kv of"><span>В фонд «Офис»</span><b>${fmt(e.office)}</b></div><div class="kv"><span>НДС и УСН</span><b>${fmt(e.vat+e.usn)}</b></div><div class="kv me"><span>${salSum?'Мне с одной '+(d.unit==='единица'?'единицы':d.unit)+', до окладов':'Мне'}</span><b>${fmt(e.me)}</b></div>
-    ${salSum?`<div class="kv"><span>Оклады в месяц: ${sal.map(r=>r.who.split(' ')[0]).join(', ')}</span><b>− ${fmt(salSum)}</b></div><div class="sub">оклады не зависят от числа единиц${need?': окупаются с '+need+'-й единицы в месяц, дальше с каждой мне '+fmtS(e.me):''}</div>`:''}
+    ${salSum?`<div class="kv"><span>Оклады в месяц: ${sal.map(r=>r.who.split(' ')[0]).join(', ')}</span><b>− ${fmt(salSum)}</b></div>${offYear?`<div class="kv"><span>Межсезонье: ${offP.map(p=>p.name.split(' ')[0]+' '+fmtS(p.off)).join(', ')} × ${OFFM} мес.</span><b>− ${fmt(offYear)}</b></div>`:''}<div class="sub">оклады не зависят от числа единиц${need?': окупаются с '+need+'-й единицы в месяц'+(need2?', с учётом межсезонья с '+need2+'-й':'')+'; дальше с каждой мне '+fmtS(e.me):''}</div>`:''}
     <div class="sub">план ${plu(d.plan,d.unit)}${d.league?' · сыграно '+pl:''} · ${d.rule}</div></div>`; }).join('')}</div>
   <div class="sec">Состав и ставки</div>${dirs.map(d=>`<div class="sec" style="margin-top:14px;font-size:15px">${d.name}</div><div class="g list" style="margin-top:8px">${RATES.filter(r=>r.dir===d.code).map(r=>`<div class="row"><div class="t"><b>${r.pos}</b><span>${r.who}${r.rule&&r.rule!=='каждая игра'?' · '+r.rule:''}</span></div><div class="v">${r.rate?fmtS(r.rate):'%'}</div></div>`).join('')}</div>`).join('')}`;
 }
@@ -950,7 +952,7 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     contracts:(j['Договоры']||[]).map(r=>[r['Код'],r['Номер'],r['Дата'],r['Предмет'],r['Статус'],n(r['Лимит с НДС']),n(r['Оплата, дней после акта']),r['Паспорт']||'']),
     dirs:(j['Направления']||[]).map(r=>[r['Код'],r['Договор'],r['Название'],r['Ед.'],n(r['Цена без НДС']),n(r['План кол-во']),r['Лига']||'',r['Где']||'',r['Правило количества']||'']),
     rates:(j['Ставки']||[]).map(r=>[r['Направление'],r['Позиция'],n(r['Ставка']),r['Кому'],r['Правило']||'каждая игра']),
-    people:(j['Люди']||[]).map(r=>[r['Человек'],r['Статус']||'',r['Форма оплаты']||'',r['Примечание']||'',n(r['На карту в месяц']),r['Отвечает за табель']||'']),
+    people:(j['Люди']||[]).map(r=>[r['Человек'],r['Статус']||'',r['Форма оплаты']||'',r['Примечание']||'',n(r['На карту в месяц']),r['Отвечает за табель']||'',n(r['Оклад в межсезонье'])]),
     cal:(j['Календарь']||[]).map(r=>[r['Дата'],r['Лига'],r['Команда'],r['Соперник'],r['Дома/выезд'],r['Направления'],r['Примечание']||'',(r['Дата']<today)?'сыгран':'впереди']),
     events:(j['События']||[]).map(r=>[r['Дата'],r['Название'],r['Тип']||'',r['Направление']||'',n(r['Сумма']),r['Примечание']||'']),
     tabel:(j['Табель_подтверждения']||[]).map(r=>({key:r['Ключ'],json:r['Состав (JSON)']})),
