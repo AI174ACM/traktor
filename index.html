@@ -340,7 +340,7 @@ function home(){
   const s=sum(played), all=sum(CAL), cur=mkey(TODAY), m=sum(CAL.filter(g=>mkey(g.date)===cur)), mp=sum(played.filter(g=>mkey(g.date)===cur));
   const next=CAL.find(g=>!g.played); const office=147000;
   return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+DATA.generated:'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
-  <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · пять договоров · по матчам</p></div>
+  <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · договоров: ${CONTRACTS.length} · по матчам</p></div>
   <div class="stack">
     <button class="card tile" data-open="me" style="text-align:left;width:100%"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
       <div class="foot"><span>Мне со всех проектов <b>${fmtS(monthKeys.reduce((x,k)=>x+meMonth(k).earned,0))} ₽</b> · нажмите</span><span>${Math.round(all.club?s.club/all.club*100:0)} % сезона</span></div></button>
@@ -388,7 +388,7 @@ function calView(){
   <div class="note">Дополнительные события сезона заносятся на лист «События» базы и появляются здесь оранжевой точкой. ЖХЛ появится, когда будет календарь ЖХЛ (в папках его пока нет: есть КХЛ, МХЛ и «Челмет»).</div>`;
 }
 function contracts(){
-  return `<div class="lt"><h1>Договоры</h1><p>пять договоров с ХК «Трактор»</p></div><div class="stack">${CONTRACTS.map(c=>{
+  return `<div class="lt"><h1>Договоры</h1><p>договоров: ${CONTRACTS.length} · ХК «Трактор» и другие заказчики</p></div><div class="stack">${CONTRACTS.map(c=>{
     const dirs=Object.values(DIRS).filter(d=>d.contract===c.code); const season=dirs.reduce((s,d)=>s+d.price*(1+VAT)*d.plan,0);
     return `<button class="g pad tile" data-open="contract:${c.code}"><div class="tile-h"><div class="lbl c">${c.num} · ${c.date.split('-').reverse().join('.')}</div><span class="chip ${c.status==='подписан'?'good':'warn'}">${c.status}</span></div>
     <div style="font-weight:800;font-size:16px;margin-top:6px;letter-spacing:-.02em">${c.subject}</div><div class="num big" style="font-size:22px">${fmtS(season)} ₽</div><div class="sub">план сезона с НДС${c.limit?' · лимит '+fmtS(c.limit):''}</div></button>`; }).join('')}</div>`;
