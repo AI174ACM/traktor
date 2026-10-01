@@ -36,7 +36,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sheet{position:absolute;inset:0;z-index:8;overflow:hidden;background:var(--ground);transform:translateX(104%);visibility:hidden;transition:transform .5s var(--spring),visibility 0s linear .5s;box-shadow:-18px 0 40px rgba(0,0,0,.14)}
 .sheet.open{transform:none;visibility:visible;transition:transform .5s var(--spring),visibility 0s}
 .sheet .views{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 40px)}
-.back{position:sticky;top:0;z-index:3;appearance:none;background:#fff;border:0;box-shadow:0 6px 18px rgba(15,20,25,.12);color:var(--accent);font:700 15px Manrope,sans-serif;padding:8px 16px 8px 11px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;margin:0 0 12px}
+.back{position:sticky;top:0;z-index:3;appearance:none;background:var(--card);border:0;box-shadow:0 6px 18px rgba(15,20,25,.12);color:var(--accent);font:700 15px Manrope,sans-serif;padding:8px 16px 8px 11px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center;margin:0 0 12px}
 .back svg{width:9px;height:15px}
 .proto{margin:0 0 14px;padding:8px 12px;border-radius:14px;background:#E4E3DF;color:#5E5D59;font:600 12px/1.35 Manrope,sans-serif}
 .lt{margin:6px 4px 16px}
@@ -74,7 +74,7 @@ button.row{cursor:pointer;transition:transform .35s var(--spring)}
 .dateb{width:46px;height:48px;border-radius:14px;background:var(--soft);display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none}
 .dateb b{font:500 16px/1 var(--mono);letter-spacing:-.06em}.dateb span{font-size:10.5px;color:var(--muted);margin-top:4px;font-weight:700}
 .dateb.khl{background:var(--khl-bg)}.dateb.khl b{color:var(--khl)}.dateb.mhl{background:var(--mhl-bg)}.dateb.mhl b{color:var(--mhl)}
-.card{border-radius:var(--r);padding:18px 18px 16px;color:var(--ink);background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.02);position:relative;overflow:hidden;border-top:5px solid var(--accent)}
+.card{border-radius:var(--r);padding:18px 18px 16px;color:var(--ink);background:var(--card);box-shadow:0 1px 0 rgba(0,0,0,.02);position:relative;overflow:hidden;border-top:5px solid var(--accent)}
 .card .lbl{color:var(--muted)}.card .mono{font-size:32px;color:var(--ink);margin-top:6px;display:block}
 .card .foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:12.5px;color:var(--muted);font-weight:600}.card .foot b{color:var(--ink)}
 .bar{height:10px;border-radius:6px;background:var(--soft);overflow:hidden;display:flex;margin-top:10px}.bar i{display:block;height:100%}
@@ -100,7 +100,7 @@ label.row{cursor:pointer}
 /* календарь */
 .mnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 10px}
 .mnav b{font:800 20px Manrope,sans-serif;letter-spacing:-.03em}
-.mnav button{appearance:none;border:0;background:#fff;width:38px;height:38px;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:pointer;display:grid;place-items:center;color:var(--ink)}
+.mnav button{appearance:none;border:0;background:var(--card);width:38px;height:38px;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,.08);cursor:pointer;display:grid;place-items:center;color:var(--ink)}
 .mnav button svg{width:9px;height:15px}
 .cal{background:var(--card);border-radius:var(--r);padding:12px 10px 10px}
 .wd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}.wd span{text-align:center;font-size:11px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.04em}
@@ -112,7 +112,7 @@ label.row{cursor:pointer}
 .day.khl{background:var(--khl-bg)}.day.khl b{color:var(--khl)}
 .day.mhl{background:var(--mhl-bg)}.day.mhl b{color:var(--mhl)}
 .day.zhl{background:var(--zhl-bg)}.day.zhl b{color:var(--zhl)}
-.day.away{background:#fff;box-shadow:inset 0 0 0 1.5px var(--khl-bg2)}.day.away b{color:var(--khl)}
+.day.away{background:var(--card);box-shadow:inset 0 0 0 1.5px var(--khl-bg2)}.day.away b{color:var(--khl)}
 .day.two{background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)}.day.two b{color:var(--ink)}
 .day.today{box-shadow:inset 0 0 0 2px var(--accent)}
 .day.next{box-shadow:inset 0 0 0 2px var(--accent),0 4px 12px rgba(255,90,31,.25)}
@@ -122,6 +122,50 @@ label.row{cursor:pointer}
 .day .d{display:flex;gap:2px}.day .d i{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.55}
 .day.khl .d i{color:var(--khl)}.day.mhl .d i{color:var(--mhl)}.day.zhl .d i{color:var(--zhl)}.day.away .d i{color:var(--khl)}
 .clegend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 6px 0;font-size:12.5px;font-weight:600;color:var(--muted)}.clegend i{display:inline-block;width:12px;height:12px;border-radius:4px;margin-right:6px;vertical-align:-1px}
+/* ===== Вид 1 «Светлый строгий» и вид 2 «Тёмный» (01.10.2026); вид 0 — прежний ===== */
+html[data-vid="1"]{--ground:#F3F3F1;--sep:#ECEBE7;--soft:#F0EFEC;--accent:#F04E1A;--accent-bg:#FDE9E1;--me:#F04E1A;--office:#7B6FA8;--crew:#3566B8;--club:#1F9460;--r:20px}
+html[data-vid="2"]{color-scheme:dark;--ground:#0C0D10;--card:#16181D;--ink:#F3F2EE;--muted:#9C9B96;--faint:#5E5E5A;--sep:#24272E;--soft:#20232A;--accent:#FF6A2B;--accent-bg:#3A2115;--khl:#D9DADF;--khl-bg:#2A2D35;--khl-bg2:#474B57;--mhl:#52C792;--mhl-bg:#12301F;--zhl:#E391C4;--zhl-bg:#371F30;--away:#7C8594;--club:#52C792;--crew:#6FA2F0;--tax:#7E848E;--me:#FF6A2B;--office:#B4A6E8;--good:#5CCB93;--good-bg:#12301F;--warn:#F2A766;--warn-bg:#3A2816;--bad:#F2857A;--bad-bg:#3B1D19;--r:20px}
+html[data-vid="1"] .g,html[data-vid="1"] .card,html[data-vid="1"] .cal{box-shadow:0 0 0 1px rgba(17,17,17,.045),0 1px 2px rgba(17,17,17,.04)}
+html[data-vid="2"] .g,html[data-vid="2"] .card,html[data-vid="2"] .cal{box-shadow:0 0 0 1px rgba(255,255,255,.05)}
+html[data-vid="1"] .mono,html[data-vid="2"] .mono{font-family:var(--num);font-weight:800;letter-spacing:-.045em;word-spacing:0}
+html[data-vid="1"] .card,html[data-vid="2"] .card{border-top:0}
+html[data-vid="1"] .tabbar,html[data-vid="2"] .tabbar{left:0;right:0;bottom:0;border-radius:0;gap:0;padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);background:var(--card);border:0;border-top:1px solid var(--sep);box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+html[data-vid="1"] .tab,html[data-vid="2"] .tab{color:var(--muted);border-radius:14px}
+html[data-vid="1"] .tab[aria-selected="true"],html[data-vid="2"] .tab[aria-selected="true"]{color:var(--accent);background:transparent;box-shadow:none}
+html[data-vid="1"] .views,html[data-vid="2"] .views{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 86px)}
+html[data-vid="1"] .sheet .views,html[data-vid="2"] .sheet .views{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 40px)}
+html[data-vid="1"] .lt h1,html[data-vid="2"] .lt h1{font-size:28px}
+html[data-vid="2"] .tabbar{background:#121418}
+html[data-vid="2"] .day.away{background:transparent}
+html[data-vid="2"] .fio{background:#1D2026;border-color:#30343C}
+html[data-vid="2"] #toast{background:#F3F2EE;color:#111}
+html[data-vid="2"] .sheet{box-shadow:-18px 0 40px rgba(0,0,0,.5)}
+html[data-vid="2"] .back{box-shadow:0 0 0 1px rgba(255,255,255,.08),0 6px 18px rgba(0,0,0,.4)}
+html[data-vid="2"] .mnav button{box-shadow:0 0 0 1px rgba(255,255,255,.08)}
+html[data-vid="2"] .proto{background:#1D2026;color:var(--muted)}
+.proto.pst,html[data-vid] .proto.pst{background:transparent;padding:0 4px;margin:-4px 0 14px;font-size:12px;color:var(--muted)}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:4px 4px 10px}
+.top h1{font:800 30px/1.05 Manrope,sans-serif;letter-spacing:-.045em;margin:2px 0 0}
+.eyebrow{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.rbtn{appearance:none;border:0;width:40px;height:40px;border-radius:50%;background:var(--card);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 0 0 1px rgba(128,128,128,.16);flex:none;font-weight:800}
+.rbtn svg{width:19px;height:19px}
+.hero{appearance:none;border:0;display:block;width:100%;text-align:left;cursor:pointer;border-radius:var(--r);padding:20px 20px 16px;background:#15171B;color:#fff;transition:transform .35s var(--spring)}
+.hero:active{transform:scale(.97);transition-duration:.12s}
+html[data-vid="2"] .hero{background:linear-gradient(145deg,#FF7A3C 0%,#E5400C 100%)}
+.hero .lbl{color:rgba(255,255,255,.68)}
+.hero .hn{font:800 40px/1.05 var(--num);letter-spacing:-.05em;margin-top:8px;white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
+.hero .hn small{font-size:22px;font-weight:700;opacity:.65}
+.hero .hb{display:flex;align-items:flex-end;gap:6px;margin-top:16px}
+.hero .hb div{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;min-width:0}
+.hero .hb i{display:block;border-radius:5px 5px 2px 2px;background:#fff}
+.hero .hb i.pl{background:rgba(255,255,255,.2)}
+.hero .hb i.cu{background:var(--accent)}
+html[data-vid="2"] .hero .hb i.cu{background:#15171B}
+.hero .hb span{font-size:10px;font-weight:700;color:rgba(255,255,255,.62);text-align:center}
+.hero .hf{margin-top:12px;font-size:12.5px;color:rgba(255,255,255,.72);font-weight:600}.hero .hf b{color:#fff}
+html[data-vid="1"] .dateb b,html[data-vid="2"] .dateb b{font:800 16px/1 var(--num);letter-spacing:-.03em}
+.vsw{display:flex;align-items:center;gap:6px;margin:22px 6px 0;font-size:12.5px;font-weight:700;color:var(--muted)}.vsw button{border:0;cursor:pointer}
+.demo{margin:0 0 12px;padding:8px 12px;border-radius:12px;background:var(--accent-bg);color:var(--accent);font:700 12px/1.3 Manrope,sans-serif;text-align:center}
 </style></head><body>
 <div id="app">
   <div class="views in" id="v-home"></div>
@@ -144,13 +188,24 @@ const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
+/* Хранилище на телефоне: в режиме показа (вымышленные данные) — только в памяти, чтобы показ не смешивался с настоящими черновиками и не уходил в базу */
+const LS = DATA.demo ? (window.__demoLS||(window.__demoLS=(()=>{ const m={}; return {getItem:k=>(k in m)?m[k]:null,setItem:(k,v)=>{m[k]=String(v);},removeItem:k=>{delete m[k];}}; })())) : window.localStorage;
+const PARAMS=DATA.params||{}; const DEMO=!!DATA.demo;
+const OFFICE_EXP=+PARAMS['Офис: расход в месяц']||147000; if(DEMO) document.title=PARAMS['Название приложения']||'Показ';
+const APPNAME=PARAMS['Название приложения']||'Трактор 26/27', OWNER_LBL=PARAMS['Владелец']||'ИП Мельников';
+/* В режиме показа из надписей, зашитых в код, убираются настоящие названия */
+const scrub=h=>DEMO?String(h).replace(/Трактор ТВ/g,'Клубное ТВ').replace(/«?Челмет»?/g,'вторая команда').replace(/Белые Медведицы/g,'Метеор-Леди').replace(/Белые [Мм]едведи/g,'Метеор-Юниор').replace(/ХК «Трактор»/g,'ХК «Метеор»').replace(/Трактор/g,'Метеор').replace(/ИП Мельников[а-я]*/g,'ИП Орлов').replace(/Мельников[а-я]*/g,'Владелец').replace(/ИП Романов[а-я]*/g,'второе ИП').replace(/Романов[а-я]*/g,'второе ИП'):h;
 const ROLE = DATA.role||'admin';
 /* Личный режим сотрудника: роль person (ключ человека) или предпросмотр владельцем (?as=Фамилия / localStorage tr.as) */
-let PREVIEW=''; try{ const q=new URLSearchParams(location.search).get('as'); if(ROLE==='admin'){ if(q){ PREVIEW=q; localStorage.setItem('tr.as',q); } else PREVIEW=localStorage.getItem('tr.as')||''; } }catch(e){}
+let PREVIEW=''; try{ const q=new URLSearchParams(location.search).get('as'); if(ROLE==='admin'){ if(q){ PREVIEW=q; LS.setItem('tr.as',q); } else PREVIEW=LS.getItem('tr.as')||''; } }catch(e){}
 const WHO = DATA.who || PREVIEW || '';
 const PERSON = (ROLE==='person' || !!PREVIEW) && !!WHO;
 /* Кто видит деньги договора (клубу, мне): только владелец и офис, и не в режиме предпросмотра (23.09.2026) */
 const MONEY = (ROLE==='admin'||ROLE==='office') && !PREVIEW;
+/* Вид: 1 — светлый строгий, 2 — тёмный, 0 — прежний. Владельцу по умолчанию новый светлый; сотрудникам прежний, пока Мельников не выбрал (01.10.2026). Переключатель внизу главной или ?vid=2 */
+let VID='0'; try{ const qv=new URLSearchParams(location.search).get('vid'); if(/^[012]$/.test(qv||'')) LS.setItem('tr.vid',qv); VID=LS.getItem('tr.vid')||(((ROLE==='admin'&&!PREVIEW)||DEMO)?'1':'0'); }catch(e){}
+function applyVid(){ document.documentElement.dataset.vid=VID; const mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.content=VID==='2'?'#0C0D10':VID==='1'?'#F3F3F1':'#ECEEF1'; }
+applyVid();
 const MY_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO).map(r=>r[0]) : []);
 /* За какие направления человек отвечает в табеле: позиции «продюсер» + колонка «Отвечает за табель» листа «Люди» (или список от сервера) */
 const TAB_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO && /продюсер/i.test(r[1]) && DATA.dirs.some(d=>d[0]===r[0]&&d[6])).map(r=>r[0]).concat(DATA.tabelDirs||[], String(((DATA.people||[]).find(p=>p[0]===WHO)||[])[5]||'').split(/[;,\s]+/)).filter(c=>c&&DATA.dirs.some(d=>d[0]===c)) : []);
@@ -168,7 +223,7 @@ function dirPart(d){ return !PERSON||TAB_DIRS.has(d); }
 function opsPart(d,g){ return tabelRows(d,g).some(isOpRow)&&(!PERSON||TAB_OPS||(TAB_DIRS.has(d)&&!OPS_DELEG)); }
 function myDirOk(e,d,g){ const rows=tabelRows(d,g).filter(r=>canFill(r,d)); if(!rows.length) return true; return (!dirPart(d)||!rows.some(r=>!isOpRow(r))||partOk(e,d,false))&&(!opsPart(d,g)||partOk(e,d,true)); }
 function myPartOk(e,g){ const ds=g.dirs.filter(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d))); return ds.length>0&&ds.every(d=>myDirOk(e,d,g)); }
-if(PERSON){ DATA.acc=(DATA.acc||[]).filter(a=>a[2]===WHO); DATA.pay=(DATA.pay||[]).filter(p=>p[6]===WHO); DATA.debts=(DATA.debts||[]).filter(d=>d[2]===WHO); DATA.roles=(DATA.roles||[]).filter(r=>r[0]===WHO); DATA.ttv=(DATA.ttv||[]).filter(r=>r[7]===WHO); DATA.docs=[]; DATA.adchat=(DATA.adchat||[]).map(a=>[a[0],a[1],'','',a[4],a[5],a[6]]); /* в личном виде — только отметки «смена была», без переписки */
+if(PERSON){ DATA.acc=(DATA.acc||[]).filter(a=>a[2]===WHO); DATA.pay=(DATA.pay||[]).filter(p=>p[6]===WHO); DATA.debts=(DATA.debts||[]).filter(d=>d[2]===WHO); DATA.roles=(DATA.roles||[]).filter(r=>r[0]===WHO); DATA.ttv=(DATA.ttv||[]).filter(r=>r[7]===WHO); DATA.docs=[]; DATA.acts=[]; DATA.closed=[]; DATA.adchat=(DATA.adchat||[]).map(a=>[a[0],a[1],'','',a[4],a[5],a[6]]); /* в личном виде — только отметки «смена была», без переписки */
   /* ответственному за табель нужны матчи его направлений, даже если своих ставок там нет */
   TAB_DIRS.forEach(d=>MY_DIRS.add(d)); if(TAB_OPS) DATA.rates.filter(r=>/^Оператор(?! системы)/.test(r[1])&&!/техника|аренда/.test(r[4]||'')).forEach(r=>MY_DIRS.add(r[0]));
   DATA.cal=DATA.cal.filter(c=>c[5].split(';').some(d=>MY_DIRS.has(d))).map(c=>{ const x=c.slice(); x[5]=c[5].split(';').filter(d=>MY_DIRS.has(d)).join(';'); return x; }); }
@@ -193,7 +248,7 @@ function adPaid(g,dir,pos){ if(!g) return true; const e=TAB[tabKey(g)]; const id
 const DEBT_SIGN={'долг':1,'аванс':1,'зачёт':-1,'возврат':-1,'отработал':-1}; // «отработал» — долг погашен работой вне выплат (23.09.2026), из месяца не вычитается
 const m2k=s=>{ const m=/^(\d{4})-(\d\d)/.exec(String(s||'')); return m?`${m[1]}-${+m[2]-1}`:''; };
 const ACC=(DATA.acc||[]).map(a=>({k:m2k(a[0]),dir:a[1],who:a[2],basis:a[3],sum:a[4]||0,form:a[5],status:a[6],note:a[7]}));
-const PAY=(DATA.pay||[]).map(p=>({date:p[0],iso:p[0],kind:/приход/.test(p[1])?'in':/^расход/.test(p[1])?'out':/налич/.test(p[1])?'cash':'other',inc:/приход/.test(p[1]),who:p[6]||'',party:p[2],sum:p[3]||0,purpose:p[4],dir:p[5],k:m2k(p[7])||m2k(p[0]),note:p[8]}));
+const PAY=(DATA.pay||[]).map(p=>({date:p[0],iso:p[0],kind:/приход/.test(p[1])?'in':/^расход/.test(p[1])?'out':/налич/.test(p[1])?'cash':'other',inc:/приход/.test(p[1]),top:/пополн/.test(p[1]),who:p[6]||'',party:p[2],sum:p[3]||0,purpose:p[4],dir:p[5],k:m2k(p[7])||m2k(p[0]),note:p[8]}));
 function accOf(name,k){ return ACC.filter(a=>a.who===name&&(!k||a.k===k)); }
 function paidOf(name,k){ return PAY.filter(p=>p.kind==='out'&&p.who===name&&(!k||p.k===k)); }
 /* Месяц зачёта: из колонки «Месяц», иначе из примечания «из выплаты за Сентябрь 2026», иначе по дате операции.
@@ -207,7 +262,7 @@ function debtRows(name){ return DEBTS.filter(d=>d.who===name); }
 function debtBalance(name){ return debtRows(name).reduce((s,d)=>s+(DEBT_SIGN[d.op]||0)*d.sum,0); }
 function debtPeople(project){ const m={}; DEBTS.forEach(d=>{ if(project&&(d.project==='Трактор')!==(project==='Трактор')) return; m[d.who]=(m[d.who]||0)+(DEBT_SIGN[d.op]||0)*d.sum; }); return Object.entries(m).map(([who,bal])=>({who,bal})).sort((a,b)=>b.bal-a.bal); }
 function debtTotal(project){ return debtPeople(project).reduce((s,x)=>s+(x.bal>0?x.bal:0),0); }
-function pushDebt(row){ if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'debt',row})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false); }
+function pushDebt(row){ if(DATA.demo) return Promise.resolve(true); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'debt',row})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false); }
 const EVENTS = (DATA.events||[]).map(e=>({date:new Date(e[0]),iso:e[0],title:e[1],kind:e[2],dir:e[3],sum:e[4]||0,note:e[5]||''}));
 /* отметки табеля, ждущие подтверждения */
 function todo(){ return played.filter(g=>g.dirs.some(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d)))&&!myPartOk(TAB[tabKey(g)],g)); }
@@ -235,10 +290,10 @@ function form(n,word){ const f=FORMS[word]||[word,word,word]; n=Math.abs(Math.ro
 function plu(n,word){ return n+' '+form(n,word); }
 /* --- расчёт за игру по направлению --- */
 const firstKhl = CAL.find(g=>g.home&&g.league==='КХЛ');
-let TAB={}; function loadTab(){ TAB={}; (DATA.tabel||[]).forEach(r=>{ try{ TAB[r.key]=JSON.parse(r.json||'{}'); }catch(e){} }); let loc={}; try{ loc=JSON.parse(localStorage.getItem('tr.tabel2')||'{}'); }catch(e){} Object.keys(loc).forEach(k=>{ if(!TAB[k]||!TAB[k].confirmed||(loc[k]&&loc[k].pending)) TAB[k]=loc[k]; else if(loc[k]){ TAB[k].names=Object.assign({},loc[k].names||{},TAB[k].names||{}); TAB[k].adv=Object.assign({},loc[k].adv||{},TAB[k].adv||{}); } }); } loadTab();
-function saveTab(){ try{ localStorage.setItem('tr.tabel2',JSON.stringify(TAB)); }catch(e){} }
+let TAB={}; function loadTab(){ TAB={}; (DATA.tabel||[]).forEach(r=>{ try{ TAB[r.key]=JSON.parse(r.json||'{}'); }catch(e){} }); let loc={}; try{ loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); }catch(e){} Object.keys(loc).forEach(k=>{ if(!TAB[k]||!TAB[k].confirmed||(loc[k]&&loc[k].pending)) TAB[k]=loc[k]; else if(loc[k]){ TAB[k].names=Object.assign({},loc[k].names||{},TAB[k].names||{}); TAB[k].adv=Object.assign({},loc[k].adv||{},TAB[k].adv||{}); } }); } loadTab();
+function saveTab(){ try{ LS.setItem('tr.tabel2',JSON.stringify(TAB)); }catch(e){} }
 /* Запись табеля: до трёх попыток. Сервер перезаписывает строку по ключу, повтор безопасен (01.10.2026: ответ терялся, когда приложение обновлялось в момент сохранения) */
-function pushTab(key,left){ if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); left=left==null?2:left; return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'tabel',key,entry:Object.assign({},TAB[key],{pending:undefined})})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false).then(ok=>(ok||left<=0)?ok:new Promise(res=>setTimeout(res,1500)).then(()=>pushTab(key,left-1))); }
+function pushTab(key,left){ if(DATA.demo) return Promise.resolve(true); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); left=left==null?2:left; return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'tabel',key,entry:Object.assign({},TAB[key],{pending:undefined})})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false).then(ok=>(ok||left<=0)?ok:new Promise(res=>setTimeout(res,1500)).then(()=>pushTab(key,left-1))); }
 function tabKey(g){ return g.iso+'|'+g.league; }
 function resolveName(s){ s=(s||'').trim(); if(!s) return ''; const sur=s.split(/\s+/)[0].toLowerCase(); const p=PEOPLE.find(p=>p.name.split(/\s+/)[0].toLowerCase()===sur); return p?p.name:s; }
 /* Правило ставки «с ГГГГ-ММ-ДД: …» — строка действует только с этой даты (напр. 50 % Шебельбайну с матча со СКА 25.09.2026) */
@@ -253,8 +308,8 @@ function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWit
    оплата монтажёру = единицы × ставка за единицу (лист «Ставки», TTV «за единицу»). Отчёт клубу = все строки с единицами, включая задачи без монтажа. ===== */
 let TTV=(DATA.ttv||[]).map(r=>({date:String(r[0]||'').slice(0,10),title:r[1]||'',place:r[2]||'',link:r[3]||'',note:r[4]||'',units:(r[6]===''||r[6]==null)?null:+r[6],mont:r[7]||'',by:r[8]||'',id:r[9]||''}));
 function ttvK(x){ return m2k(x.date); }
-function ttvQ(){ try{ return JSON.parse(localStorage.getItem('tr.ttvq')||'[]'); }catch(e){ return []; } }
-function ttvQsave(q){ try{ localStorage.setItem('tr.ttvq',JSON.stringify(q)); }catch(e){} }
+function ttvQ(){ try{ return JSON.parse(LS.getItem('tr.ttvq')||'[]'); }catch(e){ return []; } }
+function ttvQsave(q){ try{ LS.setItem('tr.ttvq',JSON.stringify(q)); }catch(e){} }
 function ttvApply(op,row){ const i=TTV.findIndex(x=>x.id===row.id); if(op==='delete'){ if(i>=0) TTV.splice(i,1); return; } const base=i>=0?TTV[i]:{date:'',title:'',place:'',link:'',note:'',units:null,mont:'',by:'',id:row.id}; const x=Object.assign({},base,row); if(i>=0) TTV[i]=x; else TTV.push(x); }
 ttvQ().forEach(q=>ttvApply(q.op,q.row)); /* то, что ещё не дошло до базы, показываем сразу */
 function ttvPush(op,row){ ttvApply(op,row); const q=ttvQ(); q.push({op,row}); ttvQsave(q); ttvFlush(); }
@@ -293,7 +348,7 @@ function ttvFormSheet(id){ const x=id==='new'?null:TTV.find(t=>t.id===id); if(id
     <label><div class="lbl">Единиц (ставит Мельников)</div><select class="fio" id="tv-units">${['',0,1,2,3,4,5,6,7,8].map(u=>`<option value="${u}" ${String(x&&x.units!=null?x.units:'')===String(u)?'selected':''}>${u===''?'ещё не оценено':u}</option>`).join('')}</select></label>`:''}
     ${x&&x.link?`<a href="${esc(x.link)}" target="_blank" rel="noopener" class="chip info" style="justify-self:start;text-decoration:none;padding:8px 12px">открыть материал</a>`:''}
     ${locked?'':`<button id="tv-save" data-id="${x?x.id:''}" class="tile" style="background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Сохранить</button>`}
-    ${x&&!locked?`<button id="tv-del" data-id="${x.id}" class="tile" style="background:#fff;color:var(--bad);font-weight:700;padding:11px;border-radius:14px;text-align:center;border:1.5px solid var(--bad)">Удалить запись</button>`:''}
+    ${x&&!locked?`<button id="tv-del" data-id="${x.id}" class="tile" style="background:var(--card);color:var(--bad);font-weight:700;padding:11px;border-radius:14px;text-align:center;border:1.5px solid var(--bad)">Удалить запись</button>`:''}
   </div>`; }
 function ttvRedraw(){ const v=$('#v-report'); if(v&&!v.hidden) v.innerHTML=ttvView(); const top=STACK[STACK.length-1]; if(top&&top.split(':')[0]==='ttv') renderSheet(top); }
 on(document,'click',e=>{ const m=e.target.closest('[data-ttvm]'); if(m){ ttvMonth=m.dataset.ttvm; ttvRedraw(); return; }
@@ -342,23 +397,24 @@ function meMonth(k){
   const dirs=new Set(); ACC.filter(a=>a.k===k).forEach(a=>dirs.add(PROJ_GROUP[a.dir]||a.dir)); PAY.filter(p=>p.inc&&p.k===k).forEach(p=>dirs.add(PROJ_GROUP[p.dir]||p.dir));
   [...dirs].filter(d=>!SKIP_DIRS.has(d)&&!MATCH_DIRS.has(d)).forEach(d=>{ const acc=ACC.filter(a=>a.k===k&&(PROJ_GROUP[a.dir]||a.dir)===d); const inc=PAY.filter(p=>p.inc&&p.k===k&&(PROJ_GROUP[p.dir]||p.dir)===d).reduce((s,p)=>s+p.sum,0);
     const explicit=acc.filter(a=>a.who==='Мельников').reduce((s,a)=>s+a.sum,0); const people=acc.filter(a=>a.who!=='Мельников').reduce((s,a)=>s+a.sum,0);
-    let me=null, tax=0, note=''; if(explicit){ me=explicit; note=acc.find(a=>a.who==='Мельников').note||''; } else if(inc>0){ const bez=inc/1.05; tax=(inc-bez)+bez*USN; me=inc-tax-people; if(!people) note='выплаты людям ещё не разнесены'; } else note='оплаты от клуба ещё нет';
-    rows.push({dir:d,name:projName(d),income:inc,people,tax,me,note,kind:'other'}); });
+    let me=null, tax=0, note='', info=false; if(explicit){ me=explicit; info=true; note=acc.find(a=>a.who==='Мельников').note||''; } else if(inc>0){ const bez=inc/1.05; tax=(inc-bez)+bez*USN; me=inc-tax-people; if(!people) note='выплаты людям ещё не разнесены'; } else note='оплаты от клуба ещё нет';
+    rows.push({dir:d,name:projName(d),income:inc,people,tax,me,note,info,kind:'other'}); });
   const costs=PAY.filter(p=>p.kind==='out'&&p.k===k&&!p.who&&(p.dir==='ШТАТ'||p.dir==='ИП')).reduce((s,p)=>s+p.sum,0);
-  const earned=rows.reduce((s,r)=>s+(r.me||0),0); return {rows,costs,earned,net:earned-costs};
+  const earned=rows.reduce((s,r)=>s+(r.me||0),0); const tx=TAXM[k]||{one:0,off:0}; /* взнос 1 % — резерв к 1 июля; взносы уменьшают УСН, который в строках выше взят полностью (6 %) */ return {rows,costs,earned,one:tx.one,off:tx.off,net:earned-costs-tx.one+tx.off};
 }
-function meSheet(){ const ms=monthKeys.map(k=>({k,m:meMonth(k)})).filter(x=>x.m.rows.length||x.m.costs); const tot=ms.reduce((s,x)=>s+x.m.earned,0), cost=ms.reduce((s,x)=>s+x.m.costs,0); const plan=sum(CAL).me;
+function meSheet(){ const ms=monthKeys.map(k=>({k,m:meMonth(k)})).filter(x=>x.m.rows.length||x.m.costs); const tot=ms.reduce((s,x)=>s+x.m.earned,0), netAll=ms.reduce((s,x)=>s+x.m.net,0); const plan=sum(CAL).me;
   return `<div class="lt"><h1>Мои деньги</h1><p>что остаётся мне после людей, налогов и офиса</p></div><div class="stack">
-  <div class="card" style="border-top-color:var(--me)"><div class="lbl">Заработано с начала сезона</div><span class="mono">${fmtS(tot)} ₽</span><div class="foot"><span>минус расходы ИП ${fmtS(cost)} → чисто <b>${fmtS(tot-cost)} ₽</b></span><span>план по матчам ${fmtS(plan)}</span></div></div>
+  <div class="card" style="border-top-color:var(--me)"><div class="lbl">Начислено мне ${startWord()}</div><span class="mono">${fmtS(tot)} ₽</span><div class="foot"><span>после расходов ИП и взносов чисто <b>${fmtS(netAll)} ₽</b></span><span>план по матчам ${fmtS(plan)}</span></div></div>
   ${ms.slice().reverse().map(({k,m})=>`<div class="g pad"><div class="tile-h"><div class="lbl c">${mname(k)}</div><span class="chip ak">${fmtS(m.earned)} ₽</span></div>
-    ${m.rows.map(r=>`<div class="kv"><span>${r.name}${r.income&&r.kind==='other'?`<br><small style="color:var(--muted)">пришло ${fmtS(r.income)} · людям ${fmtS(r.people)}${r.tax?' · налоги '+fmtS(r.tax):''}</small>`:r.kind==='matches'?`<br><small style="color:var(--muted)">клубу ${fmtS(r.income)} · людям ${fmtS(r.people)} · налоги ${fmtS(r.tax)}</small>`:''}${r.note?`<br><small style="color:var(--warn)">${r.note}</small>`:''}</span><b>${r.me==null?'—':fmt(r.me)}</b></div>`).join('')}
+    ${m.rows.map(r=>`<div class="kv"><span>${r.name}${r.income&&r.kind==='other'?`<br><small style="color:var(--muted)">пришло ${fmtS(r.income)} · людям ${fmtS(r.people)}${r.tax?' · налоги '+fmtS(r.tax):''}</small>`:r.kind==='matches'?`<br><small style="color:var(--muted)">клубу ${fmtS(r.income)} · людям ${fmtS(r.people)} · налоги ${fmtS(r.tax)}</small>`:''}${r.note?`<br><small style="color:var(--${r.info?'muted':'warn'})">${r.note}</small>`:''}</span><b>${r.me==null?'—':fmt(r.me)}</b></div>`).join('')}
     ${m.costs?`<div class="kv"><span>Расходы ИП<br><small style="color:var(--muted)">налоги штата, бухгалтер, прочее</small></span><b>− ${fmt(m.costs)}</b></div>`:''}
+    ${m.one>1?`<div class="kv"><span>Взнос 1 % с дохода<br><small style="color:var(--muted)">резерв, срок 1 июля</small></span><b>− ${fmt(m.one)}</b></div>`:''}${m.off>1?`<div class="kv"><span>Взносы уменьшают УСН<br><small style="color:var(--muted)">возврат в мою долю</small></span><b>+ ${fmt(m.off)}</b></div>`:''}
     <div class="kv me"><span>Чисто за месяц</span><b>${fmt(m.net)}</b></div></div>`).join('')}
-  </div><div class="note">По матчам — по сыгранным и ставкам. По остальным проектам — приход от клуба минус НДС, УСН и начисления людям и офису; если в базе есть строка «Мельников», берётся она. Профайлы №19 лежат на счету ИП Романова.</div>`; }
-function home(){
+  </div><div class="note">По матчам — по сыгранным и ставкам. По остальным проектам — приход от клуба минус НДС, УСН и начисления людям и офису; если в базе есть строка «Мельников», берётся она. Профайлы №19 лежат на счету ИП Романова. Налоги: УСН в строках взят полностью, 6 %; взносы за штат и за себя уменьшают его не больше чем наполовину — это строка «Взносы уменьшают УСН». Подробно — «Налоги и взносы».</div>`; }
+function home(){ if(VID!=='0') return homeNew();
   const s=sum(played), all=sum(CAL), cur=mkey(TODAY), m=sum(CAL.filter(g=>mkey(g.date)===cur)), mp=sum(played.filter(g=>mkey(g.date)===cur));
-  const next=CAL.find(g=>!g.played); const office=147000;
-  return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu():'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
+  const next=CAL.find(g=>!g.played); const office=OFFICE_EXP;
+  return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu():'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:var(--card);color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
   <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · договоров: ${CONTRACTS.length} · по матчам</p></div>
   <div class="stack">
     <button class="card tile" data-open="me" style="text-align:left;width:100%"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
@@ -369,7 +425,7 @@ function home(){
       <div class="legend"><span><i style="background:var(--crew)"></i>людям ${fmtS(m.pay)}</span><span><i style="background:var(--tax)"></i>налоги ${fmtS(m.vat+m.usn)}</span><span><i style="background:var(--me)"></i>мне ${fmtS(m.me)}</span></div></button>
     <div class="grid2">
       <button class="g tile now" data-open="${next?`game:${next.iso}:${next.league}`:''}"><div class="lbl" style="color:var(--accent)">Следующий матч</div><div class="num big" style="font-size:22px">${next?dmy(next.date).slice(0,5):'—'}</div><div class="sub">${next?next.team+' — '+next.opp+' · '+(next.home?'дома':'выезд'):''}</div></button>
-      <button class="g tile" data-open="office"><div class="lbl">Фонд «Офис»</div><div class="num big" style="font-size:22px">${fmtS(s.office)} ₽</div><div class="sub">собрано · расход ${fmtS(office)} в мес.</div></button>
+      <button class="g tile" data-open="office"><div class="lbl">Фонд «Офис»</div><div class="num big" style="font-size:22px">${signed(officeNow().bal)} ₽</div><div class="sub">остаток на сегодня · собрано ${fmtS(officeNow().inc)}</div></button>
     </div>
     <button class="g pad tile" data-tab="money"><div class="tile-h"><div class="lbl c">План на сезон по матчам</div><span class="chip info">${CAL.length} матчей</span></div>
       <div class="kv"><span>Клуб заплатит, с НДС</span><b>${fmt(all.club)}</b></div><div class="kv"><span>Людям и за технику</span><b>${fmt(all.pay-all.office)}</b></div><div class="kv of"><span>В фонд «Офис»</span><b>${fmt(all.office)}</b></div><div class="kv"><span>НДС и УСН</span><b>${fmt(all.vat+all.usn)}</b></div><div class="kv me"><span>Остаётся мне</span><b>${fmt(all.me)}</b></div></button>
@@ -381,6 +437,7 @@ function home(){
       <button class="g tile docs" data-open="docs"><div class="lbl" style="color:var(--crew)">Документы</div><div class="num big" style="font-size:22px">${[...new Set(docsAll().map(d=>d.doc))].length||'—'}</div><div class="sub">реквизиты, ИП, личные, люди</div></button>
     </div>
   </div>
+  ${vidSwitch()}
   <div class="note">Матчи до сегодняшнего дня считаются сыгранными по календарю; табель ещё не подтверждён. Плей-офф, ЖХЛ (нет календаря) и матчи МХЛ на ОТВ не учтены.</div>`;
 }
 let calMonth = new Date(TODAY.getFullYear(), TODAY.getMonth(), 1);
@@ -401,7 +458,7 @@ function calView(){
   return `<div class="lt"><h1>Календарь</h1><p>дни закрашены цветом лиги · нажмите день</p></div>
   <div class="mnav"><button data-cal="-1" aria-label="Предыдущий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg></button><b>${MONTHS_F[mo]} ${y}</b><button data-cal="1" aria-label="Следующий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1.5 1.5l6 6-6 6"/></svg></button></div>
   <div class="cal"><div class="wd">${['пн','вт','ср','чт','пт','сб','вс'].map(w=>`<span>${w}</span>`).join('')}</div><div class="days">${cells}</div></div>
-  <div class="clegend"><span><i style="background:var(--khl-bg)"></i>КХЛ дома</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:#fff"></i>КХЛ выезд</span><span><i style="background:var(--mhl-bg)"></i>МХЛ дома</span><span><i style="background:var(--zhl-bg)"></i>ЖХЛ дома</span><span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:#fff"></i>сегодня и следующий матч</span><span><i style="background:var(--accent)"></i>событие</span><span><i style="background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)"></i>два матча</span></div>
+  <div class="clegend"><span><i style="background:var(--khl-bg)"></i>КХЛ дома</span><span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:var(--card)"></i>КХЛ выезд</span><span><i style="background:var(--mhl-bg)"></i>МХЛ дома</span><span><i style="background:var(--zhl-bg)"></i>ЖХЛ дома</span><span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:var(--card)"></i>сегодня и следующий матч</span><span><i style="background:var(--accent)"></i>событие</span><span><i style="background:linear-gradient(135deg,var(--khl-bg) 50%,var(--mhl-bg) 50%)"></i>два матча</span></div>
   <div class="sec">Матчи месяца<small>${ms.n}${PERSON?' · ставка за месяц '+fmtS(myMonth):MONEY?' · клубу '+fmtS(ms.club)+' · мне '+fmtS(ms.me):''}</small></div><div class="g list" style="margin-top:10px">${list||'<div class="row"><div class="t"><span>матчей нет</span></div></div>'}</div>
   ${(()=>{const ev=EVENTS.filter(e=>e.date.getFullYear()===y&&e.date.getMonth()===mo); return ev.length?`<div class="sec">События<small>${ev.length}</small></div><div class="g list" style="margin-top:10px">${ev.map(e=>`<div class="row"><div class="dateb" style="background:var(--warn-bg)"><b style="color:var(--me)">${String(e.date.getDate()).padStart(2,'0')}</b><span>${WD[e.date.getDay()]}</span></div><div class="t"><b>${e.title}</b><span>${e.kind}${e.note?' · '+e.note:''}</span></div><div class="v">${e.sum&&!PERSON?fmtS(e.sum):''}</div></div>`).join('')}</div>`:'';})()}
   <div class="note">Дополнительные события сезона заносятся на лист «События» базы и появляются здесь оранжевой точкой. ЖХЛ появится, когда будет календарь ЖХЛ (в папках его пока нет: есть КХЛ, МХЛ и «Челмет»).</div>`;
@@ -421,7 +478,7 @@ function contractSheet(code){
     <div class="sub">план ${d.plan} ${d.unit}${d.league?' · сыграно '+pl:''} · ${d.rule}</div></div>`; }).join('')}</div>
   <div class="sec">Состав и ставки</div>${dirs.map(d=>`<div class="sec" style="margin-top:14px;font-size:15px">${d.name}</div><div class="g list" style="margin-top:8px">${RATES.filter(r=>r.dir===d.code).map(r=>`<div class="row"><div class="t"><b>${r.pos}</b><span>${r.who}${r.rule&&r.rule!=='каждая игра'?' · '+r.rule:''}</span></div><div class="v">${r.rate?fmtS(r.rate):'%'}</div></div>`).join('')}</div>`).join('')}`;
 }
-let peopleMonth=(()=>{ try{ return localStorage.getItem('tr.peopleMonth')||''; }catch(e){ return ''; } })();
+let peopleMonth=(()=>{ try{ return LS.getItem('tr.peopleMonth')||''; }catch(e){ return ''; } })();
 function peopleSeason(){ const PL=allPeople(); return `<div class="g list">${PL.map((p,i)=>{ const a=personGames(p.name,played); const plan=personGames(p.name,CAL); const t=personTotals(p.name);
     return `<button class="row pr" data-open="person:${i}"><div class="av" style="background:${pcolor(i)}">${p.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div class="t"><b>${p.name}${debtBalance(p.name)>0?` <span class="chip bad" style="margin-left:6px">долг ${fmtS(debtBalance(p.name))}</span>`:''}</b><span>${p.st}${p.note?' · '+p.note:''}</span></div><div class="v">${t.total?fmtS(t.total):'—'}<small>${a.n?plu(a.n,'матч'):plan.n?'план '+plan.n:'не по матчам'}</small></div>${chev}</button>`; }).join('')}</div>
   <div class="note">Меняющиеся позиции (операторы, титровальщик) начисляются «кто вышел» и до табеля никому не приписаны.</div>`; }
@@ -436,6 +493,7 @@ function people(){
   const office=ACC.filter(a=>a.k===k&&a.who==='Фонд «Офис»').reduce((s,a)=>s+a.sum,0)+sum(played.filter(g=>mkey(g.date)===k)).office; const me=meMonth(k);
   return `<div class="lt"><h1>Люди</h1><p>${mname(k)} · ${plu(rows.length,'человек')}</p></div>${chips}<div class="stack">
   <div class="g pad"><div class="kv"><span>Начислено всем за ${mname(k).toLowerCase()}</span><b>${fmt(T.total)}</b></div><div class="kv"><span>Выплачено (с картой)</span><b>− ${fmt(T.paid)}</b></div>${T.off?`<div class="kv"><span>Зачтено в долги</span><b>− ${fmt(T.off)}</b></div>`:''}<div class="kv me"><span>${payWin(k).open?'Осталось выдать':'К выплате '+payWin(k).text}</span><b>${fmt(T.due)}</b></div></div>
+  <button class="g tile" data-open="ved:${k}" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--crew)"></span><div style="flex:1"><b style="display:block;font-weight:800">Ведомость выплат${CLOSED[k]?' · месяц закрыт':''}</b><span style="font-size:12.5px;color:var(--muted)">безналом, на карту, наличными · закрытие месяца</span></div>${chev}</button>
   <div class="g list">${rows.map(({p,i,t})=>`<button class="row pr" data-open="pm:${i}:${k}"><div class="av" style="background:${pcolor(i)}">${p.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div><div class="t"><b>${p.name}${debtBalance(p.name)>0?` <span class="chip bad" style="margin-left:6px">долг ${fmtS(debtBalance(p.name))}</span>`:''}</b><span>${[t.n?plu(t.n,'матч')+' · '+fmtS(t.match):'',t.extra&&t.n?'ещё '+fmtS(t.extra):'',(()=>{const r=accOf(p.name,k).filter(a=>/Романов/.test(a.basis+' '+a.note)).reduce((s,a)=>s+a.sum,0); return r?'из них Романов '+fmtS(r):'';})(),t.paid?'выплачено '+fmtS(t.paid):'',t.off?'зачёт '+fmtS(t.off):''].filter(Boolean).join(' · ')||p.st}</span></div><div class="v">${fmtS(t.total)}<small>${t.due>0?(Math.round(t.due)===Math.round(t.total)?(payWin(k).open?'выдать':'к выплате'):(payWin(k).open?'выдать ':'осталось ')+fmtS(t.due)):t.due<0?'переплата '+fmtS(-t.due):'закрыто'}</small></div>${chev}</button>`).join('')}
     <div class="row" style="background:var(--accent);color:#fff;flex-wrap:wrap;row-gap:5px;padding-top:15px;padding-bottom:15px"><div class="t" style="flex:1 1 auto"><b style="white-space:nowrap;color:#fff;font-size:16px">Итого выплат людям</b></div><div class="v" style="font-weight:800;font-size:19px;color:#fff">${fmtS(T.total)}</div><div style="flex:1 0 100%;font-size:12.5px;color:rgba(255,255,255,.9);line-height:1.5">${plu(rows.length,'человек')}${T.paid?' · выплачено '+fmtS(T.paid):''}${T.off?' · зачёт в долги '+fmtS(T.off):''}<br><b style="color:#fff">${T.due>0?(payWin(k).open?'Осталось выдать ':'К выплате '+payWin(k).text+': ')+fmtS(T.due):'Всё выплачено'}</b>${(SP.bank+SP.card+SP.cash)>0?`<br>безналом <b style="color:#fff">${fmtS(SP.bank)}</b> · штатным на карту <b style="color:#fff">${fmtS(SP.card)}</b> · наличными <b style="color:#fff">${fmtS(SP.cash)}</b>`:''}</div></div>
     ${office?`<button class="row of" data-open="office"><div class="t"><b>Фонд «Офис»</b><span>отчисления за месяц</span></div><div class="v" style="color:var(--office)">${fmtS(office)}</div>${chev}</button>`:''}
@@ -447,7 +505,7 @@ function personSheet(i){ if(!allPeople()[i]) return '<div class="lt"><h1>Чел�
   return `<div class="lt"><h1>${p.name}</h1><p>${p.st} · ${p.form}</p></div><div class="stack">${(()=>{const t=personTotals(p.name); return `<div class="card" style="border-top-color:${pcolor(i)}"><div class="lbl">Заработано с начала сезона</div><span class="mono">${fmtS(t.total)} ₽</span><div class="foot"><span>за матчи <b>${fmtS(a.s)}</b> (${plu(a.n,'матч')})${t.extra?` · за остальную работу <b>${fmtS(t.extra)}</b>`:''}</span><span>${debtBalance(p.name)>0?`<b style="color:var(--bad)">${PERSON?'ваш долг':'долг'} ${fmtS(debtBalance(p.name))} ₽</b>`:''}</span></div></div>
   <div class="g pad"><div class="kv"><span>Заработано за сезон</span><b>${fmt(t.total)}</b></div><div class="kv"><span>Из этого уже выплачено</span><b>− ${fmt(t.paid)}</b></div>${t.off?`<div class="kv"><span>Зачтено в счёт долга</span><b>− ${fmt(t.off)}</b></div>`:''}<div class="kv me"><span>${t.due>=0?'Осталось выплатить':'Переплата'}</span><b>${fmt(Math.abs(t.due))}</b></div>${monthKeys.map(k=>({k,d:personTotals(p.name,k).due})).filter(x=>Math.abs(x.d)>=1).map(x=>{ const w=payWin(x.k); return `<div class="kv" style="font-size:13px"><span style="color:var(--muted)">${x.d>0?'за '+mname(x.k).toLowerCase()+' · '+(w.running?'месяц ещё идёт, ':'')+(w.open?'пора выплачивать':'выплата '+w.text):'переплата за '+mname(x.k).toLowerCase()}</span><b>${x.d>0?'':'− '}${fmt(Math.abs(x.d))}</b></div>`; }).join('')}${plan.s>a.s?`<div class="kv" style="color:var(--muted)"><span>Впереди по календарю, если отыграть все матчи</span><b>+ ${fmt(plan.s-a.s)}</b></div>`:''}</div>`;})()}</div>
   ${PERSON?'':debtSection(p.name)}
-  ${(!PERSON&&ROLE==='admin'&&RATES.some(r=>r.who===p.name&&DIRS[r.dir]&&DIRS[r.dir].league))?`<button class="tile" data-preview="${p.name}" style="margin-top:4px;background:#fff;color:var(--accent);font-weight:800;padding:12px;border-radius:14px;text-align:center;border:1.5px solid var(--accent)">Показать, как видит ${p.name.split(' ')[0]}</button>`:''}
+  ${(!PERSON&&ROLE==='admin'&&RATES.some(r=>r.who===p.name&&DIRS[r.dir]&&DIRS[r.dir].league))?`<button class="tile" data-preview="${p.name}" style="margin-top:4px;background:var(--card);color:var(--accent);font-weight:800;padding:12px;border-radius:14px;text-align:center;border:1.5px solid var(--accent)">Показать, как видит ${p.name.split(' ')[0]}</button>`:''}
   <div class="sec">Ставки<small>за что и сколько</small></div><div class="g list" style="margin-top:10px">${RATES.filter(r=>r.who===p.name).map(r=>{ const d=DIRS[r.dir]; const col=d.league?`var(--${LG[d.league]})`:'var(--accent)'; const per=/оклад/.test(r.rule)?'в месяц':({'игра':'за игру','матч':'за матч','единица':'за единицу','серия':'за серию','месяц':'в месяц'}[d.unit]||'за '+d.unit); return `<div class="row"><span class="stripe" style="background:${col}"></span><div class="t"><b>${r.pos}</b><span>${d.name}${r.rule&&r.rule!=='каждая игра'?' · '+pub(r.rule):''}</span></div><div class="v" style="font-weight:800;color:${col}">${r.rate?fmtS(r.rate):'%'}<small style="font-weight:400">${per}</small></div></div>`; }).join('')}</div>
   ${roleBlocks(p.name)}
   <div class="sec">По месяцам<small>нажмите месяц</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k); const pm=personGames(p.name,gs), pp=personGames(p.name,gs.filter(g=>g.played)); const t=personTotals(p.name,k); return (pm.n||t.extra||t.paid)?`<button class="row pr" data-open="pm:${i}:${k}"><div class="t"><b>${mname(k)}</b><span>${pm.n?plu(pm.n,'матч')+' · план '+fmtS(pm.s):'не по матчам'}${t.paid?' · выплачено '+fmtS(t.paid):''}</span></div><div class="v">${fmtS(t.total)}<small>${t.due>0?(payWin(k).open?'к выплате ':payWin(k).text+' · ')+fmtS(t.due):t.due<0?'переплата '+fmtS(-t.due):'закрыто'}</small></div>${chev}</button>`:''; }).join('')}</div>`;
@@ -471,7 +529,7 @@ function personMonthSheet(i,k){ if(!allPeople()[i]) return '<div class="lt"><h1>
       <div class="kv me"><span>${t.due>0?(payWin(k).open?'К выплате на руки':'К выплате '+payWin(k).text):t.due<0?'Переплата':'Закрыто'}${t.due>0&&!payWin(k).open?`<br><small style="color:var(--muted);font-weight:400">${payWin(k).running?'месяц ещё идёт, сумма растёт':'ждёт дня выплаты'}</small>`:''}</span><b>${fmt(Math.abs(t.due))}</b></div>
       ${offCan?`<button class="tile" data-debt-off="${p.name}" data-sum="${Math.round(offCan)}" data-month="${mname(k)}" data-mk="${k}" style="margin-top:10px;background:var(--bad);color:#fff;font-weight:800;padding:12px;border-radius:14px;text-align:center">Зачесть ${fmtS(offCan)} ₽ в счёт долга</button>`:''}
     </div></div>`; })()}
-  ${(!PERSON&&ROLE==='admin'&&RATES.some(r=>r.who===p.name&&DIRS[r.dir]&&DIRS[r.dir].league))?`<button class="tile" data-preview="${p.name}" style="margin-top:10px;width:100%;background:#fff;color:var(--accent);font-weight:800;padding:12px;border-radius:14px;text-align:center;border:1.5px solid var(--accent)">Показать, как видит ${p.name.split(' ')[0]}</button>`:''}
+  ${(!PERSON&&ROLE==='admin'&&RATES.some(r=>r.who===p.name&&DIRS[r.dir]&&DIRS[r.dir].league))?`<button class="tile" data-preview="${p.name}" style="margin-top:10px;width:100%;background:var(--card);color:var(--accent);font-weight:800;padding:12px;border-radius:14px;text-align:center;border:1.5px solid var(--accent)">Показать, как видит ${p.name.split(' ')[0]}</button>`:''}
   ${perGame.length?(PERSON?`<details class="g" style="margin-top:12px"><summary style="padding:13px 16px;font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between"><span>Выплата за каждую игру</span><span style="color:var(--muted);font-weight:400">${plu(perGame.length,'матч')} ›</span></summary>`:'<div class="sec">Выплата за каждую игру</div>'):''}<div class="${PERSON?'list':'g list'}" style="margin-top:${PERSON?0:10}px">${perGame.map(x=>`<button class="row" data-open="game:${x.g.iso}:${x.g.league}"><div class="dateb ${LG[x.g.league]}"><b>${String(x.g.date.getDate()).padStart(2,'0')}</b><span>${WD[x.g.date.getDay()]}</span></div><div class="t"><b>${x.g.team} — ${x.g.opp}</b><span>${x.g.league} · ${x.g.home?'дома':'выезд'} · ${x.g.played?'сыгран':'впереди'}</span></div><div class="v" style="${x.g.played?'':'color:var(--faint)'}">${fmtS(x.s)}</div>${chev}</button>`).join('')}</div>
   ${PERSON&&perGame.length?'</details>':''}
   ${perGame.length?`<div class="sec">Сделанная работа в месяце<small>по сыгранным</small></div><div class="g list" style="margin-top:10px">${Object.values(work).map(w=>`<div class="row"><div class="t"><b>${w.pos}</b><span>${DIRS[w.dir].name} · ${w.n} × ${fmtS(w.rate)}</span></div><div class="v">${fmtS(w.n*w.rate)}</div></div>`).join('')||'<div class="row"><div class="t"><span>сыгранных матчей ещё нет</span></div></div>'}</div>`:''}
@@ -485,6 +543,9 @@ function money(){
     <div class="bar"><i style="width:${(all.pay-all.office)/all.club*100}%;background:var(--crew)"></i><i style="width:${all.office/all.club*100}%;background:var(--office)"></i><i style="width:${(all.vat+all.usn)/all.club*100}%;background:var(--tax)"></i><i style="width:${all.me/all.club*100}%;background:var(--me)"></i></div>
     <div class="kv" style="margin-top:8px"><span>Клуб заплатит, с НДС</span><b>${fmt(all.club)}</b></div><div class="kv"><span>Людям и за технику</span><b>${fmt(all.pay-all.office)}</b></div><div class="kv of"><span>В фонд «Офис»</span><b>${fmt(all.office)}</b></div><div class="kv"><span>НДС к уплате</span><b>${fmt(all.vat)}</b></div><div class="kv"><span>УСН 6 %</span><b>${fmt(all.usn)}</b></div><div class="kv me"><span>Остаётся мне</span><b>${fmt(all.me)}</b></div></div>
   <button class="g tile" data-open="me" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--me)"></span><div style="flex:1"><b style="display:block;font-weight:800">Мои деньги</b><span style="font-size:12.5px;color:var(--muted)">по месяцам и проектам · факт</span></div>${chev}</button>
+  <div class="g list"><button class="row" data-open="chain"><span class="stripe" style="background:var(--club)"></span><div class="t"><b>Деньги заказчиков</b><span>начислено, выставлено, оплачено</span></div><div class="v">${fmtS(chainOf(monthKeys.filter(k=>cmpK(k,CURK)<=0)).debt)}<small>долг</small></div>${chev}</button>
+    <button class="row" data-open="tax"><span class="stripe" style="background:var(--tax)"></span><div class="t"><b>Налоги и взносы</b><span>календарь платежей и резерв</span></div>${chev}</button>
+    ${ROLE==='admin'?`<button class="row" data-open="cash"><span class="stripe" style="background:var(--me)"></span><div class="t"><b>Касса наличных</b><span>снято, выдано людям, осталось</span></div><div class="v">${fmtS(cashOf().left)}<small>осталось</small></div>${chev}</button>`:''}</div>
   <div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${['TTV','SERIAL','GRAPH'].map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним: оклады Трактор ТВ, за серию, правило по графике — считаются отдельно</div></div>
   </div>
   <div class="sec">По месяцам<small>клубу · людям · мне</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played)); const cur=k===mkey(TODAY); const inc=PAY.filter(p=>p.inc&&p.k===k).reduce((s,p)=>s+p.sum,0), outs=PAY.filter(p=>p.kind==='out'&&p.k===k).reduce((s,p)=>s+p.sum,0); return `<button class="row${cur?' now':''}" data-open="month:${k}"><div class="t"><b>${mname(k)}${cur?' <span class="chip ak" style="margin-left:6px">идёт</span>':''}</b><span>${m.n?plu(m.n,'матч')+' · людям '+fmtS(m.pay-m.office)+' · мне '+fmtS(m.me):'не по матчам'}${inc?' · пришло '+fmtS(inc):''}${outs?' · выплачено '+fmtS(outs):''}</span></div><div class="v">${fmtS(m.club+inc)}<small>${m.n?(mp.n===m.n?'сыграно':mp.n?mp.n+' из '+m.n:'план'):'факт'}</small></div>${chev}</button>`; }).join('')}</div>`;
@@ -531,7 +592,7 @@ function tabelFilled(dir,g){ const e=TAB[tabKey(g)]||{}; const need=tabelRows(di
 function tabelLabel(r){ let m=r.pos.match(/^Оператор (\d)\s*(?:\((.*)\))?/); if(m) return {title:'Камера '+m[1], sub:(m[2]||{'1':'','2':'','3':'','4':'Романов, наличные','5':'трансляция + микс-зона'}[m[1]]||'')}; if(/микс-зон/i.test(r.pos)) return {title:'Микс-зона', sub:'доплата оператору одной из камер; обычно Абрамов, если он на выезде — Махиня'}; return {title:r.pos, sub:''}; }
 function tabelHint(r){ if(/микс-зон/i.test(r.pos)) return 'Абрамов или Махиня'; if(/чередуются/.test(r.rule)) return r.who.replace(/\s*\/\s*/g,' или '); if(isRot(r)){ const m=r.who.match(/\((.*)\)/); return m?m[1].replace(/,\s*/g,' / '):'фамилия'; } return r.who; }
 function todoSheet(){
-  const bar=ROLE==='producer'?`<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu()+' · ':''}сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>`:'';
+  const bar=ROLE==='producer'?`<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu()+' · ':''}сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:var(--card);color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>`:'';
   const dirs=Object.values(DIRS).filter(d=>d.league&&tabHas(d.code));
   return `${bar}<div class="lt"><h1>Табель</h1><p>проект → дата матча → кто работал</p></div><div class="g list">${dirs.map(d=>{ const gs=CAL.filter(g=>g.dirs.includes(d.code)); const pl=gs.filter(g=>g.played); const wait=pl.filter(g=>tabelRows(d.code,g).some(r=>canFill(r,d.code))&&!tabelFilled(d.code,g).confirmed).length;
     return `<button class="row" data-open="tp:${d.code}"><span class="stripe" style="background:var(--${LG[d.league]})"></span><div class="t"><b>${d.name}</b><span>${pl.length} сыграно из ${gs.length}${wait?` · ${wait} без подтверждения`:''}</span></div>${wait?`<span class="chip warn">${wait}</span>`:'<span class="chip good">ок</span>'}${chev}</button>`; }).join('')}</div>
@@ -589,7 +650,7 @@ function debtFormSheet(id){ const [who,op0]=id.split('|'); const names=[...new S
     <label><div class="lbl">За что</div><input class="fio" id="df-note" placeholder="например: аванс за сентябрь, билет, зачёт из выплаты за сентябрь"></label>
     <button id="df-save" class="tile" style="background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Сохранить в базу</button>
   </div><div class="note">Зачёт — когда вычли из выплаты, возврат — когда человек вернул деньгами. Запись сразу уходит в лист «Долги» базы.</div>`; }
-function otherSheet(){ const T=DIRS.TTV,S=DIRS.SERIAL,G=DIRS.GRAPH; const gr=(x)=>{const a=x/1.05,b=a*0.94,of=b*0.04,c=b-of,sh=c*0.6,comp=sh*0.07;return {of,sh:sh+comp,ip:c-sh-comp};}; const g=gr(G.price*(1+VAT));
+function otherSheet(){ if(DEMO) return otherDemo(); const T=DIRS.TTV,S=DIRS.SERIAL,G=DIRS.GRAPH; const gr=(x)=>{const a=x/1.05,b=a*0.94,of=b*0.04,c=b-of,sh=c*0.6,comp=sh*0.07;return {of,sh:sh+comp,ip:c-sh-comp};}; const g=gr(G.price*(1+VAT));
   return `<div class="lt"><h1>Не по матчам</h1><p>считаются по единицам, сериям и приложениям</p></div><div class="stack">
   <div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">Трактор ТВ</div><span class="chip info">за единицу</span></div><div class="kv"><span>Клубу за единицу, с НДС</span><b>${fmt(T.price*(1+VAT))}</b></div><div class="kv"><span>План сезона, ${T.plan} ед.</span><b>${fmt(T.price*(1+VAT)*T.plan)}</b></div><div class="kv of"><span>В фонд «Офис» с единицы</span><b>406 ₽</b></div><div class="sub">людям: Архипов за единицу; Махиня и Михайлов — оклады, за август по 40 000, с сентября суммы ещё не определены. Абрамов в цену единицы не входит — разовые поездки оплачиваются отдельно. Единицы за месяц считает Мельников.</div></div>
   <div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">Сериал</div><span class="chip info">за серию</span></div><div class="kv"><span>Клубу за серию, с НДС</span><b>${fmt(S.price*(1+VAT))}</b></div><div class="kv"><span>Махиня, наличные</span><b>59 000 ₽</b></div><div class="kv"><span>Михайлов, наличные</span><b>48 400 ₽</b></div><div class="kv of"><span>В фонд «Офис»</span><b>6 600 ₽</b></div><div class="kv"><span>НДС и УСН</span><b>${fmt(S.price*VAT+S.price*USN)}</b></div><div class="kv me"><span>Мне, техника своя</span><b>${fmt(S.price-S.price*USN-114000)}</b></div><div class="sub">8 серий за сезон · допсоглашение с ценой 147 000 без НДС ещё не в проекте</div></div>
@@ -615,11 +676,189 @@ function docSheet(id){ const [sec,doc]=id.split('|'); const rows=docRows(sec,doc
 /* Фонд «Офис»: приход = отчисления с матчей + строки «Фонд «Офис»» из начислений (графика, профайлы, сериал, тренерская);
    расход = зарплаты и аренда из начислений за месяц, иначе плановые 147 000 (23.09.2026: раньше приход считался только с матчей, а расход был жёстко 147 000 — экран месяца показывал другое) */
 function officeOther(k){ return ACC.filter(a=>a.k===k&&a.who==='Фонд «Офис»').reduce((s,a)=>s+a.sum,0); }
-function officeCost(k){ const c=ACC.filter(a=>a.k===k&&a.dir==='OFFICE').reduce((s,a)=>s+a.sum,0); return c||147000; }
-function officeSheet(){ const inc=monthKeys.map(k=>{ const mt=sum(CAL.filter(g=>mkey(g.date)===k)).office, mp=sum(CAL.filter(g=>mkey(g.date)===k&&g.played)).office, ot=officeOther(k); return {k,v:mt+ot,p:mp+ot,ot,exp:officeCost(k)}; }); const exp=147000; let bal=0;
-  return `<div class="lt"><h1>Фонд «Офис»</h1><p>приход с матчей · расход ${fmtS(exp)} в месяц</p></div><div class="stack"><div class="g pad"><div class="kv"><span>Левина, чистыми</span><b>75 000</b></div><div class="kv"><span>Мошарова, чистыми</span><b>30 000</b></div><div class="kv"><span>Аренда, ХК «Трактор», пожертвование</span><b>≈ 42 000</b></div><div class="kv of"><span>Итого в месяц, круглый год</span><b>${fmt(exp)}</b></div><div class="sub">при оплате самозанятым +7 % сверху: 154 350. Остаток фонда переходит на лето.</div></div></div>
+function officeCost(k){ const c=ACC.filter(a=>a.k===k&&a.dir==='OFFICE').reduce((s,a)=>s+a.sum,0); return c||OFFICE_EXP; }
+function officeSheet(){ const on=officeNow(); const inc=monthKeys.map(k=>{ const mt=sum(CAL.filter(g=>mkey(g.date)===k)).office, mp=sum(CAL.filter(g=>mkey(g.date)===k&&g.played)).office, ot=officeOther(k); return {k,v:mt+ot,p:mp+ot,ot,exp:officeCost(k)}; }); const exp=OFFICE_EXP; let bal=0;
+  return `<div class="lt"><h1>Фонд «Офис»</h1><p>приход с матчей · расход ${fmtS(exp)} в месяц</p></div><div class="stack"><div class="g pad"><div class="kv"><span>Собрано в фонд ${startWord()}</span><b>${fmt(on.inc)}</b></div><div class="kv"><span>Расход фонда за это время</span><b>− ${fmt(on.exp)}</b></div><div class="kv of"><span>Остаток на сегодня</span><b>${signed(on.bal)} ₽</b></div><div class="sub">недостающее покрывается другими доходами владельца: офис заложен и в другом его бизнесе, данные объединим позже</div></div>${DEMO?'':`<div class="g pad"><div class="kv"><span>Левина, чистыми</span><b>75 000</b></div><div class="kv"><span>Мошарова, чистыми</span><b>30 000</b></div><div class="kv"><span>Аренда, ХК «Трактор», пожертвование</span><b>≈ 42 000</b></div><div class="kv of"><span>Итого в месяц, круглый год</span><b>${fmt(exp)}</b></div><div class="sub">при оплате самозанятым +7 % сверху: 154 350. Остаток фонда переходит на лето.</div></div>`}</div>
   <div class="sec">По месяцам<small>приход с матчей · баланс</small></div><div class="g list" style="margin-top:10px">${inc.map(x=>{ bal+=x.v-x.exp; return `<div class="row"><div class="t"><b>${mname(x.k)}</b><span>приход ${fmtS(x.v)}${x.ot?' (с матчей '+fmtS(x.v-x.ot)+' · не по матчам '+fmtS(x.ot)+')':' (сыграно '+fmtS(x.p)+')'} · расход ${fmtS(x.exp)}</span></div><div class="v" style="color:${bal<0?'var(--bad)':'var(--good)'}">${bal<0?'−':''}${fmtS(Math.abs(bal))}<small>накопительно</small></div></div>`; }).join('')}</div>
   <div class="note">Без графики, Трактор ТВ и сериала: они добавят в фонд ≈ 320 тыс. за сезон. Полная картина в Контракты/_Фонд_Офис.md.</div>`; }
+/* ===== 01.10.2026: акты и долг заказчиков, налоги, касса наличных, ведомость и закрытие месяца, новый вид. ===== */
+const cmpK=(a,b)=>{ const [ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number); return ay-by||am-bm; };
+const CURK=mkey(TODAY);
+const dm=d=>String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');
+/* срок, выпавший на выходной, переносится на ближайший рабочий день (п. 7 ст. 6.1 НК) */
+const workDay=(y,m,d)=>{ const x=new Date(y,m,d); const w=x.getDay(); if(w===6) x.setDate(x.getDate()+2); else if(w===0) x.setDate(x.getDate()+1); return x; };
+const ACT_DAY=+PARAMS['Акты клубу до числа']||9;
+const initials=n=>String(n).split(' ').map(s=>s[0]).slice(0,2).join('');
+const startWord=()=>{ const k=monthKeys[0]; return k?'с '+MONTHS_G[+k.split('-')[1]]:'с начала учёта'; };
+
+/* --- Акты и долг заказчиков. Лист «Акты»: счета и акты заказчикам; оплата проставляется в строке акта.
+   Начислено = сыгранные матчи по цене договора (или акт по матчам, если он больше) + акты не по матчам. --- */
+const ACTS=(DATA.acts||[]).map(a=>({date:a[0],num:a[1],kind:a[2],party:a[3],contract:a[4],dirs:String(a[5]||'').split(/[;,\s]+/).filter(Boolean),k:m2k(a[6])||m2k(a[0]),sum:a[7]||0,paidDate:a[8]||'',paid:a[9]||0,note:a[10]||''})).filter(a=>monthKeys.includes(a.k));
+const actIsMatch=a=>a.dirs.some(d=>MATCH_DIRS.has(d));
+function chainOf(ks){ ks=ks||monthKeys; let acc=0,billed=0,paid=0; const per=ks.map(k=>{ const m=sum(played.filter(g=>mkey(g.date)===k)).club; const acts=ACTS.filter(a=>a.k===k); const bm=acts.filter(actIsMatch).reduce((s,a)=>s+a.sum,0), bo=acts.filter(a=>!actIsMatch(a)).reduce((s,a)=>s+a.sum,0); const a=Math.max(m,bm)+bo, b=bm+bo, p=acts.reduce((s,x)=>s+x.paid,0); acc+=a; billed+=b; paid+=p; return {k,acc:a,billed:b,paid:p,unbilled:a-b,waiting:b-p}; }); return {acc,billed,paid,unbilled:acc-billed,waiting:billed-paid,debt:acc-paid,per}; }
+/* за какие месяцы нет актов по проектам «не по матчам» (Трактор ТВ, графика) — суммы ещё не сформированы */
+function actsMissing(){ const out=[]; monthKeys.filter(k=>cmpK(k,CURK)<0).forEach(k=>{ ['TTV','GRAPH'].forEach(d=>{ if(DIRS[d]&&!ACTS.some(a=>a.k===k&&a.dirs.includes(d))) out.push({k,d}); }); }); return out; }
+function segBar(ch){ const t=ch.acc||1; return `<div class="bar"><i style="width:${ch.paid/t*100}%;background:var(--club)"></i><i style="width:${ch.waiting/t*100}%;background:var(--crew)"></i><i style="width:${ch.unbilled/t*100}%;background:var(--faint)"></i></div>`; }
+function chainSheet(){ const ks=monthKeys.filter(k=>cmpK(k,CURK)<=0); const ch=chainOf(ks); const miss=actsMissing(); const pdK=mkey(new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1));
+  return `<div class="lt"><h1>Деньги заказчиков</h1><p>что начислено по работе, выставлено и оплачено · ${startWord()}</p></div><div class="stack">
+  <div class="g pad">${segBar(ch)}<div class="legend"><span><i style="background:var(--club)"></i>оплачено</span><span><i style="background:var(--crew)"></i>выставлено, ждём</span><span><i style="background:var(--faint)"></i>не выставлено</span></div>
+    <div class="kv" style="margin-top:8px"><span>Начислено по работе, с НДС</span><b>${fmt(ch.acc)}</b></div><div class="kv"><span>Выставлено счетами и актами</span><b>${fmt(ch.billed)}</b></div><div class="kv"><span>Оплачено</span><b>${fmt(ch.paid)}</b></div>
+    <div class="kv me"><span>Долг заказчиков</span><b>${fmt(ch.debt)}</b></div><div class="sub">не выставлено ${fmtS(ch.unbilled)} · выставлено и ждём оплату ${fmtS(ch.waiting)}</div></div>
+  ${miss.length?`<div class="g pad"><div class="lbl c">Суммы ещё не сформированы</div>${miss.map(x=>`<div class="kv"><span>${dirName(x.d)} · ${mname(x.k).toLowerCase()}</span><b style="color:var(--muted);font-weight:600">акта нет</b></div>`).join('')}<div class="sub">в «начислено» не входят, пока нет отчёта и акта</div></div>`:''}
+  </div>
+  <div class="sec">По месяцам<small>начислено · долг</small></div><div class="g list" style="margin-top:10px">${ch.per.slice().reverse().map(x=>`<button class="row" data-open="month:${x.k}"><div class="t"><b>${mname(x.k)}${x.k===CURK?' <span class="chip ak" style="margin-left:6px">идёт</span>':''}</b><span>${x.acc?`выставлено ${fmtS(x.billed)} · оплачено ${fmtS(x.paid)}`:'пока ничего не начислено'}${x.unbilled>1&&x.k===pdK?' · акты до '+String(ACT_DAY).padStart(2,'0')+'.'+String(TODAY.getMonth()+1).padStart(2,'0'):''}</span></div><div class="v">${fmtS(x.acc)}<small>${x.acc-x.paid>1?'долг '+fmtS(x.acc-x.paid):(x.acc?'оплачено':'')}</small></div>${chev}</button>`).join('')}</div>
+  <div class="sec">Счета и акты<small>${ACTS.length}</small></div><div class="g list" style="margin-top:10px">${ACTS.slice().sort((a,b)=>a.date<b.date?1:-1).map(a=>`<div class="row"><span class="stripe" style="background:${a.paid>=a.sum-1?'var(--club)':'var(--crew)'}"></span><div class="t"><b>№ ${esc(a.num)} от ${a.date.split('-').reverse().join('.')}</b><span>${esc(a.party)} · ${a.dirs.map(dirName).join(', ')}${a.note?' · '+esc(a.note):''}</span></div><div class="v">${fmtS(a.sum)}<small>${a.paid>=a.sum-1?'оплачен '+(a.paidDate?a.paidDate.split('-').reverse().slice(0,2).join('.'):''):(a.paid?'оплачено '+fmtS(a.paid):'ждём оплату')}</small></div></div>`).join('')||'<div class="row"><div class="t"><b class="hd">Актов пока нет</b></div></div>'}</div>
+  <div class="note">Порядок месяца: акты за месяц выставляем до ${ACT_DAY}-го числа следующего, клуб платит 10–15-го, людям платим по мере прихода. Акт попадает сюда из листа «Акты» базы, оплата отмечается по выписке.</div>`; }
+
+/* --- Ведомость выплат и закрытие месяца --- */
+function vedOf(k){ const z=q=>({cash:q.cash<1?0:q.cash,card:q.card<1?0:q.card,bank:q.bank<1?0:q.bank}); /* меньше рубля — округление банка */ const rows=allPeople().map((p,i)=>({p,i,t:personTotals(p.name,k),q:z(paySplit(p.name,k))})).filter(x=>x.t.total||x.t.paid); const T={total:0,paid:0,off:0,due:0,cash:0,card:0,bank:0}; rows.forEach(x=>{ T.total+=x.t.total; T.paid+=x.t.paid; T.off+=x.t.off; T.due+=Math.max(0,x.t.due); T.cash+=x.q.cash; T.card+=x.q.card; T.bank+=x.q.bank; }); return {rows,T}; }
+const CLOSED=window.__closedLocal&&window.__closedGen===DATA.generated?window.__closedLocal:(()=>{ const o={}; (DATA.closed||[]).forEach(c=>{ const k=m2k(c[0]); if(!k) return; (o[k]=o[k]||{rows:[],when:c[7]||'',by:c[6]||''}).rows.push({who:c[1],total:c[2]||0,paid:c[3]||0,off:c[4]||0,due:c[5]||0}); }); return o; })();
+window.__closedLocal=CLOSED; window.__closedGen=DATA.generated;
+function closeDiff(k){ const c=CLOSED[k]; if(!c) return []; const live=vedOf(k).rows; const out=[]; c.rows.forEach(r=>{ const l=live.find(x=>x.p.name===r.who); const lt=l?l.t.total:0; if(Math.abs(lt-r.total)>=1) out.push({who:r.who,was:r.total,now:lt}); }); live.forEach(x=>{ if(x.t.total&&!c.rows.some(r=>r.who===x.p.name)) out.push({who:x.p.name,was:0,now:x.t.total}); }); return out; }
+function pushClose(k,op){ const [y,m]=k.split('-').map(Number); const month=y+'-'+String(m+1).padStart(2,'0'); const rows=op==='open'?[]:vedOf(k).rows.map(x=>({who:x.p.name,total:x.t.total,paid:x.t.paid,off:x.t.off,due:x.t.due}));
+  const done=()=>{ if(op==='open') delete CLOSED[k]; else CLOSED[k]={rows,when:(()=>{ const n=new Date(); return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'); })(),by:ROLE}; return true; };
+  if(DEMO) return Promise.resolve(done()); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false);
+  return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'close',month,op:op||'close',rows})}).then(r=>r.json()).then(j=>j&&j.ok?done():false).catch(()=>false); }
+function vedText(k){ const v=vedOf(k); const L=['Ведомость выплат за '+mname(k).toLowerCase()]; const grp=(title,key)=>{ const rs=v.rows.filter(x=>x.q[key]>0).sort((a,b)=>b.q[key]-a.q[key]); if(!rs.length) return; L.push('',title+': '+fmtS(v.T[key])); rs.forEach(x=>L.push(x.p.name+' — '+fmtS(x.q[key]))); }; grp('Безналом','bank'); grp('Штатным на карту','card'); grp('Наличными','cash'); L.push('','Всего к выплате: '+fmtS(v.T.bank+v.T.card+v.T.cash)); return L.join('\n').replace(/ /g,' '); }
+function vedSheet(k){ const v=vedOf(k), w=payWin(k), c=CLOSED[k], diff=closeDiff(k); const prelim=ACC.filter(a=>a.k===k&&/предвар|предлож|ждёт|ждет/i.test(a.status||'')).length; const boss=ROLE==='admin'&&!PREVIEW;
+  const hint={bank:x=>x.p.st||'безнал',card:x=>'зарплата по реестру',cash:x=>'наличными'+(x.t.paid?' · уже выплачено '+fmtS(x.t.paid):'')};
+  const grp=(title,key)=>{ const rs=v.rows.filter(x=>x.q[key]>0).sort((a,b)=>b.q[key]-a.q[key]); return rs.length?`<div class="sec">${title}<small>${fmtS(v.T[key])}</small></div><div class="g list" style="margin-top:10px">${rs.map(x=>`<button class="row pr" data-open="pm:${x.i}:${k}"><div class="av" style="background:${pcolor(x.i)}">${initials(x.p.name)}</div><div class="t"><b>${x.p.name}</b><span>${hint[key](x)}</span></div><div class="v">${fmtS(x.q[key])}</div>${chev}</button>`).join('')}</div>`:''; };
+  const left=v.T.bank+v.T.card+v.T.cash;
+  return `<div class="lt"><h1>Ведомость</h1><p>${mname(k)} · ${left>0?(w.open?'идёт выплата':'к выплате '+w.text):'всё выплачено'}</p></div><div class="stack">
+  <div class="g pad"><div class="kv"><span>Начислено людям за месяц</span><b>${fmt(v.T.total)}</b></div><div class="kv"><span>Уже выплачено</span><b>− ${fmt(v.T.paid)}</b></div>${v.T.off?`<div class="kv"><span>Зачтено в долги</span><b>− ${fmt(v.T.off)}</b></div>`:''}<div class="kv me"><span>Осталось выплатить</span><b>${fmt(left)}</b></div>
+    <div class="bar"><i style="width:${left?v.T.bank/left*100:0}%;background:var(--crew)"></i><i style="width:${left?v.T.card/left*100:0}%;background:var(--club)"></i><i style="width:${left?v.T.cash/left*100:0}%;background:var(--me)"></i></div>
+    <div class="legend"><span><i style="background:var(--crew)"></i>безналом ${fmtS(v.T.bank)}</span><span><i style="background:var(--club)"></i>на карту ${fmtS(v.T.card)}</span><span><i style="background:var(--me)"></i>наличными ${fmtS(v.T.cash)}</span></div></div>
+  ${prelim?`<div class="g pad" style="display:flex;gap:12px;align-items:center"><span class="stripe" style="background:var(--warn)"></span><div style="flex:1"><b style="display:block;font-weight:800">Есть неутверждённые начисления: ${prelim}</b><span style="font-size:12.5px;color:var(--muted)">суммы за месяц могут измениться</span></div></div>`:''}
+  ${left>0?`<button class="g tile" data-copy="${esc(vedText(k))}" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--crew)"></span><div style="flex:1"><b style="display:block;font-weight:800">Скопировать ведомость</b><span style="font-size:12.5px;color:var(--muted)">текстом: кому сколько и каким способом</span></div></button>`:''}
+  </div>${grp('Безналом','bank')}${grp('Штатным на карту','card')}${grp('Наличными','cash')}
+  <div class="sec">Закрытие месяца</div>
+  ${c?`<div class="g pad" style="margin-top:10px"><div class="tile-h"><div style="font-weight:800">Месяц закрыт</div><span class="chip good">${c.when?c.when.slice(8,10)+'.'+c.when.slice(5,7)+' '+c.when.slice(11,16):'закрыт'}</span></div>
+    ${diff.length?`<div class="sub" style="color:var(--warn)">После закрытия расчёт изменился:</div>${diff.map(d=>`<div class="kv"><span>${d.who}</span><b>${fmtS(d.was)} → ${fmtS(d.now)}</b></div>`).join('')}`:'<div class="sub">Расчёт совпадает с закрытием: начисления людям не менялись.</div>'}
+    ${boss?`<button class="tile" data-close-open="${k}" style="margin-top:12px;padding:11px;border-radius:14px;background:var(--soft);font-weight:800;text-align:center">${diff.length?'Закрыть заново с новыми цифрами':'Снять закрытие'}</button>`:''}</div>`
+   :`<div class="g pad" style="margin-top:10px"><div class="sub" style="margin-top:0">Закрытие запоминает начисления людям за месяц. Если потом поменяется ставка или табель, приложение покажет, что и на сколько изменилось.</div>
+    ${boss?(w.running?'<div class="sub">Месяц ещё идёт — закрыть можно после его окончания.</div>':`<button class="tile" data-close="${k}" style="margin-top:12px;padding:12px;border-radius:14px;background:var(--accent);color:#fff;font-weight:800;text-align:center">Закрыть ${mname(k).toLowerCase()}</button>`):''}</div>`}
+  <div class="note">Безналом — самозанятым и ИП; штатным на карту — зарплата по реестру; наличными — остальное штатным и трансляции. Людям платим по мере прихода денег от клуба.</div>`; }
+on(document,'click',e=>{ const b=e.target.closest('[data-close],[data-close-open]'); if(!b) return; const k=b.dataset.close||b.dataset.closeOpen; const reopen=!!b.dataset.closeOpen; const again=reopen&&closeDiff(k).length>0;
+  if(!confirm(reopen?(again?'Закрыть '+mname(k)+' заново с текущими цифрами?':'Снять закрытие за '+mname(k)+'?'):'Закрыть '+mname(k)+'? Начисления людям за месяц будут запомнены.')) return;
+  b.textContent='Записываю…'; pushClose(k,reopen&&!again?'open':'close').then(ok=>{ if(!ok){ alert('Не удалось записать в базу. Проверьте связь и повторите.'); } else toast(reopen&&!again?'Закрытие снято':'Месяц закрыт'); window.__rerender&&window.__rerender(); }); });
+
+/* --- Касса наличных: снято со счёта себе − возвращено на счёт − выдано людям наличными = осталось у владельца (личные расходы, Мельников 01.10.2026) --- */
+const dk=p=>m2k(p.date);
+const isCashOut=p=>p.kind==='out'&&!!p.who&&/^наличн/i.test(p.note||'');
+function cashOf(k){ const f=p=>(!k||dk(p)===k)&&monthKeys.includes(dk(p)); const s=l=>l.reduce((x,p)=>x+p.sum,0); const taken=s(PAY.filter(p=>p.kind==='cash'&&f(p))), back=s(PAY.filter(p=>p.top&&f(p))), given=s(PAY.filter(p=>isCashOut(p)&&f(p))), own=s(PAY.filter(p=>p.kind==='out'&&p.dir==='ЛИЧНОЕ'&&f(p))); return {taken,back,net:taken-back,given,left:taken-back-given,own}; }
+function cashSheet(){ const T=cashOf(); const ks=monthKeys.filter(k=>{ const c=cashOf(k); return c.taken||c.back||c.given||c.own; }); const outs=PAY.filter(p=>isCashOut(p)&&monthKeys.includes(dk(p))).sort((a,b)=>a.date<b.date?1:-1);
+  const pd=mkey(new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1)); const need=monthKeys.includes(pd)?vedOf(pd).T.cash:0;
+  return `<div class="lt"><h1>Касса наличных</h1><p>сколько снято, сколько выдано людям и что осталось · ${startWord()}</p></div><div class="stack">
+  <div class="g pad"><div class="kv"><span>Снято со счёта себе</span><b>${fmt(T.taken)}</b></div><div class="kv"><span>Возвращено на счёт своей картой</span><b>− ${fmt(T.back)}</b></div><div class="kv"><span>Выдано людям наличными</span><b>− ${fmt(T.given)}</b></div><div class="kv me"><span>Осталось у меня</span><b>${fmt(T.left)}</b></div><div class="sub">остаток считается личными расходами${T.own?' · ещё личное прямо со счёта: '+fmtS(T.own):''}</div></div>
+  ${need>0?`<button class="g tile" data-open="ved:${pd}" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--me)"></span><div style="flex:1"><b style="display:block;font-weight:800">Нужно наличных на выплаты: ${fmtS(need)}</b><span style="font-size:12.5px;color:var(--muted)">за ${mname(pd).toLowerCase()} · открыть ведомость</span></div>${chev}</button>`:''}
+  </div>
+  <div class="sec">По месяцам<small>снято · выдано · осталось</small></div><div class="g list" style="margin-top:10px">${ks.slice().reverse().map(k=>{ const c=cashOf(k); return `<div class="row"><div class="t"><b>${mname(k)}</b><span>снято ${fmtS(c.taken)}${c.back?' · возвращено '+fmtS(c.back):''} · людям ${fmtS(c.given)}${c.own?' · личное со счёта '+fmtS(c.own):''}</span></div><div class="v">${c.left<0?'−':''}${fmtS(Math.abs(c.left))}<small>${c.left<0?'выдал больше, чем снял':'осталось'}</small></div></div>`; }).join('')||'<div class="row"><div class="t"><b class="hd">Движений наличных нет</b></div></div>'}</div>
+  <div class="sec">Выдано людям наличными<small>${fmtS(T.given)}</small></div><div class="g list" style="margin-top:10px">${outs.map(p=>`<div class="row"><div class="t"><b>${p.who}</b><span>${p.date.split('-').reverse().join('.')} · за ${p.k?mname(p.k).toLowerCase():''} · ${dirName(p.dir)}</span></div><div class="v">${fmtS(p.sum)}</div></div>`).join('')||'<div class="row"><div class="t"><b class="hd">Пока не выдавалось</b></div></div>'}</div>
+  <div class="note">Месяц здесь — по дню операции. «Снято» — переводы себе и банкомат, «возвращено» — пополнения счёта своей картой. Выдача людям записывается в базу в день выдачи с пометкой «наличные».</div>`; }
+
+/* --- Налоги ИП: УСН «доходы» 6 % + НДС 5 %, есть работники. Справка: Регламенты/Налоги_ИП_УСН_НДС5.md (01.10.2026).
+   НДС 5/105 с актов (отгрузка) и авансов, квартал, тремя долями до 28-го числа трёх следующих месяцев; декларация до 25-го.
+   УСН 6 % с поступивших денег без НДС; аванс до 28-го числа после квартала, за год — до 28 апреля.
+   Взнос 1 % с дохода (без НДС) свыше 300 000 платится и при НДС; срок — 1 июля следующего года. Фиксированный взнос — до 28 декабря.
+   УСН уменьшается на взносы за себя и за работников, но не больше чем наполовину (п. 3.1 ст. 346.21 НК). --- */
+const FIX_YEAR=+PARAMS['Взнос ИП фиксированный за год']||57390, ONE_CAP=+PARAMS['Взнос 1 %: предел за год']||321818;
+const payTxt=p=>(p.purpose||'')+' '+(p.note||'');
+const isNdfl=p=>/НДФЛ/i.test(p.purpose||'');
+const isContrib=p=>p.kind==='out'&&!p.who&&!isNdfl(p)&&/взнос|ОПС|страхов/i.test(payTxt(p));
+const isFix=p=>isContrib(p)&&/фиксир/i.test(payTxt(p));
+const isVatPay=p=>p.kind==='out'&&!p.who&&/плат[её]ж\s*\(\s*НДС|НДС за \d|НДС \d\s*кв/i.test(payTxt(p));
+const isUsnPay=p=>p.kind==='out'&&!p.who&&!isContrib(p)&&/УСН|упрощ/i.test(payTxt(p));
+const TAXM=(()=>{ const o={}; let yr=null,Dc=0,Cc=0,offPrev=0,oneC=0; monthKeys.forEach(k=>{ const y=+k.split('-')[0]; if(y!==yr){ yr=y; Dc=0; Cc=0; offPrev=0; oneC=0; }
+  const inc=PAY.filter(p=>p.inc&&p.dir!=='PROF'&&dk(p)===k).reduce((s,p)=>s+p.sum,0); const D=inc/(1+VAT); const usn=D*USN; const one=Math.max(0,Math.min(D*0.01,ONE_CAP-oneC)); oneC+=one;
+  const contrib=PAY.filter(p=>isContrib(p)&&dk(p)===k).reduce((s,p)=>s+p.sum,0); const ndfl=PAY.filter(p=>p.kind==='out'&&!p.who&&isNdfl(p)&&dk(p)===k).reduce((s,p)=>s+p.sum,0); Dc+=D; Cc+=contrib+one; const offC=Math.min(Cc,Dc*USN/2); const off=offC-offPrev; offPrev=offC;
+  o[k]={inc,D,usn,one,contrib,ndfl,off}; }); return o; })();
+function taxQuarters(){ const qs={}; monthKeys.forEach(k=>{ const [y,m]=k.split('-').map(Number); const q=Math.floor(m/3); const id=y+'-'+q; (qs[id]=qs[id]||{id,y,q,ks:[]}).ks.push(k); });
+  return Object.values(qs).map(Q=>{ const ch=chainOf(Q.ks); const vat=ch.acc*VAT/(1+VAT); const endM=Q.q*3+2; const S=f=>Q.ks.reduce((s,k)=>s+TAXM[k][f],0);
+    return Object.assign(Q,{name:(Q.q+1)+' квартал '+Q.y,vat,parts:[1,2,3].map(i=>({d:workDay(Q.y,endM+i,28),sum:vat/3})),decl:workDay(Q.y,endM+1,25),usn:S('usn'),off:S('off'),one:S('one'),contrib:S('contrib'),inc:S('inc'),
+      usnDue:Q.q<3?workDay(Q.y,endM+1,28):workDay(Q.y+1,3,28),usnName:Q.q<3?'Аванс УСН за '+['1 квартал','полугодие','9 месяцев'][Q.q]+' '+Q.y:'УСН за '+Q.y+' год',over:new Date(Q.y,endM+1,1)<=TODAY,partial:Q.ks.length<3&&Q.ks[0]===monthKeys[0]}); }); }
+function deadlines(){ const ev=[]; const add=(d,title,sum,open,sub,tax)=>ev.push({d,title,sum:sum||0,open,sub:sub||'',tax:!!tax});
+  const pd=new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1), pk=mkey(pd), y=TODAY.getFullYear(), m=TODAY.getMonth();
+  if(monthKeys.includes(pk)){ const ch=chainOf([pk]); const v=vedOf(pk).T; const mn=MONTHS_F[pd.getMonth()].toLowerCase(); const left=v.bank+v.card+v.cash;
+    if(ch.unbilled>1) add(new Date(y,m,ACT_DAY),'Акты за '+mn,ch.unbilled,'chain','выставить до '+ACT_DAY+'-го числа');
+    if(ch.acc-ch.paid>1) add(new Date(y,m,15),'Ждём оплату за '+mn,ch.acc-ch.paid,'chain','клуб платит 10–15-го');
+    if(left>1) add(new Date(y,m,15),'Выплаты людям',left,'ved:'+pk,'за '+mn+' · по мере прихода денег'); }
+  taxQuarters().forEach(Q=>{ if(Q.vat>1){ add(Q.decl,'Декларация по НДС',0,'tax','за '+Q.name+' · подаёт бухгалтер',true); Q.parts.forEach((p,i)=>add(p.d,'НДС, доля '+(i+1)+' из 3',p.sum,'tax','за '+Q.name+(Q.over?'':' · квартал идёт, сумма растёт'),true)); }
+    if(Q.usn>1) add(Q.usnDue,Q.usnName,Math.max(0,Q.usn-Q.off),'tax',(Q.over?'':'квартал ещё идёт · ')+'с поступлений '+Q.name.replace(/ \d{4}$/,'а'),true); });
+  [...new Set(monthKeys.map(k=>+k.split('-')[0]))].forEach((yy,i)=>{ const ks=monthKeys.filter(k=>+k.split('-')[0]===yy); const one=ks.reduce((s,k)=>s+TAXM[k].one,0); if(i===0){ const paid=PAY.filter(p=>isFix(p)&&+String(p.date).slice(0,4)===yy).reduce((s,p)=>s+p.sum,0); if(FIX_YEAR-paid>1) add(workDay(yy,11,28),'Фиксированные взносы ИП за '+yy,FIX_YEAR-paid,'tax','уплачено '+fmtS(paid)+' из '+fmtS(FIX_YEAR),true); }
+    if(one>1) add(workDay(yy+1,6,1),'Взнос 1 % с дохода за '+yy,one,'tax','с поступлений без НДС',true); });
+  return ev.sort((a,b)=>a.d-b.d); }
+const dlRow=e=>`<button class="row" ${e.open?`data-open="${e.open}"`:''}><div class="dateb"><b>${String(e.d.getDate()).padStart(2,'0')}</b><span>${MONTHS[e.d.getMonth()]}</span></div><div class="t"><b style="white-space:normal">${e.title}</b>${e.sub?`<span>${e.sub}</span>`:''}</div><div class="v">${e.sum?fmtS(e.sum):''}</div>${e.open?chev:''}</button>`;
+function taxSheet(){ const all=deadlines().filter(e=>e.tax); const up=all.filter(e=>e.d>=TODAY); const yEnd=new Date(TODAY.getFullYear(),11,31); const res=up.filter(e=>e.d<=yEnd).reduce((s,e)=>s+e.sum,0);
+  const ks=monthKeys.filter(k=>cmpK(k,CURK)<=0); const S=f=>ks.reduce((s,k)=>s+TAXM[k][f],0); const ch=chainOf(ks); const usn=S('usn'), off=S('off'), one=S('one'), contrib=S('contrib'), inc=S('inc'), ndfl=S('ndfl');
+  const vatPaid=PAY.filter(isVatPay).reduce((s,p)=>s+p.sum,0), usnPaid=PAY.filter(isUsnPay).reduce((s,p)=>s+p.sum,0);
+  return `<div class="lt"><h1>Налоги и взносы</h1><p>УСН 6 % и НДС 5 % · расчёт по закону, сверять с бухгалтером</p></div><div class="stack">
+  <div class="card"><div class="lbl">Отложить на налоги до конца ${TODAY.getFullYear()} года</div><span class="mono">${fmtS(res)} ₽</span><div class="foot"><span>ближайший платёж <b>${up.find(e=>e.sum>0)?dm(up.find(e=>e.sum>0).d):'—'}</b></span><span>${up.filter(e=>e.d<=yEnd&&e.sum>0).length} платежей</span></div></div>
+  <div class="g pad"><div class="lbl c">Как считается · ${startWord()}</div>
+    <div class="kv"><span>НДС 5 % в начисленном заказчикам</span><b>${fmt(ch.acc*VAT/(1+VAT))}</b></div>
+    <div class="kv"><span>Поступило на счёт от заказчиков</span><b>${fmt(inc)}</b></div>
+    <div class="kv"><span>УСН 6 % с поступлений без НДС</span><b>${fmt(usn)}</b></div>
+    <div class="kv"><span>Взносы за штат и за себя уплачено</span><b>${fmt(contrib)}</b></div>
+    <div class="kv"><span>Взнос 1 % с дохода, начислен</span><b>${fmt(one)}</b></div>
+    <div class="kv"><span>УСН уменьшается на взносы</span><b>− ${fmt(off)}</b></div>
+    <div class="kv me"><span>УСН к уплате</span><b>${fmt(usn-off)}</b></div>
+    <div class="sub">НДФЛ за штат уплачен: ${fmtS(ndfl)}. Он УСН не уменьшает.${vatPaid||usnPaid?' Уплачено по выписке: НДС '+fmtS(vatPaid)+', УСН '+fmtS(usnPaid)+'.':' Платежей НДС и УСН в выписке за этот период нет.'}</div></div>
+  </div>
+  <div class="sec">Календарь платежей<small>${up.length}</small></div><div class="g list" style="margin-top:10px">${up.map(dlRow).join('')||'<div class="row"><div class="t"><b class="hd">Ближайших сроков нет</b></div></div>'}</div>
+  <div class="sec">Правила</div><div class="g pad" style="margin-top:10px;font-size:13.5px;line-height:1.5">
+    <p style="margin:0 0 8px"><b>Взнос 1 % платится и при НДС.</b> Считается с дохода без НДС свыше 300 000 за год, предел ${fmtS(ONE_CAP)}. Срок за ${TODAY.getFullYear()} год — 1 июля ${TODAY.getFullYear()+1}.</p>
+    <p style="margin:0 0 8px"><b>Взносы уменьшают УСН.</b> И за себя, и за работников, но не больше половины налога. Поэтому на деле УСН и взносы вместе стоят около 6 % дохода, а не 6 % плюс взносы.</p>
+    <p style="margin:0 0 8px"><b>НДС 5 %</b> считается по актам и авансам, платится за квартал тремя равными долями до 28-го числа. Входной НДС к вычету не берётся.</p>
+    <p style="margin:0"><b>УСН</b> считается с денег, которые пришли на счёт, без НДС. Аванс до 28-го числа после квартала, за год до 28 апреля.</p></div>
+  <div class="note">В учёте только месяцы ${startWord()}: первое полугодие и июль считает бухгалтер. Срок, выпавший на выходной, перенесён на ближайший рабочий день.</div>`; }
+
+/* --- Фонд «Офис»: честный остаток на сегодня (по закрытым месяцам) --- */
+function officeNow(){ let inc=0,exp=0; monthKeys.filter(k=>cmpK(k,CURK)<0).forEach(k=>{ inc+=sum(played.filter(g=>mkey(g.date)===k)).office+officeOther(k); exp+=officeCost(k); }); return {inc,exp,bal:inc-exp}; }
+const signed=n=>(n<0?'−':'')+fmtS(Math.abs(n));
+
+/* --- Новая главная (вид 1 и 2) --- */
+function homeNew(){
+  const ksPast=monthKeys.filter(k=>cmpK(k,CURK)<=0); const earned=ksPast.reduce((s,k)=>s+meMonth(k).earned,0), net=ksPast.reduce((s,k)=>s+meMonth(k).net,0);
+  const bars=monthKeys.map(k=>{ const fact=cmpK(k,CURK)<0; const plan=sum(CAL.filter(g=>mkey(g.date)===k)).me; const v=fact?meMonth(k).net:Math.max(plan,k===CURK?meMonth(k).net:0); return {k,v:Math.max(0,v),fact,cur:k===CURK}; }); const mx=Math.max(1,...bars.map(b=>b.v));
+  const ch=chainOf(ksPast); const pd=new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1), pk=mkey(pd); const hasPk=monthKeys.includes(pk); const v=hasPk?vedOf(pk).T:null; const w=hasPk?payWin(pk):null; const left=v?v.bank+v.card+v.cash:0;
+  const m=sum(CAL.filter(g=>mkey(g.date)===CURK)), mp=sum(played.filter(g=>mkey(g.date)===CURK)); const next=CAL.find(g=>!g.played);
+  const dls=deadlines().filter(e=>e.d>=TODAY); const dl=dls.slice(0,4); const on=officeNow(); const cs=cashOf(); const yEnd=new Date(TODAY.getFullYear(),11,31); const taxRes=dls.filter(e=>e.tax&&e.d<=yEnd).reduce((s,e)=>s+e.sum,0);
+  const nTodo=todo().length; const tile=(open,lbl,val,sub,col)=>`<button class="g tile" data-open="${open}"><div class="lbl"${col?` style="color:${col}"`:''}>${lbl}</div><div class="num big" style="font-size:21px">${val}</div><div class="sub">${sub}</div></button>`;
+  return `${DEMO?'<div class="demo">Показ на вымышленных данных · ничего не сохраняется</div>':''}
+  <div class="top"><div><div class="eyebrow">${OWNER_LBL}</div><h1>${APPNAME}</h1></div>${DEMO?'':'<button id="refresh" class="rbtn" aria-label="Обновить"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 6.3"/><path d="M20 5v6h-6"/></svg></button>'}</div>
+  <div class="proto pst"><span>${DATA.generated?'данные от '+genRu():'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span></div>
+  <div class="stack">
+    <button class="hero" data-open="me"><div class="lbl">Мне ${startWord()} · после людей, налогов и расходов</div><div class="hn">${fmtS(net)} <small>₽</small></div>
+      <div class="hb">${bars.map(b=>`<div><i class="${b.cur?'cu':b.fact?'':'pl'}" style="height:${Math.max(3,Math.round(b.v/mx*46))}px"></i><span>${MONTHS[+b.k.split('-')[1]]}</span></div>`).join('')}</div>
+      <div class="hf"><span>начислено <b>${fmtS(earned)}</b> · серые столбцы: план по матчам</span></div></button>
+    <button class="g pad tile" data-open="chain"><div class="tile-h"><div class="lbl c">Деньги заказчиков · ${startWord()}</div>${ch.debt>1?`<span class="chip warn">долг ${fmtS(ch.debt)}</span>`:'<span class="chip good">всё оплачено</span>'}</div>
+      ${segBar(ch)}<div class="kv" style="margin-top:8px"><span>Начислено по работе</span><b>${fmt(ch.acc)}</b></div><div class="kv"><span>Выставлено актами</span><b>${fmt(ch.billed)}</b></div><div class="kv"><span>Оплачено</span><b>${fmt(ch.paid)}</b></div></button>
+    ${hasPk&&v.total?`<button class="g pad tile" data-open="ved:${pk}"><div class="tile-h"><div class="lbl c">Людям за ${MONTHS_F[pd.getMonth()].toLowerCase()}</div><span class="chip ${left>0?'ak':'good'}">${left>0?(w.open?'идёт выплата':w.text):'выплачено'}</span></div>
+      <div class="num big">${fmtS(left)} ₽</div><div class="sub">осталось выплатить из ${fmtS(v.total)}${CLOSED[pk]?' · месяц закрыт':''}</div>
+      ${left>0?`<div class="legend"><span><i style="background:var(--crew)"></i>безналом ${fmtS(v.bank)}</span><span><i style="background:var(--club)"></i>на карту ${fmtS(v.card)}</span><span><i style="background:var(--me)"></i>наличными ${fmtS(v.cash)}</span></div>`:''}</button>`:''}
+    ${nTodo?`<button class="g tile" data-open="tabel" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--warn)"></span><div style="flex:1"><b style="display:block;font-weight:800">Табель ждёт подтверждения</b><span style="font-size:12.5px;color:var(--muted)">${plu(nTodo,'матч')} сыграно без подтверждённого состава</span></div>${chev}</button>`:''}
+  </div>
+  <div class="sec">Ближайшее</div><div class="g list" style="margin-top:10px">
+    ${next?`<button class="row now" data-open="game:${next.iso}:${next.league}"><div class="dateb ${LG[next.league]||''}"><b>${String(next.date.getDate()).padStart(2,'0')}</b><span>${MONTHS[next.date.getMonth()]}</span></div><div class="t"><b style="white-space:normal">${next.team} — ${next.opp}</b><span>следующий матч · ${next.league} · ${next.home?'дома':'выезд'}</span></div>${chev}</button>`:''}
+    ${dl.map(dlRow).join('')}</div>
+  <div class="sec">${mname(CURK)}<small>${mp.n} из ${m.n} матчей</small></div>
+  <button class="g pad tile" data-open="month:${CURK}" style="margin-top:10px"><div class="num big" style="margin-top:0">${fmtS(m.club)} ₽</div><div class="sub">к выставлению клубу за месяц по матчам, с НДС</div>
+    <div class="bar"><i style="width:${m.pay/(m.club||1)*100}%;background:var(--crew)"></i><i style="width:${(m.vat+m.usn)/(m.club||1)*100}%;background:var(--tax)"></i><i style="width:${m.me/(m.club||1)*100}%;background:var(--me)"></i></div>
+    <div class="legend"><span><i style="background:var(--crew)"></i>людям ${fmtS(m.pay)}</span><span><i style="background:var(--tax)"></i>налоги ${fmtS(m.vat+m.usn)}</span><span><i style="background:var(--me)"></i>мне ${fmtS(m.me)}</span></div></button>
+  <div class="sec">Разделы</div><div class="grid2" style="margin-top:10px">
+    ${tile('tax','Налоги',fmtS(taxRes)+' ₽','отложить до конца года')}
+    ${ROLE==='admin'?tile('cash','Касса наличных',fmtS(cs.left)+' ₽','осталось у меня из снятого'):''}
+    ${tile('office','Фонд «Офис»',signed(on.bal)+' ₽','остаток на сегодня')}
+    ${tile('debts','Долги и авансы',fmtS(debtTotal())+' ₽',plu(debtPeople().filter(x=>x.bal>0).length,'человек')||'пусто')}
+    ${(ROLE==='admin'||ROLE==='office')?tile('ttv:','Трактор ТВ',(()=>{ const l=TTV.filter(x=>ttvK(x)===CURK); return l.reduce((s,x)=>s+(x.units||0),0)+' ед.'; })(),'отчёт по дням'+(TTV.filter(x=>x.units==null).length?' · ждут оценки: '+TTV.filter(x=>x.units==null).length:'')):''}
+    ${tile('other','Не по матчам',fmtS(['TTV','SERIAL','GRAPH'].reduce((s,c)=>s+(DIRS[c]?DIRS[c].price*(1+VAT)*DIRS[c].plan:0),0))+' ₽','план сезона')}
+    ${DEMO?'':tile('docs','Документы',([...new Set(docsAll().map(d=>d.doc))].length||'—'),'реквизиты, ИП, люди')}
+  </div>
+  ${vidSwitch()}`;
+}
+function vidSwitch(){ return `<div class="vsw"><span>Вид</span>${[['1','Светлый'],['2','Тёмный'],['0','Прежний']].map(x=>`<button class="chip ${VID===x[0]?'ak':'info'}" data-vid="${x[0]}">${x[1]}</button>`).join('')}</div>`; }
+function otherDemo(){ return `<div class="lt"><h1>Не по матчам</h1><p>считаются по единицам, сериям и приложениям</p></div><div class="stack">${['TTV','SERIAL','GRAPH'].filter(c=>DIRS[c]).map(c=>{ const d=DIRS[c]; return `<div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">${d.name}</div><span class="chip info">${d.unit}</span></div><div class="kv"><span>Заказчику за единицу, с НДС</span><b>${fmt(d.price*(1+VAT))}</b></div><div class="kv"><span>План сезона: ${d.plan}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div></div>`; }).join('')}</div>`; }
+on(document,'click',e=>{ const b=e.target.closest('[data-vid]'); if(!b) return; VID=b.dataset.vid; try{ LS.setItem('tr.vid',VID); }catch(err){} applyVid(); window.__rerender&&window.__rerender(); });
+
 /* --- навигация --- */
 const VIEWS = ROLE==='producer' ? {home:()=>todoSheet().replace('<div class="lt"><h1>Табель</h1>','<div class="lt"><h1>Табель матчей</h1>'), cal:calView} : PERSON ? {home:personHome,cal:calView,tabel:todoSheet,money:()=>myIdx()<0?'<div class="lt"><h1>Вас нет в списке людей</h1><p>сообщите Мельникову</p></div>':personSheet(myIdx())} : {home,cal:calView,contracts,people,money};
 /* Панель вкладок и контейнеры возвращаются в исходный вид при каждом запуске: код перезапускается при обновлении данных, а роль и права могли измениться */
@@ -629,11 +868,11 @@ if(PERSON&&ttvRate(WHO)) VIEWS.report=ttvView;
 if(PERSON){ const pv=$('#v-people'); if(pv) pv.id='v-tabel'; const cv=$('#v-contracts'); if(cv&&VIEWS.report) cv.id='v-report'; if(!TAB_ANY) delete VIEWS.tabel; document.querySelectorAll('.tab').forEach(b=>{ const t=b.dataset.tab; /* вкладки переименовываются один раз, а код перезапускается при каждом обновлении данных — учитываем оба имени */ if((t==='contracts'||t==='report')&&VIEWS.report){ b.dataset.tab='report'; b.querySelector('span').textContent='Отчёт'; } else if(t==='people'||t==='tabel'){ if(TAB_ANY){ b.dataset.tab='tabel'; b.querySelector('span').textContent='Табель'; } else { b.remove(); delete VIEWS.tabel; const pv2=$('#v-tabel'); if(pv2) pv2.hidden=true; } } else if(t==='home') b.querySelector('span').textContent='Месяц'; else if(t==='money') b.querySelector('span').textContent='Деньги'; else if(!(t in VIEWS)) b.remove(); }); }
 function myIdx(){ return allPeople().findIndex(p=>p.name===WHO); } /* −1, если человека нет в списке */
 function previewBar(){ return PREVIEW?`<div class="g pad" style="display:flex;gap:10px;align-items:center;margin-bottom:10px;border-left:5px solid var(--accent)"><div style="flex:1;font-size:13px"><b>Предпросмотр.</b> Так приложение видит ${WHO}. Данные только по этому человеку.</div><button data-preview="" class="chip info" style="border:0;cursor:pointer">выйти</button></div>`:''; }
-let myMonth=(()=>{ try{ return localStorage.getItem('tr.myMonth')||''; }catch(e){ return ''; } })();
+let myMonth=(()=>{ try{ return LS.getItem('tr.myMonth')||''; }catch(e){ return ''; } })();
 function personHome(){ const i=myIdx(); const cur=mkey(TODAY); const next=CAL.find(g=>!g.played); const wait=todo().filter(g=>g.dirs.some(d=>tabHas(d,g))).length;
   const avail=monthKeys.filter(k=>{ const [y,m]=k.split('-').map(Number); if(new Date(y,m,1)>TODAY) return false; const t=personTotals(WHO,k); return t.total||t.paid||CAL.some(g=>mkey(g.date)===k&&myRate(g)); }); if(!avail.includes(cur)) avail.push(cur); if(!avail.includes(myMonth)) myMonth=cur; const k=myMonth;
   const body=personMonthSheet(i,k).replace(/^<div class="lt">[\s\S]*?<\/div>\s*/,'');
-  return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu()+' · ':''}сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:#fff;color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
+  return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu()+' · ':''}сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:var(--card);color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
   ${previewBar()}<div class="lt"><h1>${WHO}</h1><p>${k===cur&&payWin(k).running?'месяц идёт · выплата '+payWin(k).text:payWin(k).open?'выплата с '+payWin(k).text:'выплата '+payWin(k).text}</p></div>
   <div style="display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch">${avail.map(m=>`<button class="chip ${m===k?'ak':'info'}" data-mymonth="${m}" style="border:0;cursor:pointer;white-space:nowrap">${mname(m)}</button>`).join('')}</div>
   <div class="stack"><div class="grid2">
@@ -646,22 +885,22 @@ function personGameSheet(g){ const mine=[]; g.dirs.forEach(dir=>crew(dir,g).forE
   return `<div class="lt"><h1>${g.team} — ${g.opp}</h1><p>${dmy(g.date)} · ${g.league} · ${g.home?'дома':'выезд'} · ${g.played?'сыгран':'впереди'}</p></div>
   <div class="stack"><div class="card"><div class="lbl">${g.played?'Начислено за матч':'Ставка за матч'}</div><span class="mono">${fmtS(s)} ₽</span><div class="foot"><span>${mine.map(x=>DIRS[x.dir].name+' · '+x.r.pos).join(' · ')||'моих позиций в этом матче нет'}</span></div></div>
   ${g.dirs.filter(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d))).map(d=>{ const f=tabelFilled(d,g); return `<button class="g tile" data-open="tm:${g.iso}:${g.league}" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:${f.confirmed?'var(--good)':'var(--warn)'}"></span><div style="flex:1"><b style="display:block;font-weight:800">Табель · ${DIRS[d].name}</b><span style="font-size:12.5px;color:var(--muted)">${f.confirmed?'состав подтверждён':(f.need?f.done+' из '+f.need+' фамилий вписано':'открыть')}</span></div>${chev}</button>`; }).join('')}</div>`; }
-on(document,'click',e=>{ const b=e.target.closest('[data-preview]'); if(!b) return; try{ if(b.dataset.preview) localStorage.setItem('tr.as',b.dataset.preview); else localStorage.removeItem('tr.as'); }catch(err){} const u=new URL(location.href); u.searchParams.delete('as'); location.replace(u.toString()); });
-function show(tab){ if(!(tab in VIEWS)) tab='home'; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab)); Object.keys(VIEWS).forEach(k=>{const v=$('#v-'+k); v.hidden=k!==tab; if(k===tab){ try{ v.innerHTML=VIEWS[k](); }catch(err){ v.innerHTML='<div class="lt"><h1>Экран не открылся</h1><p>'+err.message+'</p></div><div class="note">Нажмите «Обновить» на главной или сообщите об ошибке.</div>'; } v.classList.remove('in'); void v.offsetWidth; v.classList.add('in'); v.scrollTop=0;}}); try{localStorage.setItem('tr.tab',tab);}catch(e){} }
+on(document,'click',e=>{ const b=e.target.closest('[data-preview]'); if(!b) return; try{ if(b.dataset.preview) LS.setItem('tr.as',b.dataset.preview); else LS.removeItem('tr.as'); }catch(err){} const u=new URL(location.href); u.searchParams.delete('as'); location.replace(u.toString()); });
+function show(tab){ if(!(tab in VIEWS)) tab='home'; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab)); Object.keys(VIEWS).forEach(k=>{const v=$('#v-'+k); v.hidden=k!==tab; if(k===tab){ try{ v.innerHTML=scrub(VIEWS[k]()); }catch(err){ v.innerHTML='<div class="lt"><h1>Экран не открылся</h1><p>'+err.message+'</p></div><div class="note">Нажмите «Обновить» на главной или сообщите об ошибке.</div>'; } v.classList.remove('in'); void v.offsetWidth; v.classList.add('in'); v.scrollTop=0;}}); try{LS.setItem('tr.tab',tab);}catch(e){} }
 const STACK = window.__STACK || (window.__STACK=[]); /* не в замыкании: boot() вызывается повторно при обновлении данных */
 function openSheet(key,replace){ if(replace||STACK[STACK.length-1]===key) STACK[STACK.length-1]=key; else STACK.push(key); renderSheet(key); }
 function goBack(){ STACK.pop(); if(STACK.length) renderSheet(STACK[STACK.length-1]); else $('#sheet').classList.remove('open'); }
 function renderSheet(key){ const [kind,...rest]=key.split(':'); const id=rest.join(':'); let body=''; try{
-  if(kind==='game'){ const [iso,lg]=id.split(':'); const g=CAL.find(g=>g.iso===iso&&g.league===lg); body=MONEY?gameSheet(g):(PERSON?personGameSheet(g):plainGameSheet(g)); } else if(kind==='day') body=daySheet(id); else if(kind==='person') body=personSheet(+id); else if(kind==='month') body=monthSheet(id); else if(kind==='contract') body=contractSheet(id); else if(kind==='office') body=officeSheet(); else if(kind==='todo'||kind==='tabel') body=todoSheet(); else if(kind==='tp') body=tabelProject(id); else if(kind==='tm'){ const [iso,lg]=id.split(':'); curTab=iso+'|'+lg; body=tabelMatch(iso,lg); } else if(kind==='pm'){ const [pi,mk]=id.split(':'); body=personMonthSheet(+pi,mk); } else if(kind==='other') body=otherSheet(); else if(kind==='me') body=meSheet(); else if(kind==='debts') body=debtsSheet(); else if(kind==='debt') body=debtPersonSheet(id); else if(kind==='debtform') body=debtFormSheet(id); else if(kind==='docs') body=docsSheet(); else if(kind==='docsec') body=docSecSheet(id); else if(kind==='doc') body=docSheet(id); else if(kind==='ttv'){ if(id) ttvMonth=id; body=ttvView(); } else if(kind==='ttvform') body=ttvFormSheet(id);
+  if(kind==='game'){ const [iso,lg]=id.split(':'); const g=CAL.find(g=>g.iso===iso&&g.league===lg); body=MONEY?gameSheet(g):(PERSON?personGameSheet(g):plainGameSheet(g)); } else if(kind==='day') body=daySheet(id); else if(kind==='person') body=personSheet(+id); else if(kind==='month') body=monthSheet(id); else if(kind==='contract') body=contractSheet(id); else if(kind==='office') body=officeSheet(); else if(kind==='todo'||kind==='tabel') body=todoSheet(); else if(kind==='tp') body=tabelProject(id); else if(kind==='tm'){ const [iso,lg]=id.split(':'); curTab=iso+'|'+lg; body=tabelMatch(iso,lg); } else if(kind==='pm'){ const [pi,mk]=id.split(':'); body=personMonthSheet(+pi,mk); } else if(kind==='other') body=otherSheet(); else if(kind==='me') body=meSheet(); else if(kind==='debts') body=debtsSheet(); else if(kind==='debt') body=debtPersonSheet(id); else if(kind==='debtform') body=debtFormSheet(id); else if(kind==='docs') body=docsSheet(); else if(kind==='docsec') body=docSecSheet(id); else if(kind==='doc') body=docSheet(id); else if(kind==='ttv'){ if(id) ttvMonth=id; body=ttvView(); } else if(kind==='ttvform') body=ttvFormSheet(id); else if(kind==='chain'&&MONEY) body=chainSheet(); else if(kind==='tax'&&MONEY) body=taxSheet(); else if(kind==='cash'&&MONEY&&ROLE==='admin') body=cashSheet(); /* касса — личное владельца, роли «офис» не показывается */ else if(kind==='ved'&&MONEY) body=vedSheet(id);
   }catch(err){ body='<div class="lt"><h1>Экран не открылся</h1><p>'+err.message+'</p></div><div class="note">Данные могли обновиться. Вернитесь назад и попробуйте снова.</div>'; }
-  $('#sheet-body').innerHTML=`<button class="back" id="back"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg>Назад</button>`+body; $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=0; if(kind==='tm') updateTabBtn(); }
+  $('#sheet-body').innerHTML=`<button class="back" id="back"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg>Назад</button>`+scrub(body); $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=0; if(kind==='tm') updateTabBtn(); }
 on(document,'click',e=>{ if(e.target.closest('input,select,textarea')) return; const t=e.target.closest('[data-tab],[data-open],[data-cal],[data-pmonth],[data-gocal],[data-mymonth],#back'); if(!t) return; if(t.dataset.tab&&!(t.dataset.tab in VIEWS)) return;
   if(t.dataset.gocal){ const [y,m]=t.dataset.gocal.split('-').map(Number); calMonth=new Date(y,m-1,1); STACK.length=0; $('#sheet').classList.remove('open'); show('cal'); return; }
-  if(t.dataset.mymonth){ myMonth=t.dataset.mymonth; try{localStorage.setItem('tr.myMonth',myMonth);}catch(e){} $('#v-home').innerHTML=personHome(); return; }
-  if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=calView(); return; }
-  if(t.dataset.pmonth){ peopleMonth=t.dataset.pmonth; try{localStorage.setItem('tr.peopleMonth',peopleMonth);}catch(e){} $('#v-people').innerHTML=people(); return; } if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
+  if(t.dataset.mymonth){ myMonth=t.dataset.mymonth; try{LS.setItem('tr.myMonth',myMonth);}catch(e){} $('#v-home').innerHTML=scrub(personHome()); return; }
+  if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=scrub(calView()); return; }
+  if(t.dataset.pmonth){ peopleMonth=t.dataset.pmonth; try{LS.setItem('tr.peopleMonth',peopleMonth);}catch(e){} $('#v-people').innerHTML=scrub(people()); return; } if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
 let curTab=null;
-on(document,'click',e=>{ if(e.target.closest('#refresh')&&window.__refresh){ e.target.closest('#refresh').textContent='…'; window.__refresh(); } });
+on(document,'click',e=>{ if(e.target.closest('#refresh')&&window.__refresh){ e.target.closest('#refresh').textContent='…'; window.__refresh(true); } });
 function toast(msg){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; ($('#app')||document.body).appendChild(el); } el.textContent=msg; el.className='on'; clearTimeout(el._t); el._t=setTimeout(()=>{el.className='';},1400); }
 on(document,'click',e=>{ const c=e.target.closest('[data-copy]'); if(c){ const v=c.dataset.copy; if(v){ (navigator.clipboard?navigator.clipboard.writeText(v):Promise.reject()).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать')); } return; }
   const cp=e.target.closest('#doc-copy'); if(cp){ const txt=docText(cp.dataset.sec,cp.dataset.doc); (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast('Скопировано')).catch(()=>toast('Не удалось скопировать')); return; }
@@ -680,9 +919,9 @@ on(document,'click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(
   /* Сначала показываем результат, в базу отправляем в фоне: скрипт отвечает от 2 до 30 секунд (01.10.2026) */
   openSheet('tm:'+iso+':'+lg,true); toast(yes?'Подтверждено. Отправляю в базу…':'Открыто для правки');
   pushTab(key).then(ok=>{ if(ok){ dropLocalTab(key); toast('Записано в базу'); } else if(window.DATA_URL) toast('База долго отвечает — сохранено на телефоне, отправлю ещё раз сам'); }); });
-function dropLocalTab(key){ if(TAB[key]) delete TAB[key].pending; try{ const loc=JSON.parse(localStorage.getItem('tr.tabel2')||'{}'); delete loc[key]; localStorage.setItem('tr.tabel2',JSON.stringify(loc)); }catch(e){} }
+function dropLocalTab(key){ if(TAB[key]) delete TAB[key].pending; try{ const loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); delete loc[key]; LS.setItem('tr.tabel2',JSON.stringify(loc)); }catch(e){} }
 /* Досылка: всё, что подтверждено на телефоне, но не дошло до базы, отправляется при открытии приложения и раз в минуту */
-function syncTabs(){ let loc={}; try{ loc=JSON.parse(localStorage.getItem('tr.tabel2')||'{}'); }catch(e){} return Object.keys(loc).filter(k=>loc[k]&&loc[k].pending).reduce((p,k)=>p.then(()=>{ TAB[k]=loc[k]; return pushTab(k,0).then(ok=>{ if(ok) dropLocalTab(k); }); }),Promise.resolve()); }
+function syncTabs(){ let loc={}; try{ loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); }catch(e){} return Object.keys(loc).filter(k=>loc[k]&&loc[k].pending).reduce((p,k)=>p.then(()=>{ TAB[k]=loc[k]; return pushTab(k,0).then(ok=>{ if(ok) dropLocalTab(k); }); }),Promise.resolve()); }
 setTimeout(syncTabs,5000); clearInterval(window.__syncT); window.__syncT=setInterval(syncTabs,60000);
 function saveDebt(row,btn){ if(btn){ btn.disabled=true; btn.textContent='Сохраняю…'; } return pushDebt(row).then(ok=>{ if(!ok){ if(btn){ btn.disabled=false; btn.textContent='Повторить'; } alert('Не удалось записать в базу. Проверьте связь и повторите.'); return false; } DEBTS.push({date:row.date,project:row.project,who:row.who,op:row.op,sum:row.sum,form:row.form,note:row.note,by:ROLE,when:'',month:row.month||''}); toast('Записано'); if(window.__refresh) setTimeout(()=>window.__refresh(),800); return true; }); }
 on(document,'click',e=>{ const b=e.target.closest('#df-save'); if(b){ const v=id=>($('#'+id)||{}).value||''; const row={date:v('df-date'),project:v('df-project')||'Трактор',who:v('df-who').trim(),op:v('df-op'),sum:parseFloat(v('df-sum').replace(/\s/g,'').replace(',','.'))||0,form:v('df-form'),note:v('df-note').trim()};
@@ -715,13 +954,22 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     adchat:(j['Реклама_чат']||[]).map(r=>[r['Дата']||'',r['Время']||'',r['Кто']||'',r['Текст']||'',r['Матч']||'',r['Реклама']||'',r['Проверено']||'']),
     roles:(j['Должности']||[]).map(r=>[r['Человек']||'',n(r['Порядок']),r['Раздел']||'',r['Заголовок']||'',r['Текст']||'']),
     ttv:(j['Единицы_ТТВ']||[]).map(r=>[r['Дата']||'',r['Что сделано']||'',r['Где произведено']||'',r['Ссылка']||'',r['Примечание']||'',r['Месяц']||'',(r['Кол-во единиц']===''||r['Кол-во единиц']==null)?'':n(r['Кол-во единиц']),r['Монтаж']||'',r['Внёс']||'',r['ID']||'']),
+    acts:(j['Акты']||[]).map(r=>[r['Дата']||'',String(r['Номер']==null?'':r['Номер']),r['Вид']||'',r['Заказчик']||'',r['Договор']||'',r['Направление']||'',r['Месяц']||'',n(r['Сумма с НДС']),r['Дата оплаты']||'',n(r['Оплачено']),r['Примечание']||'']),
+    closed:(j['Закрытие']||[]).map(r=>[r['Месяц']||'',r['Человек']||'',n(r['Начислено']),n(r['Выплачено']),n(r['Зачёт']),n(r['К выплате']),r['Закрыл']||'',r['Когда']||'']),
+    params:Object.fromEntries((j['Параметры']||[]).map(r=>[r['Параметр'],r['Значение']])), demo:!!j.demo,
     tabelDirs:j.tabelDirs||[], tabelOps:!!j.tabelOps, opsOwner:!!j.opsOwner,
     start:String(((j['Параметры']||[]).find(r=>r['Параметр']==='Начало учёта')||{})['Значение']||'2026-08'),
     docs:j.docs||[], role:j.role||'admin', who:j.who||'', today:today, generated:j.generated||'' }; }
-function fetchData(k){ const u=DATA_URL+'?k='+encodeURIComponent(k); return fetch(u,{cache:'no-store'}).then(r=>r.json()).then(j=>{ if(j.error) throw new Error(j.error); return j; }); }
-function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); window[cb]=j=>{ delete window[cb]; s.remove(); if(j.error) rej(new Error(j.error)); else res(j); }; const s=document.createElement('script'); s.src=DATA_URL+'?k='+encodeURIComponent(k)+'&callback='+cb; s.onerror=()=>rej(new Error('net')); document.head.appendChild(s); }); }
+function fetchData(k,fresh){ const u=DATA_URL+'?k='+encodeURIComponent(k)+(fresh?'&fresh=1':''); return fetch(u,{cache:'no-store'}).then(r=>r.json()).then(j=>{ if(j.error) throw new Error(j.error); if(!j.role) throw new Error('empty'); /* ответ без роли — не данные: не показывать пустой экран владельца */ return j; }); }
+function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); window[cb]=j=>{ delete window[cb]; s.remove(); if(j.error) rej(new Error(j.error)); else if(!j.role) rej(new Error('empty')); else res(j); }; const s=document.createElement('script'); s.src=DATA_URL+'?k='+encodeURIComponent(k)+'&callback='+cb; s.onerror=()=>rej(new Error('net')); document.head.appendChild(s); }); }
 (async function(){
   if(PLAIN){ boot(PLAIN); return; }
+  /* Режим показа: ?demo — вымышленные данные из demo.json, без ключа; настоящие ключ, запас и черновики на этом устройстве не трогаются (01.10.2026) */
+  if(new URL(location.href).searchParams.has('demo')){ window.DATA_URL=''; window.KEY='';
+    document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Показ</h1><p>загружаю вымышленные данные…</p></div>';
+    try{ const j=await fetch('demo.json',{cache:'no-store'}).then(r=>r.json()); j.demo=true; j.role='admin'; boot(toData(j)); }
+    catch(e){ document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Показ не загрузился</h1><p>Проверьте интернет и откройте ссылку ещё раз</p></div>'; }
+    return; }
   let prevKey=null; try{ prevKey=localStorage.getItem('tr.key'); }catch(e){}
   const url=new URL(location.href); let k=url.searchParams.get('k');
   if(k){ try{localStorage.setItem('tr.key',k);}catch(e){} } else { try{k=localStorage.getItem('tr.key');}catch(e){} }
@@ -734,7 +982,7 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
   /* новая сборка приложения: проверять при «Обновить» и при возврате в приложение — иначе открытое на телефоне остаётся старым кодом (23.09.2026) */
   function swUpd(){ try{ if('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r=>{ if(r) r.update(); }).catch(()=>{}); }catch(e){} }
-  window.__refresh=async function(){ swUpd(); try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
+  window.__refresh=async function(fresh){ swUpd(); try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
   try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
   catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('tr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
   let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else { swUpd(); if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); } });
