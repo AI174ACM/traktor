@@ -598,6 +598,8 @@ function officeSheet(){ const inc=monthKeys.map(k=>{ const mt=sum(CAL.filter(g=>
   <div class="note">Без графики, Трактор ТВ и сериала: они добавят в фонд ≈ 320 тыс. за сезон. Полная картина в Контракты/_Фонд_Офис.md.</div>`; }
 /* --- навигация --- */
 const VIEWS = ROLE==='producer' ? {home:()=>todoSheet().replace('<div class="lt"><h1>Табель</h1>','<div class="lt"><h1>Табель матчей</h1>'), cal:calView} : PERSON ? {home:personHome,cal:calView,tabel:todoSheet,money:()=>myIdx()<0?'<div class="lt"><h1>Вас нет в списке людей</h1><p>сообщите Мельникову</p></div>':personSheet(myIdx())} : {home,cal:calView,contracts,people,money};
+/* Панель вкладок и контейнеры возвращаются в исходный вид при каждом запуске: код перезапускается при обновлении данных, а роль и права могли измениться */
+(()=>{ const nav=document.querySelector('.tabbar'); if(!nav) return; if(window.__tabs0==null) window.__tabs0=nav.innerHTML; else nav.innerHTML=window.__tabs0; const a=$('#v-tabel'); if(a) a.id='v-people'; const b=$('#v-report'); if(b) b.id='v-contracts'; })();
 if(ROLE==='producer'){ document.querySelectorAll('.tab').forEach(b=>{ if(!(b.dataset.tab in VIEWS)) b.remove(); else if(b.dataset.tab==='home') b.querySelector('span').textContent='Табель'; }); }
 if(PERSON&&ttvRate(WHO)) VIEWS.report=ttvView;
 if(PERSON){ const pv=$('#v-people'); if(pv) pv.id='v-tabel'; const cv=$('#v-contracts'); if(cv&&VIEWS.report) cv.id='v-report'; if(!TAB_DIRS.size) delete VIEWS.tabel; document.querySelectorAll('.tab').forEach(b=>{ const t=b.dataset.tab; /* вкладки переименовываются один раз, а код перезапускается при каждом обновлении данных — учитываем оба имени */ if((t==='contracts'||t==='report')&&VIEWS.report){ b.dataset.tab='report'; b.querySelector('span').textContent='Отчёт'; } else if(t==='people'||t==='tabel'){ if(TAB_DIRS.size){ b.dataset.tab='tabel'; b.querySelector('span').textContent='Табель'; } else { b.remove(); delete VIEWS.tabel; const pv2=$('#v-tabel'); if(pv2) pv2.hidden=true; } } else if(t==='home') b.querySelector('span').textContent='Месяц'; else if(t==='money') b.querySelector('span').textContent='Деньги'; else if(!(t in VIEWS)) b.remove(); }); }
@@ -692,12 +694,13 @@ function fetchData(k){ const u=DATA_URL+'?k='+encodeURIComponent(k); return fetc
 function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); window[cb]=j=>{ delete window[cb]; s.remove(); if(j.error) rej(new Error(j.error)); else res(j); }; const s=document.createElement('script'); s.src=DATA_URL+'?k='+encodeURIComponent(k)+'&callback='+cb; s.onerror=()=>rej(new Error('net')); document.head.appendChild(s); }); }
 (async function(){
   if(PLAIN){ boot(PLAIN); return; }
+  let prevKey=null; try{ prevKey=localStorage.getItem('tr.key'); }catch(e){}
   const url=new URL(location.href); let k=url.searchParams.get('k');
   if(k){ try{localStorage.setItem('tr.key',k);}catch(e){} } else { try{k=localStorage.getItem('tr.key');}catch(e){} }
   if(!k){ gate(); return; }
   window.DATA_URL=DATA_URL; window.KEY=k;
   /* кэш и черновики привязаны к ключу: при входе по другой ссылке чужие данные с этого устройства стираются (01.10.2026) */
-  try{ const was=localStorage.getItem('tr.datak'); if(was&&was!==k) ['tr.data','tr.tabel2','tr.ttvq','tr.as','tr.myMonth','tr.peopleMonth'].forEach(x=>localStorage.removeItem(x)); localStorage.setItem('tr.datak',k); }catch(e){}
+  try{ const was=localStorage.getItem('tr.datak')||prevKey; if(was&&was!==k) ['tr.data','tr.tabel2','tr.ttvq','tr.as','tr.myMonth','tr.peopleMonth'].forEach(x=>localStorage.removeItem(x)); localStorage.setItem('tr.datak',k); }catch(e){}
   let cached=null; try{ cached=JSON.parse(localStorage.getItem('tr.data')||'null'); }catch(e){}
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
