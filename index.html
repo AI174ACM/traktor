@@ -156,7 +156,7 @@ const TAB_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO && /продю
 const MY_TAB=String(((DATA.people||[]).find(p=>p[0]===WHO)||[])[5]||'');
 const TAB_OPS = PERSON && (!!DATA.tabelOps || /ОПЕРАТОРЫ/i.test(MY_TAB));
 const OPS_DELEG = !!DATA.opsOwner || (DATA.people||[]).some(p=>/ОПЕРАТОРЫ/i.test(String(p[5]||'')));
-const isOpRow=r=>/^Оператор/.test(r.pos);
+const isOpRow=r=>/^Оператор(?! системы)/.test(r.pos); /* камеры и оператор пресс-конференции; «Оператор системы» тренерской — не оператор группы */
 function canFill(r,dir){ if(!PERSON) return true; if(isOpRow(r)) return TAB_OPS||(TAB_DIRS.has(dir)&&!OPS_DELEG); return TAB_DIRS.has(dir); }
 function tabHas(dir,g){ if(!PERSON) return true; if(TAB_DIRS.has(dir)) return true; return TAB_OPS&&RATES.some(r=>r.dir===dir&&isOpRow(r)&&!isFixed(r)); }
 const TAB_ANY = !PERSON || TAB_DIRS.size>0 || TAB_OPS;
@@ -167,6 +167,8 @@ function opsPart(d,g){ return tabelRows(d,g).some(isOpRow)&&(!PERSON||TAB_OPS||(
 function myDirOk(e,d,g){ const rows=tabelRows(d,g).filter(r=>canFill(r,d)); if(!rows.length) return true; return (!dirPart(d)||!rows.some(r=>!isOpRow(r))||partOk(e,d,false))&&(!opsPart(d,g)||partOk(e,d,true)); }
 function myPartOk(e,g){ const ds=g.dirs.filter(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d))); return ds.length>0&&ds.every(d=>myDirOk(e,d,g)); }
 if(PERSON){ DATA.acc=(DATA.acc||[]).filter(a=>a[2]===WHO); DATA.pay=(DATA.pay||[]).filter(p=>p[6]===WHO); DATA.debts=(DATA.debts||[]).filter(d=>d[2]===WHO); DATA.roles=(DATA.roles||[]).filter(r=>r[0]===WHO); DATA.ttv=(DATA.ttv||[]).filter(r=>r[7]===WHO); DATA.docs=[]; DATA.adchat=(DATA.adchat||[]).map(a=>[a[0],a[1],'','',a[4],a[5],a[6]]); /* в личном виде — только отметки «смена была», без переписки */
+  /* ответственному за табель нужны матчи его направлений, даже если своих ставок там нет */
+  TAB_DIRS.forEach(d=>MY_DIRS.add(d)); if(TAB_OPS) DATA.rates.filter(r=>/^Оператор(?! системы)/.test(r[1])&&!/техника|аренда/.test(r[4]||'')).forEach(r=>MY_DIRS.add(r[0]));
   DATA.cal=DATA.cal.filter(c=>c[5].split(';').some(d=>MY_DIRS.has(d))).map(c=>{ const x=c.slice(); x[5]=c[5].split(';').filter(d=>MY_DIRS.has(d)).join(';'); return x; }); }
 const DIRS = Object.fromEntries(DATA.dirs.map(d=>[d[0],{code:d[0],contract:d[1],name:d[2],unit:d[3],price:d[4],plan:d[5],league:d[6],where:d[7],rule:d[8]}]));
 const CONTRACTS = DATA.contracts.map(c=>({code:c[0],num:c[1],date:c[2],subject:c[3],status:c[4],limit:c[5],days:c[6]}));
