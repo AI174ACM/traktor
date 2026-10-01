@@ -183,7 +183,7 @@ function noteMonth(note){ const m=String(note||'').match(new RegExp('за\\s+('+
 function debtMonth(d){ return d.month?m2k(d.month):(noteMonth(d.note)||m2k(d.date)); }
 function offOf(name,k){ return DEBTS.filter(d=>d.who===name&&d.op==='зачёт'&&(!k||debtMonth(d)===k)); }
 function personTotals(name,k){ const gs=k?CAL.filter(g=>mkey(g.date)===k):CAL; const a=personGames(name,gs.filter(g=>g.played)); const extra=accOf(name,k).reduce((s,x)=>s+x.sum,0); const paid=paidOf(name,k).reduce((s,x)=>s+x.sum,0); const card=paidOf(name,k).filter(x=>x.dir==='ШТАТ').reduce((s,x)=>s+x.sum,0); const off=offOf(name,k).reduce((s,x)=>s+x.sum,0); const due0=a.s+extra-paid-off; return {match:a.s,n:a.n,extra,total:a.s+extra,paid,card,off,due:Math.abs(due0)<1?0:due0}; } // расхождение меньше рубля — округление банка, не долг
-const DIRN={TTV:'Трактор ТВ',SERIAL:'Сериал',GRAPH:'Графика',OFFICE:'Фонд «Офис»','ШТАТ':'Штат и налоги','ИП':'Расходы ИП','НАЛ':'Наличные','ДРУГОЕ':'Не по клубу'}; const dirName=c=>DIRS[c]?DIRS[c].name:(DIRN[c]||c||'');
+const DIRN={TTV:'Трактор ТВ',SERIAL:'Сериал',GRAPH:'Графика',OFFICE:'Фонд «Офис»','ШТАТ':'Штат и налоги','ИП':'Расходы ИП','НАЛ':'Наличные','СВОИ':'Свои деньги на счёт','ДРУГОЕ':'Не по клубу'}; const dirName=c=>DIRS[c]?DIRS[c].name:(DIRN[c]||c||'');
 function debtRows(name){ return DEBTS.filter(d=>d.who===name); }
 function debtBalance(name){ return debtRows(name).reduce((s,d)=>s+(DEBT_SIGN[d.op]||0)*d.sum,0); }
 function debtPeople(project){ const m={}; DEBTS.forEach(d=>{ if(project&&(d.project==='Трактор')!==(project==='Трактор')) return; m[d.who]=(m[d.who]||0)+(DEBT_SIGN[d.op]||0)*d.sum; }); return Object.entries(m).map(([who,bal])=>({who,bal})).sort((a,b)=>b.bal-a.bal); }
@@ -245,7 +245,7 @@ const pcolor=i=>PAL[i%PAL.length];
 const PROJ_GROUP={SERIAL:'TTV'};
 /* Матчевые направления уже посчитаны строкой «По матчам» — приход по ним (оплата акта клубом) не добавляем второй строкой (23.09.2026) */
 const MATCH_DIRS=new Set(['MK_KHL','MK_MHL','MK_ZHL','TR_MHL','TR_ZHL','PRESS','SCREEN','COACH']);
-const SKIP_DIRS=new Set(['OFFICE','ШТАТ','ИП','ЛИЧНОЕ','НАЛ','?','']);
+const SKIP_DIRS=new Set(['OFFICE','ШТАТ','ИП','ЛИЧНОЕ','НАЛ','СВОИ','?','']);
 function projName(d){ return d==='TTV'?'Трактор ТВ и сериал':d==='ДРУГОЕ'?'Разовое (не по договорам)':d==='PROF'?'Профайлы (ИП Романов)':dirName(d); }
 function meMonth(k){
   const gs=played.filter(g=>mkey(g.date)===k); const m=sum(gs); const rows=[]; if(m.n) rows.push({dir:'MATCH',name:'По матчам · '+m.n,income:m.club,people:m.pay,tax:m.vat+m.usn,me:m.me,kind:'matches'});
