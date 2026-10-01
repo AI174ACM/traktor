@@ -150,7 +150,8 @@ const PERSON = (ROLE==='person' || !!PREVIEW) && !!WHO;
 /* Кто видит деньги договора (клубу, мне): только владелец и офис, и не в режиме предпросмотра (23.09.2026) */
 const MONEY = (ROLE==='admin'||ROLE==='office') && !PREVIEW;
 const MY_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO).map(r=>r[0]) : []);
-const TAB_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO && /продюсер/i.test(r[1]) && DATA.dirs.some(d=>d[0]===r[0]&&d[6])).map(r=>r[0]) : []);
+/* За какие направления человек отвечает в табеле: позиции «продюсер» + колонка «Отвечает за табель» листа «Люди» (или список от сервера) */
+const TAB_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO && /продюсер/i.test(r[1]) && DATA.dirs.some(d=>d[0]===r[0]&&d[6])).map(r=>r[0]).concat(DATA.tabelDirs||[], String(((DATA.people||[]).find(p=>p[0]===WHO)||[])[5]||'').split(/[;,\s]+/)).filter(c=>c&&DATA.dirs.some(d=>d[0]===c)) : []);
 if(PERSON){ DATA.acc=(DATA.acc||[]).filter(a=>a[2]===WHO); DATA.pay=(DATA.pay||[]).filter(p=>p[6]===WHO); DATA.debts=(DATA.debts||[]).filter(d=>d[2]===WHO); DATA.roles=(DATA.roles||[]).filter(r=>r[0]===WHO); DATA.ttv=(DATA.ttv||[]).filter(r=>r[7]===WHO); DATA.docs=[]; DATA.adchat=(DATA.adchat||[]).map(a=>[a[0],a[1],'','',a[4],a[5],a[6]]); /* в личном виде — только отметки «смена была», без переписки */
   DATA.cal=DATA.cal.filter(c=>c[5].split(';').some(d=>MY_DIRS.has(d))).map(c=>{ const x=c.slice(); x[5]=c[5].split(';').filter(d=>MY_DIRS.has(d)).join(';'); return x; }); }
 const DIRS = Object.fromEntries(DATA.dirs.map(d=>[d[0],{code:d[0],contract:d[1],name:d[2],unit:d[3],price:d[4],plan:d[5],league:d[6],where:d[7],rule:d[8]}]));
@@ -595,7 +596,7 @@ function officeSheet(){ const inc=monthKeys.map(k=>{ const mt=sum(CAL.filter(g=>
 const VIEWS = ROLE==='producer' ? {home:()=>todoSheet().replace('<div class="lt"><h1>Табель</h1>','<div class="lt"><h1>Табель матчей</h1>'), cal:calView} : PERSON ? {home:personHome,cal:calView,tabel:todoSheet,money:()=>myIdx()<0?'<div class="lt"><h1>Вас нет в списке людей</h1><p>сообщите Мельникову</p></div>':personSheet(myIdx())} : {home,cal:calView,contracts,people,money};
 if(ROLE==='producer'){ document.querySelectorAll('.tab').forEach(b=>{ if(!(b.dataset.tab in VIEWS)) b.remove(); else if(b.dataset.tab==='home') b.querySelector('span').textContent='Табель'; }); }
 if(PERSON&&ttvRate(WHO)) VIEWS.report=ttvView;
-if(PERSON){ const pv=$('#v-people'); if(pv) pv.id='v-tabel'; const cv=$('#v-contracts'); if(cv&&VIEWS.report) cv.id='v-report'; document.querySelectorAll('.tab').forEach(b=>{ const t=b.dataset.tab; if(t==='contracts'&&VIEWS.report){ b.dataset.tab='report'; b.querySelector('span').textContent='Отчёт'; } else if(t==='people'){ b.dataset.tab='tabel'; b.querySelector('span').textContent=TAB_DIRS.size?'Табель':'Матчи'; } else if(t==='home') b.querySelector('span').textContent='Месяц'; else if(t==='money') b.querySelector('span').textContent='Деньги'; else if(!(t in VIEWS)) b.remove(); }); }
+if(PERSON){ const pv=$('#v-people'); if(pv) pv.id='v-tabel'; const cv=$('#v-contracts'); if(cv&&VIEWS.report) cv.id='v-report'; document.querySelectorAll('.tab').forEach(b=>{ const t=b.dataset.tab; if(t==='contracts'&&VIEWS.report){ b.dataset.tab='report'; b.querySelector('span').textContent='Отчёт'; } else if(t==='people'){ if(TAB_DIRS.size){ b.dataset.tab='tabel'; b.querySelector('span').textContent='Табель'; } else { b.remove(); delete VIEWS.tabel; const pv2=$('#v-tabel'); if(pv2) pv2.hidden=true; } } else if(t==='home') b.querySelector('span').textContent='Месяц'; else if(t==='money') b.querySelector('span').textContent='Деньги'; else if(!(t in VIEWS)) b.remove(); }); }
 function myIdx(){ return allPeople().findIndex(p=>p.name===WHO); } /* −1, если человека нет в списке */
 function previewBar(){ return PREVIEW?`<div class="g pad" style="display:flex;gap:10px;align-items:center;margin-bottom:10px;border-left:5px solid var(--accent)"><div style="flex:1;font-size:13px"><b>Предпросмотр.</b> Так приложение видит ${WHO}. Данные только по этому человеку.</div><button data-preview="" class="chip info" style="border:0;cursor:pointer">выйти</button></div>`:''; }
 let myMonth=(()=>{ try{ return localStorage.getItem('tr.myMonth')||''; }catch(e){ return ''; } })();
@@ -670,7 +671,7 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     contracts:(j['Договоры']||[]).map(r=>[r['Код'],r['Номер'],r['Дата'],r['Предмет'],r['Статус'],n(r['Лимит с НДС']),n(r['Оплата, дней после акта']),r['Паспорт']||'']),
     dirs:(j['Направления']||[]).map(r=>[r['Код'],r['Договор'],r['Название'],r['Ед.'],n(r['Цена без НДС']),n(r['План кол-во']),r['Лига']||'',r['Где']||'',r['Правило количества']||'']),
     rates:(j['Ставки']||[]).map(r=>[r['Направление'],r['Позиция'],n(r['Ставка']),r['Кому'],r['Правило']||'каждая игра']),
-    people:(j['Люди']||[]).map(r=>[r['Человек'],r['Статус']||'',r['Форма оплаты']||'',r['Примечание']||'',n(r['На карту в месяц'])]),
+    people:(j['Люди']||[]).map(r=>[r['Человек'],r['Статус']||'',r['Форма оплаты']||'',r['Примечание']||'',n(r['На карту в месяц']),r['Отвечает за табель']||'']),
     cal:(j['Календарь']||[]).map(r=>[r['Дата'],r['Лига'],r['Команда'],r['Соперник'],r['Дома/выезд'],r['Направления'],r['Примечание']||'',(r['Дата']<today)?'сыгран':'впереди']),
     events:(j['События']||[]).map(r=>[r['Дата'],r['Название'],r['Тип']||'',r['Направление']||'',n(r['Сумма']),r['Примечание']||'']),
     tabel:(j['Табель_подтверждения']||[]).map(r=>({key:r['Ключ'],json:r['Состав (JSON)']})),
@@ -680,6 +681,7 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     adchat:(j['Реклама_чат']||[]).map(r=>[r['Дата']||'',r['Время']||'',r['Кто']||'',r['Текст']||'',r['Матч']||'',r['Реклама']||'',r['Проверено']||'']),
     roles:(j['Должности']||[]).map(r=>[r['Человек']||'',n(r['Порядок']),r['Раздел']||'',r['Заголовок']||'',r['Текст']||'']),
     ttv:(j['Единицы_ТТВ']||[]).map(r=>[r['Дата']||'',r['Что сделано']||'',r['Где произведено']||'',r['Ссылка']||'',r['Примечание']||'',r['Месяц']||'',(r['Кол-во единиц']===''||r['Кол-во единиц']==null)?'':n(r['Кол-во единиц']),r['Монтаж']||'',r['Внёс']||'',r['ID']||'']),
+    tabelDirs:j.tabelDirs||[],
     start:String(((j['Параметры']||[]).find(r=>r['Параметр']==='Начало учёта')||{})['Значение']||'2026-08'),
     docs:j.docs||[], role:j.role||'admin', who:j.who||'', today:today, generated:j.generated||'' }; }
 function fetchData(k){ const u=DATA_URL+'?k='+encodeURIComponent(k); return fetch(u,{cache:'no-store'}).then(r=>r.json()).then(j=>{ if(j.error) throw new Error(j.error); return j; }); }
