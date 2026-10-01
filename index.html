@@ -241,7 +241,7 @@ function ttvPush(op,row){ ttvApply(op,row); const q=ttvQ(); q.push({op,row}); tt
 function ttvFlush(){ if(window.__ttvBusy||!window.DATA_URL||!window.KEY) return; const q=ttvQ(); if(!q.length) return; window.__ttvBusy=true; const it=q[0];
   fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'ttv',op:it.op,row:it.row})}).then(r=>r.json()).then(j=>{ window.__ttvBusy=false; if(j&&(j.ok||j.error==='locked'||j.error==='bad id'||j.error==='no title'||j.error==='403')){ const q2=ttvQ(); q2.shift(); ttvQsave(q2); if(!j.ok) toast(j.error==='locked'?'Правка отклонена: единицы уже проставлены':'Запись не принята базой'); else if(!q2.length) toast('Записано в базу'); ttvFlush(); } }).catch(()=>{ window.__ttvBusy=false; }); }
 setTimeout(ttvFlush,6000); clearInterval(window.__ttvT); window.__ttvT=setInterval(ttvFlush,60000);
-function ttvRate(name){ const r=RATES.find(x=>x.dir==='TTV'&&x.who===name&&/за единицу/.test(x.rule)); return r?r.rate:0; }
+function ttvRate(name){ const r=RATES.find(x=>x.dir==='TTV'&&x.who===name&&/^за единицу/.test(x.rule)); return r?r.rate:0; }
 function ttvOf(name,k){ return TTV.filter(x=>x.mont===name&&(!k||ttvK(x)===k)); }
 function ttvPay(name,k){ const rate=ttvRate(name); return rate?ttvOf(name,k).reduce((s,x)=>s+(x.units||0),0)*rate:0; }
 let ttvMonth='';
@@ -261,7 +261,7 @@ function ttvView(){ const me=PERSON?WHO:''; const cur=mkey(TODAY); const all=me?
   ${body||'<div class="note">За этот месяц записей пока нет.</div>'}
   <div class="note">${me?'Единицы за сюжет ставит Мельников. Пока единицы не проставлены, запись можно править и удалять.':'Нажмите строку — проставить единицы, указать, кто монтировал, или «без монтажа» (только съёмка). Строки без монтажа идут в отчёт клубу, но не в оплату монтажёру.'}</div>`; }
 function ttvFormSheet(id){ const x=id==='new'?null:TTV.find(t=>t.id===id); if(id!=='new'&&!x) return '<div class="lt"><h1>Запись не найдена</h1><p>список обновился</p></div>'; const boss=!PERSON&&(ROLE==='admin'||ROLE==='office'); const locked=!boss&&x&&x.units!=null; const dis=locked?'disabled':'';
-  const today=`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}-${String(TODAY.getDate()).padStart(2,'0')}`; const monts=['',...new Set(RATES.filter(r=>r.dir==='TTV'&&/за единицу/.test(r.rule)&&r.who!=='Фонд «Офис»').map(r=>r.who))]; const curM=x?x.mont:(monts[1]||'');
+  const today=`${TODAY.getFullYear()}-${String(TODAY.getMonth()+1).padStart(2,'0')}-${String(TODAY.getDate()).padStart(2,'0')}`; const monts=['',...new Set(RATES.filter(r=>r.dir==='TTV'&&/^за единицу/.test(r.rule)&&r.who!=='Фонд «Офис»').map(r=>r.who))]; const curM=x?x.mont:(monts[1]||'');
   return `<div class="lt"><h1>${x?'Сюжет':'Новый сюжет'}</h1><p>${locked?'единицы проставлены — правка закрыта':'название и ссылка на готовый материал'}</p></div>
   <div class="g pad" style="display:grid;gap:10px">
     <label><div class="lbl">Дата</div><input class="fio" id="tv-date" type="date" value="${x?x.date:today}" ${dis}></label>
