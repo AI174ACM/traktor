@@ -351,6 +351,7 @@ function home(){
     ${debtTile()}
     <div class="grid2">
       <button class="g tile" data-open="other"><div class="lbl">Не по матчам</div><div class="num big" style="font-size:22px">${fmtS(['TTV','SERIAL','GRAPH'].reduce((s,c)=>s+DIRS[c].price*(1+VAT)*DIRS[c].plan,0))} ₽</div><div class="sub">Трактор ТВ, сериал, графика · план</div></button>
+      ${(ROLE==='admin'||ROLE==='office')?`<button class="g tile" data-open="ttv:"><div class="lbl" style="color:var(--accent)">Трактор ТВ</div><div class="num big" style="font-size:22px">${(()=>{ const k=mkey(TODAY); const l=TTV.filter(x=>ttvK(x)===k); return l.reduce((s,x)=>s+(x.units||0),0)+' ед.'; })()}</div><div class="sub">отчёт по дням${TTV.filter(x=>x.units==null).length?' · ждут оценки: '+TTV.filter(x=>x.units==null).length:''}</div></button>`:''}
       <button class="g tile docs" data-open="docs"><div class="lbl" style="color:var(--crew)">Документы</div><div class="num big" style="font-size:22px">${[...new Set(docsAll().map(d=>d.doc))].length||'—'}</div><div class="sub">реквизиты, ИП, личные, люди</div></button>
     </div>
   </div>
