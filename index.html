@@ -220,7 +220,9 @@ function saveTab(){ try{ localStorage.setItem('tr.tabel2',JSON.stringify(TAB)); 
 function pushTab(key){ if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,action:'tabel',key,entry:TAB[key]})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false); }
 function tabKey(g){ return g.iso+'|'+g.league; }
 function resolveName(s){ s=(s||'').trim(); if(!s) return ''; const sur=s.split(/\s+/)[0].toLowerCase(); const p=PEOPLE.find(p=>p.name.split(/\s+/)[0].toLowerCase()===sur); return p?p.name:s; }
-function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWith('приостановлено') && g!==firstKhl) && !(r.rule.startsWith('со 2-й игры') && g===firstKhl)).filter(r=>!/смены рекламы/.test(r.rule)||adPaid(g,dir,r.pos)); const e=g&&TAB[tabKey(g)];
+/* Правило ставки «с ГГГГ-ММ-ДД: …» — строка действует только с этой даты (напр. 50 % Шебельбайну с матча со СКА 25.09.2026) */
+function notYet(r,g){ const m=/^с (\d{4}-\d\d-\d\d)/.exec(r.rule||''); return !!(m&&g&&g.iso<m[1]); }
+function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWith('приостановлено') && g!==firstKhl) && !notYet(r,g)).filter(r=>!/смены рекламы/.test(r.rule)||adPaid(g,dir,r.pos)); const e=g&&TAB[tabKey(g)];
   /* Подтверждение действует только на направления, которые были в форме: продюсер трансляций не гасит состав медиакуба (23.09.2026) */
   if(!e||!e.confirmed||(e.dirs&&e.dirs.length&&e.dirs.indexOf(dir)<0)) return rows;
   if(e.otv && dir==='TR_MHL') return [];
@@ -425,7 +427,7 @@ function gameSheet(g){ const e=gameEcon(g);
 /* Табель: техника и Футерман — неизменные единицы, в форме не показываются (Мельников 22.09.2026); постоянные люди — свёрнуты; заполняются только меняющиеся позиции. */
 function isFixed(r){ return /Футерман/.test(r.who)||/техника|аренда/.test(r.rule); }
 function isRot(r){ return /по табелю|меняется|чередуются/.test(r.rule+' '+r.who); }
-function tabelRows(dir,g){ return RATES.filter(r=>r.dir===dir&&r.who!=='Фонд «Офис»'&&!(r.rule.startsWith('приостановлено')&&g!==firstKhl)&&!(r.rule.startsWith('со 2-й игры')&&g===firstKhl)&&!isFixed(r)); }
+function tabelRows(dir,g){ return RATES.filter(r=>r.dir===dir&&r.who!=='Фонд «Офис»'&&!(r.rule.startsWith('приостановлено')&&g!==firstKhl)&&!notYet(r,g)&&!isFixed(r)); }
 function tabelDefault(r){ return isRot(r)?'':r.who; } // постоянные люди подставлены, но их можно заменить; меняющиеся — пусто
 function tabelFilled(dir,g){ const e=TAB[tabKey(g)]||{}; const need=tabelRows(dir,g); const val=r=>{ const id=dir+'|'+r.pos; const n=(e.names||{}); return (id in n)?String(n[id]||'').trim():tabelDefault(r); }; return {rows:need.length, need:need.length, done:need.filter(r=>val(r)).length, missing:need.filter(r=>!val(r)).map(r=>tabelLabel(r).title), confirmed:!!e.confirmed}; }
 /* Подписи позиций в форме табеля: операторы — «Камера N», микс-зона — доплата оператору одной из камер */
