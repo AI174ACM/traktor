@@ -249,7 +249,7 @@ function econ(dir,g){ const d=DIRS[dir]; const pay=payOf(dir,g); const office=cr
 function myRate(g){ let s=0; g.dirs.forEach(dir=>crew(dir,g).forEach(r=>{ if(r.who===WHO) s+=r.rate; })); return s; }
 function gameEcon(g){ const t={club:0,vat:0,usn:0,pay:0,office:0,me:0}; g.dirs.forEach(dir=>{const e=econ(dir,g); for(const k in t) t[k]+=e[k];}); return t; }
 function sum(games){ const t={club:0,vat:0,usn:0,pay:0,office:0,me:0,n:0}; games.forEach(g=>{const e=gameEcon(g); for(const k in e) t[k]+=e[k]; t.n++;}); return t; }
-const played=CAL.filter(g=>g.played); const monthKeys=[...new Set(CAL.map(g=>mkey(g.date)).concat((DATA.acc||[]).map(a=>m2k(a[0])),(DATA.pay||[]).map(p=>m2k(p[7])||m2k(p[0]))).filter(Boolean))].sort((a,b)=>{const [ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number);return ay-by||am-bm;});
+const played=CAL.filter(g=>g.played); const monthKeys=[...new Set(CAL.map(g=>mkey(g.date)).concat((DATA.acc||[]).map(a=>m2k(a[0])),(DATA.pay||[]).map(p=>m2k(p[7])||m2k(p[0]))).filter(Boolean))].filter(k=>{ /* учёт ведём с месяца «Начало учёта» (август 2026): более ранние месяцы не показываем */ const st=m2k(DATA.start||'2026-08')||'2026-7'; const [y,m]=k.split('-').map(Number),[sy,sm]=st.split('-').map(Number); return y>sy||(y===sy&&m>=sm); }).sort((a,b)=>{const [ay,am]=a.split('-').map(Number),[by,bm]=b.split('-').map(Number);return ay-by||am-bm;});
 /* люди */
 function personGames(name, games){ let n=0,s=0; games.forEach(g=>{ let x=0; g.dirs.forEach(dir=>crew(dir,g).forEach(r=>{ if(r.who===name) x+=r.rate; })); if(x){n++;s+=x;} }); return {n,s}; }
 const PAL=['#2E63E8','#1E9E63','#D9761A','#6A55E8','#C2589B','#0FA3B1','#8A8F98','#B8860B','#3F86DD','#E0662F','#1B2B4B','#7A6BE8','#19A3B8','#A64A12','#157A4C','#B3301D','#5E6570','#8B4FC9','#D39A10'];
@@ -623,6 +623,7 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     debts:(j['Долги']||[]).map(r=>[r['Дата']||'',r['Проект']||'Трактор',r['Человек']||'',r['Операция']||'',n(r['Сумма']),r['Форма']||'',r['Примечание']||'',r['Внёс']||'',r['Когда']||'',r['Месяц']||'']),
     adchat:(j['Реклама_чат']||[]).map(r=>[r['Дата']||'',r['Время']||'',r['Кто']||'',r['Текст']||'',r['Матч']||'',r['Реклама']||'',r['Проверено']||'']),
     roles:(j['Должности']||[]).map(r=>[r['Человек']||'',n(r['Порядок']),r['Раздел']||'',r['Заголовок']||'',r['Текст']||'']),
+    start:String(((j['Параметры']||[]).find(r=>r['Параметр']==='Начало учёта')||{})['Значение']||'2026-08'),
     docs:j.docs||[], role:j.role||'admin', who:j.who||'', today:today, generated:j.generated||'' }; }
 function fetchData(k){ const u=DATA_URL+'?k='+encodeURIComponent(k); return fetch(u,{cache:'no-store'}).then(r=>r.json()).then(j=>{ if(j.error) throw new Error(j.error); return j; }); }
 function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); window[cb]=j=>{ delete window[cb]; s.remove(); if(j.error) rej(new Error(j.error)); else res(j); }; const s=document.createElement('script'); s.src=DATA_URL+'?k='+encodeURIComponent(k)+'&callback='+cb; s.onerror=()=>rej(new Error('net')); document.head.appendChild(s); }); }
