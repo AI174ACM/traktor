@@ -329,8 +329,8 @@ const EVENTS = (DATA.events||[]).map(e=>({date:new Date(e[0]),iso:e[0],title:e[1
 /* отметки табеля, ждущие подтверждения */
 function todo(){ return played.filter(g=>g.dirs.some(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d)))&&!myPartOk(TAB[tabKey(g)],g)); }
 const MONTHS_G=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
-/* Окно выплат людям: раз в месяц, 10–15 число следующего месяца (правило Мельникова 22.09.2026). open — окно наступило; running — месяц ещё идёт. */
-function payWin(k){ if(!/^\d{4}-\d{1,2}$/.test(String(k))) return {open:true,running:false,text:''}; const [y,m]=k.split('-').map(Number); /* ключ месяца mkey: месяц 0-based */ const n=new Date(y,m+1,1); const start=new Date(n.getFullYear(),n.getMonth(),10); return {open:TODAY>=start, running:TODAY<n, text:`10–15 ${MONTHS_G[n.getMonth()]}`}; }
+/* Окно выплат людям (Мельников 05.10.2026, вместо «10–15» от 22.09): документы клубу до 10-го, клуб платит примерно 11–15-го, людям — через 1–2 дня после оплаты клуба, то есть 12–17 число следующего месяца; сроки могут сдвигаться. open — окно наступило; running — месяц ещё идёт. */
+function payWin(k){ if(!/^\d{4}-\d{1,2}$/.test(String(k))) return {open:true,running:false,text:''}; const [y,m]=k.split('-').map(Number); /* ключ месяца mkey: месяц 0-based */ const n=new Date(y,m+1,1); const start=new Date(n.getFullYear(),n.getMonth(),12); return {open:TODAY>=start, running:TODAY<n, text:`12–17 ${MONTHS_G[n.getMonth()]}`}; }
 const MONTHS_F=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'], MONTHS=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'], WD=['вс','пн','вт','ср','чт','пт','сб'];
 const fmtS=n=>Math.round(n).toLocaleString('ru-RU').replace(/[\s\u202f]/g,'\u00a0'), fmt=n=>fmtS(n)+'\u00a0₽';
 const genRu=()=>{ const m=String(DATA.generated||'').match(/^(\d{4})-(\d\d)-(\d\d)[ T](\d\d:\d\d)/); return m?`${m[3]}.${m[2]} ${m[4]}`:String(DATA.generated||''); };
@@ -817,7 +817,7 @@ const CURK=mkey(TODAY);
 const dm=d=>String(d.getDate()).padStart(2,'0')+'.'+String(d.getMonth()+1).padStart(2,'0');
 /* срок, выпавший на выходной, переносится на ближайший рабочий день (п. 7 ст. 6.1 НК) */
 const workDay=(y,m,d)=>{ const x=new Date(y,m,d); const w=x.getDay(); if(w===6) x.setDate(x.getDate()+2); else if(w===0) x.setDate(x.getDate()+1); return x; };
-const ACT_DAY=+PARAMS['Акты клубу до числа']||9;
+const ACT_DAY=+PARAMS['Акты клубу до числа']||10;
 const initials=n=>String(n).split(' ').map(s=>s[0]).slice(0,2).join('');
 const startWord=()=>{ const k=monthKeys[0]; return k?'с '+MONTHS_G[+k.split('-')[1]]:'с начала учёта'; };
 
@@ -839,7 +839,7 @@ function chainSheet(){ const ks=monthKeys.filter(k=>cmpK(k,CURK)<=0); const ch=c
   </div>
   <div class="sec">По месяцам<small>начислено · долг</small></div><div class="g list" style="margin-top:10px">${ch.per.slice().reverse().map(x=>`<button class="row" data-open="month:${x.k}"><div class="t"><b>${mname(x.k)}</b><span>${x.acc?`выставлено ${fmtS(x.billed)}`:'пока ничего не начислено'}${x.unbilled>1&&x.k===pdK?' · акты до '+String(ACT_DAY).padStart(2,'0')+'.'+String(TODAY.getMonth()+1).padStart(2,'0'):''}</span></div><div class="v">${fmtS(x.acc)}<small>${x.acc-x.paid>1?'долг '+fmtS(x.acc-x.paid):(x.acc?'оплачено':x.k===CURK?'идёт':'')}</small></div>${chev}</button>`).join('')}</div>
   <div class="sec">Счета и акты<small>${ACTS.length}</small></div><div class="g list" style="margin-top:10px">${ACTS.slice().sort((a,b)=>a.date<b.date?1:-1).map(a=>`<div class="row"><span class="stripe" style="background:${a.paid>=a.sum-1?'var(--club)':'var(--crew)'}"></span><div class="t"><b>№ ${esc(a.num)} от ${a.date.split('-').reverse().join('.')}</b><span>${esc(a.party)} · ${a.dirs.map(dirName).join(', ')}${a.note?' · '+esc(a.note):''}</span></div><div class="v">${fmtS(a.sum)}<small>${a.paid>=a.sum-1?'оплачен '+(a.paidDate?a.paidDate.split('-').reverse().slice(0,2).join('.'):''):(a.paid?'оплачено '+fmtS(a.paid):'ждём оплату')}</small></div></div>`).join('')||'<div class="row"><div class="t"><b class="hd">Актов пока нет</b></div></div>'}</div>
-  <div class="note">Порядок месяца: акты за месяц выставляем до ${ACT_DAY}-го числа следующего, клуб платит 10–15-го, людям платим по мере прихода. Акт попадает сюда из листа «Акты» базы, оплата отмечается по выписке.</div>`; }
+  <div class="note">Порядок месяца: акты за месяц выставляем до ${ACT_DAY}-го числа следующего, клуб платит примерно 11–15-го, людям платим через 1–2 дня после его оплаты; сроки могут сдвигаться. Акт попадает сюда из листа «Акты» базы, оплата отмечается по выписке.</div>`; }
 
 /* --- Ведомость выплат и закрытие месяца --- */
 function vedOf(k){ const z=q=>({cash:q.cash<1?0:q.cash,card:q.card<1?0:q.card,bank:q.bank<1?0:q.bank}); /* меньше рубля — округление банка */ const rows=allPeople().map((p,i)=>({p,i,t:personTotals(p.name,k),q:z(paySplit(p.name,k))})).filter(x=>x.t.total||x.t.paid); const T={total:0,paid:0,off:0,due:0,cash:0,card:0,bank:0}; rows.forEach(x=>{ T.total+=x.t.total; T.paid+=x.t.paid; T.off+=x.t.off; T.due+=Math.max(0,x.t.due); T.cash+=x.q.cash; T.card+=x.q.card; T.bank+=x.q.bank; }); return {rows,T}; }
@@ -912,7 +912,7 @@ function deadlines(){ const ev=[]; const add=(d,title,sum,open,sub,tax)=>ev.push
   const pd=new Date(TODAY.getFullYear(),TODAY.getMonth()-1,1), pk=mkey(pd), y=TODAY.getFullYear(), m=TODAY.getMonth();
   if(monthKeys.includes(pk)){ const ch=chainOf([pk]); const v=vedOf(pk).T; const mn=MONTHS_F[pd.getMonth()].toLowerCase(); const left=v.bank+v.card+v.cash;
     if(ch.unbilled>1) add(new Date(y,m,ACT_DAY),'Акты за '+mn,ch.unbilled,'chain','выставить до '+ACT_DAY+'-го числа');
-    if(ch.acc-ch.paid>1) add(new Date(y,m,15),'Ждём оплату за '+mn,ch.acc-ch.paid,'chain','клуб платит 10–15-го');
+    if(ch.acc-ch.paid>1) add(new Date(y,m,15),'Ждём оплату за '+mn,ch.acc-ch.paid,'chain','клуб платит 11–15-го');
     if(left>1) add(new Date(y,m,15),'Выплаты людям',left,'ved:'+pk,'за '+mn+' · по мере прихода денег'); }
   taxQuarters().forEach(Q=>{ if(Q.vat>1){ add(Q.decl,'Декларация по НДС',0,'tax','за '+Q.name+' · подаёт бухгалтер',true); Q.parts.forEach((p,i)=>add(p.d,'НДС, доля '+(i+1)+' из 3',p.sum,'tax','за '+Q.name+(Q.over?'':' · квартал идёт, сумма растёт'),true)); }
     if(Q.usn>1) add(Q.usnDue,Q.usnName,Math.max(0,Q.usn-Q.off),'tax',(Q.over?'':'квартал ещё идёт · ')+'с поступлений '+Q.name.replace(/ \d{4}$/,'а'),true); });
