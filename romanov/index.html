@@ -234,6 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
+const BUILD = "20261008-1643";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1240,7 +1241,9 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   /* пока человек печатает в поле, экран не перерисовываем: иначе на телефоне закрывается клавиатура и правка срывается (Левина, табель, 05.10.2026) */
   const typingNow=()=>{ const a=document.activeElement; return !!a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=='checkbox'; };
   const typingDone=()=>new Promise(res=>{ if(!typingNow()) return res(); let calm=0; const t=setInterval(()=>{ calm=typingNow()?0:calm+1; if(calm>=2){ clearInterval(t); res(); } },600); });
-  window.__refresh=async function(fresh){ swUpd(); try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('trr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
+  /* «Обновить» проверяет и номер сборки страницы: новая сборка на сайте — страница перезагружается сама (Мельников 08.10.2026: «я делал обновление», а код остался старым, пока служебный файл лежал в кэше 10 минут) */
+  async function newBuild(){ try{ const h=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():''); const m=/const BUILD = "([^"]+)"/.exec(h); return !!(m&&m[1]!==BUILD); }catch(e){ return false; } }
+  window.__refresh=async function(fresh){ swUpd(); if(fresh&&await newBuild()){ window.__reloading=true; location.reload(); return true; } try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('trr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
   try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('trr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
   catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('trr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
   let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else { swUpd(); if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); } });
