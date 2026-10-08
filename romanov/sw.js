@@ -1,5 +1,5 @@
-/* ИП Романов 26/27: страница из сети, без сети — из запаса. Сборка 20261008-1643 */
-const CACHE='romanov-20261008-1643'; const ASSETS=["./", "./index.html", "./manifest.webmanifest", "./icon-180.png"];
+/* ИП Романов 26/27: страница из сети, без сети — из запаса. Сборка 20261008-1644 */
+const CACHE='romanov-20261008-1644'; const ASSETS=["./", "./index.html", "./manifest.webmanifest", "./icon-180.png"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).catch(()=>{}).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
 self.addEventListener('fetch',e=>{const req=e.request; if(req.method!=='GET') return; let u; try{u=new URL(req.url);}catch(err){return;} if(u.origin!==self.location.origin) return;

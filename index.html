@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "";
-const BUILD = "20261008-1643";
+const BUILD = "20261008-1644";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1237,7 +1237,7 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
   /* новая сборка приложения: проверять при «Обновить» и при возврате в приложение — иначе открытое на телефоне остаётся старым кодом (23.09.2026) */
-  function swUpd(){ try{ if('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r=>{ if(r) r.update(); }).catch(()=>{}); }catch(e){} }
+  function swUpd(){ try{ if('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r=>{ if(r) r.update().catch(()=>{}); }).catch(()=>{}); }catch(e){} }
   /* пока человек печатает в поле, экран не перерисовываем: иначе на телефоне закрывается клавиатура и правка срывается (Левина, табель, 05.10.2026) */
   const typingNow=()=>{ const a=document.activeElement; return !!a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=='checkbox'; };
   const typingDone=()=>new Promise(res=>{ if(!typingNow()) return res(); let calm=0; const t=setInterval(()=>{ calm=typingNow()?0:calm+1; if(calm>=2){ clearInterval(t); res(); } },600); });
