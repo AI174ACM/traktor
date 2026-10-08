@@ -1,5 +1,5 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Трактор 26/27</title>
-<link rel="stylesheet" href="fonts/fonts.css"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Трактор"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#ECEEF1"><meta name="robots" content="noindex,nofollow,noarchive">
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>ИП Романов 26/27</title>
+<link rel="stylesheet" href="../fonts/fonts.css"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Романов"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="theme-color" content="#ECEEF1"><meta name="robots" content="noindex,nofollow,noarchive">
 <style>
 :root{
   color-scheme:light;
@@ -233,7 +233,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 <script>
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
-const BASE = "";
+const BASE = "rom";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -246,7 +246,7 @@ const APPNAME=PARAMS['Название приложения']||'Трактор 2
 const scrub=h=>DEMO?String(h).replace(/Трактор ТВ/g,'Клубное ТВ').replace(/«?Челмет»?/g,'вторая команда').replace(/Белые Медведицы/g,'Метеор-Леди').replace(/Белые [Мм]едведи/g,'Метеор-Юниор').replace(/ХК «Трактор»/g,'ХК «Метеор»').replace(/Трактор/g,'Метеор').replace(/ИП Мельников[а-я]*/g,'ИП Орлов').replace(/Мельников[а-я]*/g,'Владелец').replace(/ИП Романов[а-я]*/g,'второе ИП').replace(/Романов[а-я]*/g,'второе ИП'):h;
 const ROLE = DATA.role||'admin';
 /* Личный режим сотрудника: роль person (ключ человека) или предпросмотр владельцем (?as=Фамилия / localStorage tr.as) */
-let PREVIEW=''; try{ const q=new URLSearchParams(location.search).get('as'); if(ROLE==='admin'){ if(q){ PREVIEW=q; LS.setItem('tr.as',q); } else PREVIEW=LS.getItem('tr.as')||''; } }catch(e){}
+let PREVIEW=''; try{ const q=new URLSearchParams(location.search).get('as'); if(ROLE==='admin'){ if(q){ PREVIEW=q; LS.setItem('trr.as',q); } else PREVIEW=LS.getItem('trr.as')||''; } }catch(e){}
 const WHO = DATA.who || PREVIEW || '';
 const PERSON = (ROLE==='person' || !!PREVIEW) && !!WHO;
 /* Долги видит только владелец (Мельников 07.10.2026): в личных видах и в сверке зарплат удержание из выплаты называется без слова «долг» */
@@ -254,8 +254,8 @@ const OFFW = PERSON ? 'Удержано из выплаты' : 'Зачтено �
 /* Кто видит деньги договора (клубу, мне): только владелец и офис, и не в режиме предпросмотра (23.09.2026) */
 const MONEY = (ROLE==='admin'||ROLE==='office') && !PREVIEW;
 /* Вид: 1 — светлый строгий, 2 — тёмный, 0 — прежний. Владельцу по умолчанию новый светлый; сотрудникам прежний, пока Мельников не выбрал (01.10.2026). Переключатель внизу главной или ?vid=2 */
-let VID='1'; try{ const qv=new URLSearchParams(location.search).get('vid'); if(/^[12]$/.test(qv||'')) LS.setItem('tr.vid',qv); VID=LS.getItem('tr.vid')==='2'?'2':'1'; if(qv==='0') VID='0'; }catch(e){} /* светлый и тёмный — для всех ролей (Мельников 01.10.2026: «тема и светлая, и тёмная пусть будет»); прежний вид только по ?vid=0 */
-let HIDE=true; try{ HIDE=LS.getItem('tr.hide')!=='0'; }catch(e){}
+let VID='1'; try{ const qv=new URLSearchParams(location.search).get('vid'); if(/^[12]$/.test(qv||'')) LS.setItem('trr.vid',qv); VID=LS.getItem('trr.vid')==='2'?'2':'1'; if(qv==='0') VID='0'; }catch(e){} /* светлый и тёмный — для всех ролей (Мельников 01.10.2026: «тема и светлая, и тёмная пусть будет»); прежний вид только по ?vid=0 */
+let HIDE=true; try{ HIDE=LS.getItem('trr.hide')!=='0'; }catch(e){}
 function applyVid(){ document.documentElement.dataset.vid=VID; const mt=document.querySelector('meta[name="theme-color"]'); if(mt) mt.content=VID==='2'?'#0C0D10':VID==='1'?'#F3F3F1':'#ECEEF1'; }
 applyVid();
 const MY_DIRS = new Set(PERSON ? DATA.rates.filter(r=>r[3]===WHO).map(r=>r[0]) : []);
@@ -358,8 +358,8 @@ function form(n,word){ const f=FORMS[word]||[word,word,word]; n=Math.abs(Math.ro
 function plu(n,word){ return n+' '+form(n,word); }
 /* --- расчёт за игру по направлению --- */
 const firstKhl = CAL.find(g=>g.home&&g.league==='КХЛ');
-let TAB={}; function loadTab(){ TAB={}; (DATA.tabel||[]).forEach(r=>{ try{ TAB[r.key]=JSON.parse(r.json||'{}'); }catch(e){} }); let loc={}; try{ loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); }catch(e){} Object.keys(loc).forEach(k=>{ if(!TAB[k]||!TAB[k].confirmed||(loc[k]&&loc[k].pending)) TAB[k]=loc[k]; else if(loc[k]){ TAB[k].names=Object.assign({},loc[k].names||{},TAB[k].names||{}); TAB[k].adv=Object.assign({},loc[k].adv||{},TAB[k].adv||{}); } }); } loadTab();
-function saveTab(){ try{ LS.setItem('tr.tabel2',JSON.stringify(TAB)); }catch(e){} }
+let TAB={}; function loadTab(){ TAB={}; (DATA.tabel||[]).forEach(r=>{ try{ TAB[r.key]=JSON.parse(r.json||'{}'); }catch(e){} }); let loc={}; try{ loc=JSON.parse(LS.getItem('trr.tabel2')||'{}'); }catch(e){} Object.keys(loc).forEach(k=>{ if(!TAB[k]||!TAB[k].confirmed||(loc[k]&&loc[k].pending)) TAB[k]=loc[k]; else if(loc[k]){ TAB[k].names=Object.assign({},loc[k].names||{},TAB[k].names||{}); TAB[k].adv=Object.assign({},loc[k].adv||{},TAB[k].adv||{}); } }); } loadTab();
+function saveTab(){ try{ LS.setItem('trr.tabel2',JSON.stringify(TAB)); }catch(e){} }
 /* Запись табеля: до трёх попыток. Сервер перезаписывает строку по ключу, повтор безопасен (01.10.2026: ответ терялся, когда приложение обновлялось в момент сохранения) */
 function pushTab(key,left){ if(DATA.demo) return Promise.resolve(true); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); left=left==null?2:left; return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,base:window.BASE||'',action:'tabel',key,entry:Object.assign({},TAB[key],{pending:undefined})})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false).then(ok=>(ok||left<=0)?ok:new Promise(res=>setTimeout(res,1500)).then(()=>pushTab(key,left-1))); }
 function tabKey(g){ return g.iso+'|'+g.league; }
@@ -376,8 +376,8 @@ function crew(dir,g){ let rows=RATES.filter(r=>r.dir===dir && !(r.rule.startsWit
    оплата монтажёру = единицы × ставка за единицу (лист «Ставки», TTV «за единицу»). Отчёт клубу = все строки с единицами, включая задачи без монтажа. ===== */
 let TTV=(DATA.ttv||[]).map(r=>({date:String(r[0]||'').slice(0,10),title:r[1]||'',place:r[2]||'',link:r[3]||'',note:r[4]||'',units:(r[6]===''||r[6]==null)?null:+r[6],mont:r[7]||'',by:r[8]||'',id:r[9]||''}));
 function ttvK(x){ return m2k(x.date); }
-function ttvQ(){ try{ return JSON.parse(LS.getItem('tr.ttvq')||'[]'); }catch(e){ return []; } }
-function ttvQsave(q){ try{ LS.setItem('tr.ttvq',JSON.stringify(q)); }catch(e){} }
+function ttvQ(){ try{ return JSON.parse(LS.getItem('trr.ttvq')||'[]'); }catch(e){ return []; } }
+function ttvQsave(q){ try{ LS.setItem('trr.ttvq',JSON.stringify(q)); }catch(e){} }
 function ttvApply(op,row){ const i=TTV.findIndex(x=>x.id===row.id); if(op==='delete'){ if(i>=0) TTV.splice(i,1); return; } const base=i>=0?TTV[i]:{date:'',title:'',place:'',link:'',note:'',units:null,mont:'',by:'',id:row.id}; const x=Object.assign({},base,row); if(i>=0) TTV[i]=x; else TTV.push(x); }
 ttvQ().forEach(q=>ttvApply(q.op,q.row)); /* то, что ещё не дошло до базы, показываем сразу */
 function ttvPush(op,row){ ttvApply(op,row); const q=ttvQ(); q.push({op,row}); ttvQsave(q); ttvFlush(); }
@@ -543,7 +543,7 @@ function home(){ if(VID!=='0') return homeNew();
   const s=sum(played), all=sum(CAL), cur=mkey(TODAY), m=sum(CAL.filter(g=>mkey(g.date)===cur)), mp=sum(played.filter(g=>mkey(g.date)===cur));
   const next=CAL.find(g=>!g.played); const office=OFFICE_EXP;
   return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu():'план по календарю и ставкам'} · сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:var(--card);color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
-  <div class="lt"><h1>Трактор 26/27</h1><p>ИП Мельников · договоров: ${CONTRACTS.length} · по матчам</p></div>
+  <div class="lt"><h1>ИП Романов 26/27</h1><p>ИП Мельников · договоров: ${CONTRACTS.length} · по матчам</p></div>
   <div class="stack">
     <button class="card tile" data-open="me" style="text-align:left;width:100%"><div class="lbl">Заработано по матчам с начала сезона · ${s.n} из ${CAL.length}</div><span class="mono">${fmtS(s.club)} ₽</span>
       <div class="foot"><span>Мне со всех проектов <b>${fmtS(monthKeys.reduce((x,k)=>x+meMonth(k).earned,0))} ₽</b> · нажмите</span><span>${Math.round(all.club?s.club/all.club*100:0)} % сезона</span></div></button>
@@ -616,7 +616,7 @@ function contractSheet(code){
     <div class="sub">план ${plu(d.plan,d.unit)}${d.league?' · сыграно '+pl+' · за сезон мне '+fmtS(CAL.filter(x=>x.dirs.includes(d.code)).reduce((x,gm)=>x+econ(d.code,gm).me,0)):''}</div></div>`; }).join('')}</div>
   <div class="sec">Состав и ставки</div>${dirs.map(d=>`<div class="sec" style="margin-top:14px;font-size:15px">${d.name}</div><div class="g list" style="margin-top:8px">${RATES.filter(r=>r.dir===d.code).map(r=>`<div class="row"><div class="t"><b>${r.pos}</b><span>${r.who}${r.rule&&r.rule!=='каждая игра'?' · '+r.rule:''}</span></div><div class="v">${r.rate?fmtS(r.rate):'%'}</div></div>`).join('')}</div>`).join('')}`;
 }
-let peopleMonth=(()=>{ try{ return LS.getItem('tr.peopleMonth')||''; }catch(e){ return ''; } })();
+let peopleMonth=(()=>{ try{ return LS.getItem('trr.peopleMonth')||''; }catch(e){ return ''; } })();
 function peopleSeason(){ const PL=allPeople(); return `<div class="g list">${PL.map((p,i)=>{ const a=personGames(p.name,played); const plan=personGames(p.name,CAL); const t=personTotals(p.name); const debt=debtBalance(p.name);
     return `<button class="row pr" data-open="person:${i}"><div class="av" style="background:${pcolor(i)}">${initials(p.name)}</div><div class="t"><b>${p.name}</b><span>${String(p.st||'').replace(/\s*\(.*\)/,'').replace(/ ИП Мельникова/,'')}${debt>0?' · <i style="font-style:normal;color:var(--bad)">долг '+fmtS(debt)+'</i>':''}</span></div><div class="v">${t.total?fmtS(t.total):'—'}<small>${a.n?plu(a.n,'матч'):plan.n?'план '+plan.n:'не по матчам'}</small></div>${chev}</button>`; }).join('')}</div>`; }
 function people(){
@@ -1017,11 +1017,11 @@ function homeNew(){
 function contourLink(){ if(DEMO||ROLE!=='admin'||PERSON||!window.KEY) return ''; const rom=!!window.BASE; const href=(rom?'../':'romanov/')+'?k='+encodeURIComponent(window.KEY); return `<div class="sec">Другое ИП</div><a class="g tile" href="${href}" style="display:flex;gap:12px;align-items:center;padding:14px 16px;text-decoration:none;color:inherit"><span class="stripe" style="background:var(--crew)"></span><div style="flex:1"><b style="display:block;font-weight:800">${rom?'ИП Мельников':'ИП Романов'}</b><span style="font-size:12.5px;color:var(--muted)">${rom?'Трактор 26/27: медиакуб, трансляции, Трактор ТВ':'шоу-программа на матчах, договор №13-2026'}</span></div>${chev}</a>`; }
 on(document,'click',e=>{ const n=e.target.closest('.note,.g>.sub'); if(n) n.classList.toggle('open'); });
 /* Сумма на главной скрыта размытием, как в банковских приложениях; нажатие на сумму показывает и снова прячет (Мельников 01.10.2026) */
-on(document,'click',e=>{ const b=e.target.closest('[data-eye]'); if(!b) return; e.stopPropagation(); e.preventDefault(); HIDE=!HIDE; try{ LS.setItem('tr.hide',HIDE?'1':'0'); }catch(err){} document.querySelectorAll('.hero [data-eye]:not(.eye),[data-eyeb]').forEach(x=>x.classList.toggle('blur',HIDE)); },true);
+on(document,'click',e=>{ const b=e.target.closest('[data-eye]'); if(!b) return; e.stopPropagation(); e.preventDefault(); HIDE=!HIDE; try{ LS.setItem('trr.hide',HIDE?'1':'0'); }catch(err){} document.querySelectorAll('.hero [data-eye]:not(.eye),[data-eyeb]').forEach(x=>x.classList.toggle('blur',HIDE)); },true);
 /* --- Задачи (01.10.2026): лист «Задачи» базы + то, что приложение видит само (сроки, акты, табель). Сотрудник видит только свои. --- */
 const TASKS=(DATA.tasks||[]).map(t=>({urg:+t[0]||3,title:String(t[1]||''),who:t[2]||'',due:String(t[3]||''),status:t[4]||'открыта',sec:t[5]||'',note:t[6]||'',created:t[7]||'',id:String(t[8]||''),answer:t[9]||''})).filter(t=>t.title);
 /* Отметка «сделано» держится на телефоне 15 минут поверх данных базы (06.10.2026, «у Леры задачи не снимаются»): фоновое обновление, начатое до нажатия, возвращало только что закрытую задачу открытой. */
-function taskMarks(){ try{ const m=JSON.parse(LS.getItem('tr.tdone')||'{}'); const now=Date.now(); Object.keys(m).forEach(k=>{ if(now-m[k].t>9e5) delete m[k]; }); return m; }catch(e){ return {}; } }
+function taskMarks(){ try{ const m=JSON.parse(LS.getItem('trr.tdone')||'{}'); const now=Date.now(); Object.keys(m).forEach(k=>{ if(now-m[k].t>9e5) delete m[k]; }); return m; }catch(e){ return {}; } }
 (function(){ const m=taskMarks(); TASKS.forEach(t=>{ const x=m[t.id]; if(x){ t.status=x.s; if(x.a) t.answer=x.a; } }); })();
 /* Задачи Мошаровой (Мельников 04.10.2026): она ведёт все документы, вопросы Claude идут в её приложение; владельцу её задачи не показываются — только сигнал, если задача не закрыта 7 дней. */
 const QUIET=/^Мошарова/, QUIET_DAYS=7;
@@ -1041,7 +1041,7 @@ function tasksSheet(){ const L=taskList(); const done=TASKS.filter(t=>taskDone(t
   ${boss?`<div class="sec">Новая задача</div><div class="g pad" style="margin-top:10px"><input class="fio" id="tk-title" placeholder="что сделать"><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px"><select class="fio" id="tk-urg"><option value="1">срочно</option><option value="2" selected>на этой неделе</option><option value="3">позже</option></select><select class="fio" id="tk-who"><option value="Мельников">мне</option>${PEOPLE.map(p=>`<option>${p.name}</option>`).join('')}<option>Бухгалтер</option><option>Claude</option></select></div><input class="fio" id="tk-due" type="date" style="margin-top:8px"><button class="tile" id="tk-add" style="margin-top:10px;background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Добавить</button></div>`:''}
   <div class="note">${PERSON?'Кружок слева закрывает задачу. Если задача — вопрос, впишите ответ в поле под ней и нажмите кружок.':'Кружок слева отмечает задачу сделанной. Задачи со стрелкой приложение ставит само: сроки, акты, выплаты, табель.'+(quietN?' По документам у Мошаровой в работе '+plu(quietN,'задача')+': здесь появится только та, что не закрыта '+QUIET_DAYS+' дней.':'')}</div>`; }
 function pushTask(body){ if(DEMO) return Promise.resolve(true); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(Object.assign({k:window.KEY,base:window.BASE||'',action:'task'},body))}).then(r=>r.json()).then(j=>!!(j&&j.ok)).catch(()=>false); }
-on(document,'click',e=>{ const c=e.target.closest('[data-task]'); if(c){ const t=TASKS.find(x=>x.id===c.dataset.task); if(!t) return; const undo=!!c.dataset.undo; const ans=undo?'':String((document.querySelector('[data-ans="'+t.id+'"]')||{}).value||'').trim().slice(0,500); t.status=undo?'открыта':'сделана'; if(ans) t.answer=ans; try{ const m=taskMarks(); m[t.id]={t:Date.now(),s:t.status,a:ans}; LS.setItem('tr.tdone',JSON.stringify(m)); }catch(err){} toast(undo?'Возвращена':'Сделано'); window.__rerender&&window.__rerender(); pushTask(Object.assign({op:undo?'open':'done',id:t.id},ans?{answer:ans}:{})).then(ok=>{ if(!ok) toast('Не записалось в базу, повторите'); }); return; }
+on(document,'click',e=>{ const c=e.target.closest('[data-task]'); if(c){ const t=TASKS.find(x=>x.id===c.dataset.task); if(!t) return; const undo=!!c.dataset.undo; const ans=undo?'':String((document.querySelector('[data-ans="'+t.id+'"]')||{}).value||'').trim().slice(0,500); t.status=undo?'открыта':'сделана'; if(ans) t.answer=ans; try{ const m=taskMarks(); m[t.id]={t:Date.now(),s:t.status,a:ans}; LS.setItem('trr.tdone',JSON.stringify(m)); }catch(err){} toast(undo?'Возвращена':'Сделано'); window.__rerender&&window.__rerender(); pushTask(Object.assign({op:undo?'open':'done',id:t.id},ans?{answer:ans}:{})).then(ok=>{ if(!ok) toast('Не записалось в базу, повторите'); }); return; }
   const a=e.target.closest('#tk-add'); if(a){ const v=id=>($('#'+id)||{}).value||''; const title=v('tk-title').trim(); if(!title){ toast('Впишите задачу'); return; } const row={id:(Math.random().toString(36).slice(2,10)+'00000000').slice(0,8),urg:+v('tk-urg')||2,title,who:v('tk-who'),due:v('tk-due')}; TASKS.push({urg:row.urg,title,who:row.who,due:row.due,status:'открыта',sec:'',note:'',created:'',id:row.id}); toast('Добавлено'); window.__rerender&&window.__rerender(); pushTask({op:'add',row}).then(ok=>{ if(!ok) toast('Не записалось в базу, повторите'); }); } });
 /* --- Сверка учёта (Мельников 02.10.2026: «по платёжкам или по памяти? у меня должен быть чёткий учёт»): у каждой строки базы есть источник — выписка банка, ведомость, слова Мельникова, оценка. Экран показывает, что подтверждено документом, а что нет. --- */
 const SRC_DOC=/выписка|ведомость|платёжка/i;
@@ -1059,7 +1059,7 @@ const debtTag=n=>{ const d=debtBalance(n); return d>0?' · <i class="dt">дол�
 function vidSwitch(){ return `<div class="vsw"><span>Вид</span>${[['1','Светлый'],['2','Тёмный']].map(x=>`<button class="chip ${VID===x[0]?'ak':'info'}" data-vid="${x[0]}">${x[1]}</button>`).join('')}</div>`; }
 function otherDemo(){ return `<div class="lt"><h1>Не по матчам</h1><p>считаются по единицам, сериям и приложениям</p></div><div class="stack">${['TTV','SERIAL','GRAPH'].filter(c=>DIRS[c]).map(c=>{ const d=DIRS[c]; return `<div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">${d.name}</div><span class="chip info">${d.unit}</span></div><div class="kv"><span>Заказчику за единицу, с НДС</span><b>${fmt(d.price*(1+VAT))}</b></div><div class="kv"><span>План сезона: ${d.plan}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div></div>`; }).join('')}</div>`; }
 /* только кнопки выбора вида: у самого <html> тоже есть data-vid, и без уточнения любое нажатие в приложении перерисовывало экран — из-за этого в табеле нельзя было поставить курсор в клетку с фамилией (05.10.2026) */
-on(document,'click',e=>{ const b=e.target.closest('button[data-vid]'); if(!b) return; VID=b.dataset.vid; try{ LS.setItem('tr.vid',VID); }catch(err){} applyVid(); window.__rerender&&window.__rerender(); });
+on(document,'click',e=>{ const b=e.target.closest('button[data-vid]'); if(!b) return; VID=b.dataset.vid; try{ LS.setItem('trr.vid',VID); }catch(err){} applyVid(); window.__rerender&&window.__rerender(); });
 
 /* Зарплаты персонала для сверки: начислено, выплачено и остаток по каждому человеку за месяц; строка открывает лист человека. Только люди из листа «Люди» и из табеля */
 let payMonth='';
@@ -1112,7 +1112,7 @@ if(PERSON&&TTV_READ) VIEWS.report=ttvReadView; else if(PERSON&&hasReport(WHO)) V
 if(PERSON){ const pv=$('#v-people'); if(pv) pv.id=VIEWS.pay?'v-pay':'v-tabel'; const cv=$('#v-contracts'); if(cv&&VIEWS.report) cv.id='v-report'; if(!TAB_ANY) delete VIEWS.tabel; document.querySelectorAll('.tab').forEach(b=>{ const t=b.dataset.tab; /* вкладки переименовываются один раз, а код перезапускается при каждом обновлении данных — учитываем оба имени */ if((t==='contracts'||t==='report')&&VIEWS.report){ b.dataset.tab='report'; b.querySelector('span').textContent='Отчёт'; } else if((t==='people'||t==='tabel'||t==='pay')&&VIEWS.pay){ b.dataset.tab='pay'; b.querySelector('span').textContent='Зарплаты'; } else if(t==='people'||t==='tabel'||t==='pay'){ if(TAB_ANY){ b.dataset.tab='tabel'; b.querySelector('span').textContent='Табель'; } else { b.remove(); delete VIEWS.tabel; const pv2=$('#v-tabel'); if(pv2) pv2.hidden=true; } } else if(t==='home') b.querySelector('span').textContent='Месяц'; else if(t==='money') b.querySelector('span').textContent='Деньги'; else if(!(t in VIEWS)) b.remove(); }); }
 function myIdx(){ return allPeople().findIndex(p=>p.name===WHO); } /* −1, если человека нет в списке */
 function previewBar(){ return PREVIEW?`<div class="g pad" style="display:flex;gap:10px;align-items:center;margin-bottom:10px;border-left:5px solid var(--accent)"><div style="flex:1;font-size:13px"><b>Предпросмотр.</b> Так приложение видит ${WHO}. Данные только по этому человеку.</div><button data-preview="" class="chip info" style="border:0;cursor:pointer">выйти</button></div>`:''; }
-let myMonth=(()=>{ try{ return LS.getItem('tr.myMonth')||''; }catch(e){ return ''; } })();
+let myMonth=(()=>{ try{ return LS.getItem('trr.myMonth')||''; }catch(e){ return ''; } })();
 function personHome(){ const i=myIdx(); const cur=mkey(TODAY); const next=CAL_ALL.find(g=>!g.played); const wait=todo().filter(g=>g.dirs.some(d=>tabHas(d,g))).length;
   const avail=monthKeys.filter(k=>{ const [y,m]=k.split('-').map(Number); if(new Date(y,m,1)>TODAY) return false; const t=personTotals(WHO,k); return t.total||t.paid||CAL.some(g=>mkey(g.date)===k&&myRate(g)); }); if(!avail.includes(cur)) avail.push(cur); if(!avail.includes(myMonth)) myMonth=cur; const k=myMonth;
   const body=personMonthSheet(i,k).replace(/^<div class="lt">[\s\S]*?<\/div>\s*/,'');
@@ -1132,8 +1132,8 @@ function personGameSheet(g){ const mine=[]; g.dirs.forEach(dir=>crew(dir,g).forE
   return `<div class="lt"><h1>${g.team} — ${g.opp}</h1><p>${dmy(g.date)} · ${g.league} · ${g.home?'дома':'выезд'} · ${g.played?'сыгран':'впереди'}</p></div>
   <div class="stack"><div class="card"><div class="lbl">${g.played?'Начислено за матч':'Ставка за матч'}</div><span class="mono">${fmtS(s)} ₽</span><div class="foot"><span>${mine.map(x=>DIRS[x.dir].name+' · '+x.r.pos).join(' · ')||'моих позиций в этом матче нет'}</span></div></div>
   ${g.dirs.filter(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d))).map(d=>{ const f=tabelFilled(d,g); return `<button class="g tile" data-open="tm:${g.iso}:${g.league}" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:${f.confirmed?'var(--good)':'var(--warn)'}"></span><div style="flex:1"><b style="display:block;font-weight:800">Табель · ${DIRS[d].name}</b><span style="font-size:12.5px;color:var(--muted)">${f.confirmed?'состав подтверждён':(f.need?f.done+' из '+f.need+' фамилий вписано':'открыть')}</span></div>${chev}</button>`; }).join('')}</div>`; }
-on(document,'click',e=>{ const b=e.target.closest('[data-preview]'); if(!b) return; try{ if(b.dataset.preview) LS.setItem('tr.as',b.dataset.preview); else LS.removeItem('tr.as'); }catch(err){} const u=new URL(location.href); u.searchParams.delete('as'); location.replace(u.toString()); });
-function show(tab){ if(!(tab in VIEWS)) tab='home'; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab)); Object.keys(VIEWS).forEach(k=>{const v=$('#v-'+k); v.hidden=k!==tab; if(k===tab){ try{ v.innerHTML=scrub(VIEWS[k]()); }catch(err){ v.innerHTML='<div class="lt"><h1>Экран не открылся</h1><p>'+err.message+'</p></div><div class="note">Нажмите «Обновить» на главной или сообщите об ошибке.</div>'; } v.classList.remove('in'); void v.offsetWidth; v.classList.add('in'); v.scrollTop=0;}}); try{LS.setItem('tr.tab',tab);}catch(e){} }
+on(document,'click',e=>{ const b=e.target.closest('[data-preview]'); if(!b) return; try{ if(b.dataset.preview) LS.setItem('trr.as',b.dataset.preview); else LS.removeItem('trr.as'); }catch(err){} const u=new URL(location.href); u.searchParams.delete('as'); location.replace(u.toString()); });
+function show(tab){ if(!(tab in VIEWS)) tab='home'; document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===tab)); Object.keys(VIEWS).forEach(k=>{const v=$('#v-'+k); v.hidden=k!==tab; if(k===tab){ try{ v.innerHTML=scrub(VIEWS[k]()); }catch(err){ v.innerHTML='<div class="lt"><h1>Экран не открылся</h1><p>'+err.message+'</p></div><div class="note">Нажмите «Обновить» на главной или сообщите об ошибке.</div>'; } v.classList.remove('in'); void v.offsetWidth; v.classList.add('in'); v.scrollTop=0;}}); try{LS.setItem('trr.tab',tab);}catch(e){} }
 const STACK = window.__STACK || (window.__STACK=[]); /* не в замыкании: boot() вызывается повторно при обновлении данных */
 function openSheet(key,replace){ if(replace||STACK[STACK.length-1]===key) STACK[STACK.length-1]=key; else STACK.push(key); renderSheet(key); }
 function goBack(){ STACK.pop(); if(STACK.length) renderSheet(STACK[STACK.length-1]); else $('#sheet').classList.remove('open'); }
@@ -1143,9 +1143,9 @@ function renderSheet(key){ const [kind,...rest]=key.split(':'); const id=rest.jo
   $('#sheet-body').innerHTML=`<button class="back" id="back"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg>Назад</button>`+scrub(body); $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=0; if(kind==='tm') updateTabBtn(); }
 on(document,'click',e=>{ if(e.target.closest('input,select,textarea')) return; const t=e.target.closest('[data-tab],[data-open],[data-cal],[data-pmonth],[data-gocal],[data-mymonth],#back'); if(!t) return; if(t.dataset.tab&&!(t.dataset.tab in VIEWS)) return;
   if(t.dataset.gocal){ const [y,m]=t.dataset.gocal.split('-').map(Number); calMonth=new Date(y,m-1,1); STACK.length=0; $('#sheet').classList.remove('open'); show('cal'); return; }
-  if(t.dataset.mymonth){ myMonth=t.dataset.mymonth; try{LS.setItem('tr.myMonth',myMonth);}catch(e){} $('#v-home').innerHTML=scrub(personHome()); return; }
+  if(t.dataset.mymonth){ myMonth=t.dataset.mymonth; try{LS.setItem('trr.myMonth',myMonth);}catch(e){} $('#v-home').innerHTML=scrub(personHome()); return; }
   if(t.id==='back'){goBack();return;} if(t.dataset.cal){ calMonth=new Date(calMonth.getFullYear(),calMonth.getMonth()+(+t.dataset.cal),1); $('#v-cal').innerHTML=scrub(calView()); return; }
-  if(t.dataset.pmonth){ peopleMonth=t.dataset.pmonth; try{LS.setItem('tr.peopleMonth',peopleMonth);}catch(e){} $('#v-people').innerHTML=scrub(people()); return; } if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
+  if(t.dataset.pmonth){ peopleMonth=t.dataset.pmonth; try{LS.setItem('trr.peopleMonth',peopleMonth);}catch(e){} $('#v-people').innerHTML=scrub(people()); return; } if(t.dataset.open){openSheet(t.dataset.open);return;} if(t.dataset.tab){STACK.length=0;$('#sheet').classList.remove('open');show(t.dataset.tab);} });
 let curTab=null;
 on(document,'click',e=>{ if(e.target.closest('#refresh')&&window.__refresh){ e.target.closest('#refresh').textContent='…'; window.__refresh(true); } });
 function toast(msg){ let el=document.getElementById('toast'); if(!el){ el=document.createElement('div'); el.id='toast'; ($('#app')||document.body).appendChild(el); } el.textContent=msg; el.className='on'; clearTimeout(el._t); el._t=setTimeout(()=>{el.className='';},1400); }
@@ -1167,9 +1167,9 @@ on(document,'click',e=>{ const b=e.target.closest('#tab-confirm,#tab-edit'); if(
   /* Сначала показываем результат, в базу отправляем в фоне: скрипт отвечает от 2 до 30 секунд (01.10.2026) */
   openSheet('tm:'+iso+':'+lg,true); toast(yes?'Подтверждено. Отправляю в базу…':'Открыто для правки');
   pushTab(key).then(ok=>{ if(ok){ dropLocalTab(key); toast('Записано в базу'); } else if(window.DATA_URL) toast('База долго отвечает — сохранено на телефоне, отправлю ещё раз сам'); }); });
-function dropLocalTab(key){ if(TAB[key]) delete TAB[key].pending; try{ const loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); delete loc[key]; LS.setItem('tr.tabel2',JSON.stringify(loc)); }catch(e){} }
+function dropLocalTab(key){ if(TAB[key]) delete TAB[key].pending; try{ const loc=JSON.parse(LS.getItem('trr.tabel2')||'{}'); delete loc[key]; LS.setItem('trr.tabel2',JSON.stringify(loc)); }catch(e){} }
 /* Досылка: всё, что подтверждено на телефоне, но не дошло до базы, отправляется при открытии приложения и раз в минуту */
-function syncTabs(){ let loc={}; try{ loc=JSON.parse(LS.getItem('tr.tabel2')||'{}'); }catch(e){} return Object.keys(loc).filter(k=>loc[k]&&loc[k].pending).reduce((p,k)=>p.then(()=>{ TAB[k]=loc[k]; return pushTab(k,0).then(ok=>{ if(ok) dropLocalTab(k); }); }),Promise.resolve()); }
+function syncTabs(){ let loc={}; try{ loc=JSON.parse(LS.getItem('trr.tabel2')||'{}'); }catch(e){} return Object.keys(loc).filter(k=>loc[k]&&loc[k].pending).reduce((p,k)=>p.then(()=>{ TAB[k]=loc[k]; return pushTab(k,0).then(ok=>{ if(ok) dropLocalTab(k); }); }),Promise.resolve()); }
 setTimeout(syncTabs,5000); clearInterval(window.__syncT); window.__syncT=setInterval(syncTabs,60000);
 function saveDebt(row,btn){ if(btn){ btn.disabled=true; btn.textContent='Сохраняю…'; } return pushDebt(row).then(ok=>{ if(!ok){ if(btn){ btn.disabled=false; btn.textContent='Повторить'; } alert('Не удалось записать в базу. Проверьте связь и повторите.'); return false; } DEBTS.push({date:row.date,project:row.project,who:row.who,op:row.op,sum:row.sum,form:row.form,note:row.note,by:ROLE,when:'',month:row.month||''}); toast('Записано'); if(window.__refresh) setTimeout(()=>window.__refresh(),800); return true; }); }
 on(document,'click',e=>{ const b=e.target.closest('#df-save'); if(b){ const v=id=>($('#'+id)||{}).value||''; const row={date:v('df-date'),project:v('df-project')||'Трактор',who:v('df-who').trim(),op:v('df-op'),sum:parseFloat(v('df-sum').replace(/\s/g,'').replace(',','.'))||0,form:v('df-form'),note:v('df-note').trim()};
@@ -1182,7 +1182,7 @@ window.__rerender=function(){ const cur=document.querySelector('.tab[aria-select
 if(window.__booted){ window.__rerender(); } else { window.__booted=true; show('home'); }
 }
 
-function gate(msg){ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
+function gate(msg){ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>ИП Романов 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
   <div class="g pad"><input id="klink" inputmode="url" placeholder="Вставьте сюда свою ссылку" style="width:100%;font:600 15px Manrope,sans-serif;padding:12px 14px;border:1px solid #DDE1E6;border-radius:14px;background:#F6F7F9">
   <button id="kgo" class="tile" style="margin-top:10px;background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Открыть</button></div>`;
   document.getElementById('kgo').onclick=()=>{ const v=document.getElementById('klink').value.trim(); let k=v; try{ k=new URL(v).searchParams.get('k')||v; }catch(e){} location.href=location.pathname+'?k='+encodeURIComponent(k); }; }
@@ -1220,24 +1220,24 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
     try{ const j=await fetch('demo.json',{cache:'no-store'}).then(r=>r.json()); j.demo=true; j.role='admin'; boot(toData(j)); }
     catch(e){ document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Показ не загрузился</h1><p>Проверьте интернет и откройте ссылку ещё раз</p></div>'; }
     return; }
-  let prevKey=null; try{ prevKey=localStorage.getItem('tr.key'); }catch(e){}
+  let prevKey=null; try{ prevKey=localStorage.getItem('trr.key'); }catch(e){}
   const url=new URL(location.href); let k=url.searchParams.get('k');
-  if(k){ try{localStorage.setItem('tr.key',k);}catch(e){} } else { try{k=localStorage.getItem('tr.key');}catch(e){} }
+  if(k){ try{localStorage.setItem('trr.key',k);}catch(e){} } else { try{k=localStorage.getItem('trr.key');}catch(e){} }
   if(!k){ gate(); return; }
   window.DATA_URL=DATA_URL; window.KEY=k; window.BASE=BASE;
   /* кэш и черновики привязаны к ключу: при входе по другой ссылке чужие данные с этого устройства стираются (01.10.2026) */
-  try{ const was=localStorage.getItem('tr.datak')||prevKey; if(was&&was!==k) ['tr.data','tr.tabel2','tr.ttvq','tr.as','tr.myMonth','tr.peopleMonth'].forEach(x=>localStorage.removeItem(x)); localStorage.setItem('tr.datak',k); }catch(e){}
-  let cached=null; try{ cached=JSON.parse(localStorage.getItem('tr.data')||'null'); }catch(e){}
+  try{ const was=localStorage.getItem('trr.datak')||prevKey; if(was&&was!==k) ['trr.data','trr.tabel2','trr.ttvq','trr.as','trr.myMonth','trr.peopleMonth'].forEach(x=>localStorage.removeItem(x)); localStorage.setItem('trr.datak',k); }catch(e){}
+  let cached=null; try{ cached=JSON.parse(localStorage.getItem('trr.data')||'null'); }catch(e){}
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
-  else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>загружаю данные…</p></div>';
+  else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:40px"><h1>ИП Романов 26/27</h1><p>загружаю данные…</p></div>';
   /* новая сборка приложения: проверять при «Обновить» и при возврате в приложение — иначе открытое на телефоне остаётся старым кодом (23.09.2026) */
   function swUpd(){ try{ if('serviceWorker' in navigator) navigator.serviceWorker.getRegistration().then(r=>{ if(r) r.update(); }).catch(()=>{}); }catch(e){} }
   /* пока человек печатает в поле, экран не перерисовываем: иначе на телефоне закрывается клавиатура и правка срывается (Левина, табель, 05.10.2026) */
   const typingNow=()=>{ const a=document.activeElement; return !!a&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)&&a.type!=='checkbox'; };
   const typingDone=()=>new Promise(res=>{ if(!typingNow()) return res(); let calm=0; const t=setInterval(()=>{ calm=typingNow()?0:calm+1; if(calm>=2){ clearInterval(t); res(); } },600); });
-  window.__refresh=async function(fresh){ swUpd(); try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
-  try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
-  catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('tr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
+  window.__refresh=async function(fresh){ swUpd(); try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('trr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
+  try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('trr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
+  catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('trr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
   let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else { swUpd(); if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); } });
   if('serviceWorker' in navigator && SW){ const had=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(had && !window.__reloading){ window.__reloading=true; location.reload(); } }); navigator.serviceWorker.register('sw.js').then(r=>{ try{ r.update(); }catch(e){} }).catch(()=>{}); }
 })();
