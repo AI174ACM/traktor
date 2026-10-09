@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "";
-const BUILD = "20261009-1133";
+const BUILD = "20261009-1302";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1123,7 +1123,7 @@ function personHome(){ const i=myIdx(); const cur=mkey(TODAY); const next=CAL_AL
   const avail=monthKeys.filter(k=>{ const [y,m]=k.split('-').map(Number); if(new Date(y,m,1)>TODAY) return false; const t=personTotals(WHO,k); return t.total||t.paid||CAL.some(g=>mkey(g.date)===k&&myRate(g)); }); if(!avail.includes(cur)) avail.push(cur); if(!avail.includes(myMonth)) myMonth=cur; const k=myMonth;
   const body=personMonthSheet(i,k).replace(/^<div class="lt">[\s\S]*?<\/div>\s*/,'');
   return `<div class="proto" style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${DATA.generated?'данные от '+genRu()+' · ':''}сегодня ${dmy(TODAY)}</span><button id="refresh" style="appearance:none;border:0;background:var(--card);color:var(--accent);font:700 12px Manrope,sans-serif;padding:5px 10px;border-radius:999px;cursor:pointer;white-space:nowrap">Обновить</button></div>
-  ${previewBar()}<div class="lt"><h1>${WHO}</h1><p>${k===cur&&payWin(k).running?'месяц идёт · выплата '+payWin(k).text:payWin(k).open?'выплата с '+payWin(k).text:'выплата '+payWin(k).text}</p></div>
+  ${previewBar()}<div class="lt">${DOC_READ?contourTop():''}<h1>${WHO}</h1><p>${k===cur&&payWin(k).running?'месяц идёт · выплата '+payWin(k).text:payWin(k).open?'выплата с '+payWin(k).text:'выплата '+payWin(k).text}</p></div>
   <div style="display:flex;gap:8px;overflow-x:auto;padding:0 0 12px;-webkit-overflow-scrolling:touch">${avail.map(m=>`<button class="chip ${m===k?'ak':'info'}" data-mymonth="${m}" style="border:0;cursor:pointer;white-space:nowrap">${mname(m)}</button>`).join('')}</div>
   <div class="stack"><div class="grid2">
     <button class="g tile now" ${next?`data-gocal="${next.iso.slice(0,7)}"`:'disabled style="opacity:.6"'}><div class="lbl" style="color:var(--accent)">Следующий матч</div><div class="num big" style="font-size:22px">${next?dmy(next.date).slice(0,5):'—'}</div><div class="sub">${next?next.team+' — '+next.opp+' · '+next.league+' · '+(next.home?'дома':'выезд')+' · открыть календарь':'в календаре пусто'}</div></button>
