@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
-const BUILD = "20261008-1644";
+const BUILD = "20261009-1127";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1210,7 +1210,7 @@ function toData(j){ const n=x=>(x===''||x==null)?0:(typeof x==='number'?x:parseF
     ttv:(j['Единицы_ТТВ']||[]).map(r=>[r['Дата']||'',r['Что сделано']||'',r['Где произведено']||'',r['Ссылка']||'',r['Примечание']||'',r['Месяц']||'',(r['Кол-во единиц']===''||r['Кол-во единиц']==null)?'':n(r['Кол-во единиц']),r['Монтаж']||'',r['Внёс']||'',r['ID']||'']),
     acts:(j['Акты']||[]).map(r=>[r['Дата']||'',String(r['Номер']==null?'':r['Номер']),r['Вид']||'',r['Заказчик']||'',r['Договор']||'',r['Направление']||'',r['Месяц']||'',n(r['Сумма с НДС']),r['Дата оплаты']||'',n(r['Оплачено']),r['Примечание']||'']),
     closed:(j['Закрытие']||[]).map(r=>[r['Месяц']||'',r['Человек']||'',n(r['Начислено']),n(r['Выплачено']),n(r['Зачёт']),n(r['К выплате']),r['Закрыл']||'',r['Когда']||'']),
-    arh:(j['Реестр_документов']||[]).filter(r=>String(r['Статус']||'')!=='заменён').map(r=>[r['Вид']||'',String(r['Номер']==null?'':r['Номер']),r['Дата документа']||'',r['Контрагент']||'',r['Человек']||'',r['Месяц']||'',String(r['Договор']==null?'':r['Договор']),r['Подписи']||'',r['Ссылка']||'',r['Сезон']||'']),
+    arh:(j['Реестр_документов']||[]).filter(r=>!/^заменён/.test(String(r['Статус']||''))).map(r=>[r['Вид']||'',String(r['Номер']==null?'':r['Номер']),r['Дата документа']||'',r['Контрагент']||'',r['Человек']||'',r['Месяц']||'',String(r['Договор']==null?'':r['Договор']),r['Подписи']||'',r['Ссылка']||'',r['Сезон']||'']),
     tasks:(j['Задачи']||[]).map(r=>[n(r['Срочность']),r['Задача']||'',r['Кто']||'',r['Срок']||'',r['Статус']||'',r['Раздел']||'',r['Примечание']||'',r['Создана']||'',r['ID']||'',r['Ответ']||'']),
     params:Object.fromEntries((j['Параметры']||[]).map(r=>[r['Параметр'],r['Значение']])), demo:!!j.demo,
     tabelDirs:j.tabelDirs||[], tabelOps:!!j.tabelOps, opsOwner:!!j.opsOwner,
