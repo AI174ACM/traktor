@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
-const BUILD = "20261009-1127";
+const BUILD = "20261009-1133";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1018,7 +1018,7 @@ function homeNew(){
   ${vidSwitch()}`;
 }
 /* Второй контур — ИП Романов (шоу-программа, 08.10.2026): отдельная база и отдельная страница romanov/, тот же ключ владельца; деньги двух ИП не смешиваются */
-function contourTop(){ if(DEMO||ROLE!=='admin'||PERSON||!window.KEY) return `<div class="eyebrow">${OWNER_LBL}</div>`; const rom=!!window.BASE; const href=(rom?'../':'romanov/')+'?k='+encodeURIComponent(window.KEY); const on='class="chip ak" style="border:0"', off='class="chip info" style="border:0;text-decoration:none"'; /* переключатель между ИП — сверху (Мельников 08.10.2026) */
+function contourTop(){ if(DEMO||!window.KEY||!(ROLE==='admin'&&!PERSON||PERSON&&typeof DOC_READ!=='undefined'&&DOC_READ)) return /* владелец и Мошарова (право ДОКУМЕНТЫ) видят переключатель ИП (Мельников 09.10.2026) */ `<div class="eyebrow">${OWNER_LBL}</div>`; const rom=!!window.BASE; const href=(rom?'../':'romanov/')+'?k='+encodeURIComponent(window.KEY); const on='class="chip ak" style="border:0"', off='class="chip info" style="border:0;text-decoration:none"'; /* переключатель между ИП — сверху (Мельников 08.10.2026) */
   return `<div class="eyebrow" style="display:flex;gap:6px;align-items:center;margin-bottom:8px">${rom?`<a href="${href}" ${off}>ИП Мельников</a><span ${on}>ИП Романов</span>`:`<span ${on}>ИП Мельников</span><a href="${href}" ${off}>ИП Романов</a>`}</div>`; }
 function contourLink(){ if(DEMO||ROLE!=='admin'||PERSON||!window.KEY) return ''; const rom=!!window.BASE; const href=(rom?'../':'romanov/')+'?k='+encodeURIComponent(window.KEY); return `<div class="sec">Другое ИП</div><a class="g tile" href="${href}" style="display:flex;gap:12px;align-items:center;padding:14px 16px;text-decoration:none;color:inherit"><span class="stripe" style="background:var(--crew)"></span><div style="flex:1"><b style="display:block;font-weight:800">${rom?'ИП Мельников':'ИП Романов'}</b><span style="font-size:12.5px;color:var(--muted)">${rom?'Трактор 26/27: медиакуб, трансляции, Трактор ТВ':'шоу-программа на матчах, договор №13-2026'}</span></div>${chev}</a>`; }
 on(document,'click',e=>{ const n=e.target.closest('.note,.g>.sub'); if(n) n.classList.toggle('open'); });
