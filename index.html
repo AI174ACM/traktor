@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "";
-const BUILD = "20261010-2323";
+const BUILD = "20261010-2332";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -725,7 +725,7 @@ function money(){
     <button class="row" data-open="tax"><span class="stripe" style="background:var(--tax)"></span><div class="t"><b>Налоги и взносы</b><span>календарь платежей и резерв</span></div><div class="v">${fmtS(deadlines().filter(e=>e.tax&&e.d>=TODAY&&e.d<=new Date(TODAY.getFullYear(),11,31)).reduce((x,e)=>x+e.sum,0))}<small>до конца года</small></div>${chev}</button>
     <button class="row" data-open="src"><span class="stripe" style="background:var(--bad)"></span><div class="t"><b>Сверка учёта</b><span>что подтверждено документом</span></div><div class="v">${fmtS(PAY.filter(p=>(monthKeys.includes(p.k)||monthKeys.includes(dk(p)))&&!SRC_DOC.test(p.src||'')).reduce((x,p)=>x+p.sum,0))}<small>без документа</small></div>${chev}</button>
     ${ROLE==='admin'?`<button class="row" data-open="cash"><span class="stripe" style="background:var(--me)"></span><div class="t"><b>Касса наличных</b><span>снято, выдано людям, осталось</span></div><div class="v">${fmtS(cashOf().left)}<small>осталось</small></div>${chev}</button>`:''}</div>
-  <div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${['TTV','SERIAL','GRAPH'].map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним: оклады Трактор ТВ, за серию, правило по графике — считаются отдельно</div></div>
+  ${(()=>{ /* направления не по матчам — из своей базы (в контуре ИП Романова кодов TTV/SERIAL/GRAPH нет, экран падал — 11.10.2026) */ const nm=Object.keys(DIRS).filter(c=>!MATCH_DIRS.has(c)&&DIRS[c].plan>0); return nm.length?`<div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${nm.map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним: оклады Трактор ТВ, за серию, правило по графике — считаются отдельно</div></div>`:''; })()}
   </div>
   <div class="sec">По месяцам<small>клубу · людям · мне</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played)); const cur=k===mkey(TODAY); const inc=PAY.filter(p=>p.inc&&p.k===k).reduce((s,p)=>s+p.sum,0), outs=PAY.filter(p=>p.kind==='out'&&p.k===k).reduce((s,p)=>s+p.sum,0); return `<button class="row${cur?' now':''}" data-open="month:${k}"><div class="t"><b>${mname(k)}</b><span>${m.n?plu(m.n,'матч')+' · мне '+fmtS(m.me):'не по матчам'}</span></div><div class="v">${fmtS(m.club+inc)}<small>${cur?'идёт':m.n?(mp.n===m.n?'сыграно':mp.n?mp.n+' из '+m.n:'план'):'факт'}</small></div>${chev}</button>`; }).join('')}</div>`;
 }
