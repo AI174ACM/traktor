@@ -234,7 +234,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
-const BUILD = "20261010-2332";
+const BUILD = "20261010-2338";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -355,7 +355,7 @@ function on(target,type,fn,opts){ if(!target) return; target.addEventListener(ty
   addEventListener('resize',rot); addEventListener('orientationchange',()=>setTimeout(rot,80)); if(screen.orientation) screen.orientation.addEventListener('change',rot); rot(); })(); const chev='<svg class="chev" viewBox="0 0 7 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l5 5-5 5"/></svg>';
 const LG={'КХЛ':'khl','МХЛ':'mhl','ЖХЛ':'zhl','ВХЛ':'vhl'};
 /* Склонение числительных по-русски: 1 матч, 2 матча, 5 матчей, 11 матчей, 22 матча (Мельников 23.09.2026) */
-const FORMS={'запись':['запись','записи','записей'],'задача':['задача','задачи','задач'],'договор':['договор','договора','договоров'],'матч':['матч','матча','матчей'],'игра':['игра','игры','игр'],'единица':['единица','единицы','единиц'],'серия':['серия','серии','серий'],'месяц':['месяц','месяца','месяцев'],'человек':['человек','человека','человек'],'день':['день','дня','дней'],'фамилия':['фамилия','фамилии','фамилий'],'приложение':['приложение','приложения','приложений']};
+const FORMS={'запись':['запись','записи','записей'],'задача':['задача','задачи','задач'],'договор':['договор','договора','договоров'],'матч':['матч','матча','матчей'],'игра':['игра','игры','игр'],'единица':['единица','единицы','единиц'],'профайл':['профайл','профайла','профайлов'],'мероприятие':['мероприятие','мероприятия','мероприятий'],'серия':['серия','серии','серий'],'месяц':['месяц','месяца','месяцев'],'человек':['человек','человека','человек'],'день':['день','дня','дней'],'фамилия':['фамилия','фамилии','фамилий'],'приложение':['приложение','приложения','приложений']};
 function form(n,word){ const f=FORMS[word]||[word,word,word]; n=Math.abs(Math.round(n)); const t=n%100, o=n%10; return (t>=11&&t<=14)?f[2]:o===1?f[0]:(o>=2&&o<=4)?f[1]:f[2]; }
 function plu(n,word){ return n+' '+form(n,word); }
 /* --- расчёт за игру по направлению --- */
@@ -505,6 +505,8 @@ const PROJ_GROUP={SERIAL:'TTV'};
 /* Матчевые направления уже посчитаны строкой «По матчам» — приход по ним (оплата акта клубом) не добавляем второй строкой (23.09.2026) */
 const MATCH_DIRS=new Set(['MK_KHL','MK_MHL','MK_ZHL','TR_MHL','TR_ZHL','PRESS','SCREEN','COACH'].concat(Object.keys(DIRS).filter(d=>/^(игра|матч)$/.test(String(DIRS[d].unit||'').trim())))); /* плюс всё, что считается за игру (контур ИП Романова: SHOW_KHL/MHL/ZHL/VHL), иначе счёт клубу шёл в «Мне» второй раз (10.10.2026) */
 const SKIP_DIRS=new Set(['OFFICE','ШТАТ','ИП','ЛИЧНОЕ','НАЛ','СВОИ','?','']);
+function nonMatchDirs(){ return Object.keys(DIRS).filter(c=>!MATCH_DIRS.has(c)&&DIRS[c].plan>0); } /* направления не по матчам своей базы: плитка «Не по матчам», экран «Деньги», лист «Не по матчам» считают один список (11.10.2026) */
+function nonMatchPlan(){ return nonMatchDirs().reduce((s,c)=>s+DIRS[c].price*(1+VAT)*DIRS[c].plan,0); }
 function projName(d){ return d==='TTV'?'Трактор ТВ и сериал':d==='ДРУГОЕ'?'Разовое (не по договорам)':d==='PROF'?'Профайлы (ИП Романов)':dirName(d); }
 function meMonth(k){
   const gs=played.filter(g=>mkey(g.date)===k); const m=sum(gs); const rows=[];
@@ -593,7 +595,7 @@ function home(){ if(VID!=='0') return homeNew();
     ${(()=>{const n=todo().length; return n?`<button class="g tile" data-open="tabel" style="display:flex;gap:12px;align-items:center;padding:14px 16px"><span class="stripe" style="background:var(--warn)"></span><div style="flex:1"><b style="display:block;font-weight:800">Табель ждёт подтверждения</b><span style="font-size:12.5px;color:var(--muted)">${plu(n,'матч')} сыграно без подтверждённого состава</span></div>${chev}</button>`:'';})()}
     ${debtTile()}
     <div class="grid2">
-      <button class="g tile" data-open="other"><div class="lbl">Не по матчам</div><div class="num big" style="font-size:22px">${fmtS(['TTV','SERIAL','GRAPH'].reduce((s,c)=>s+DIRS[c].price*(1+VAT)*DIRS[c].plan,0))} ₽</div><div class="sub">Трактор ТВ, сериал, графика · план</div></button>
+      ${nonMatchDirs().length?`<button class="g tile" data-open="other"><div class="lbl">Не по матчам</div><div class="num big" style="font-size:22px">${fmtS(nonMatchPlan())} ₽</div><div class="sub">${nonMatchDirs().map(c=>DIRS[c].name).join(', ').slice(0,40)} · план</div></button>`:''}
       ${(ROLE==='admin'||ROLE==='office')?`<button class="g tile" data-open="ttv:"><div class="lbl" style="color:var(--accent)">Трактор ТВ</div><div class="num big" style="font-size:22px">${(()=>{ const k=mkey(TODAY); const l=TTV.filter(x=>ttvK(x)===k); return l.reduce((s,x)=>s+(x.units||0),0)+' ед.'; })()}</div><div class="sub">отчёт по дням${ttvWaiting()?' · ждут оценки: '+ttvWaiting():''}</div></button>`:''}
       <button class="g tile docs" data-open="docs"><div class="lbl" style="color:var(--crew)">Документы</div><div class="num big" style="font-size:22px">${[...new Set(docsAll().map(d=>d.doc))].length||'—'}</div><div class="sub">реквизиты, ИП, личные, люди</div></button>
     </div>
@@ -715,7 +717,7 @@ function personMonthSheet(i,k){ if(!allPeople()[i]) return '<div class="lt"><h1>
 }
 function money(){
   const all=sum(CAL);
-  return `<div class="lt"><h1>Деньги</h1><p>по матчам · план и факт по месяцам</p></div><div class="stack">
+  return `<div class="lt"><h1>Деньги</h1><p>${window.BASE==='rom'?'ИП Романов · ':''}по матчам · план и факт по месяцам</p></div><div class="stack">
   <div class="card"><div class="lbl">Клуб заплатит за сезон по матчам, с НДС</div><span class="mono">${fmtS(all.club)} ₽</span><div class="foot"><span>уже сыграно на <b>${fmtS(sum(played).club)}</b></span><span>${plu(CAL.length,'матч')}</span></div></div>
   <div class="g pad"><div class="lbl c">Как делится</div>
     <div class="bar"><i style="width:${(all.pay-all.office)/all.club*100}%;background:var(--crew)"></i><i style="width:${all.office/all.club*100}%;background:var(--office)"></i><i style="width:${(all.vat+all.usn)/all.club*100}%;background:var(--tax)"></i><i style="width:${all.me/all.club*100}%;background:var(--me)"></i></div>
@@ -725,9 +727,9 @@ function money(){
     <button class="row" data-open="tax"><span class="stripe" style="background:var(--tax)"></span><div class="t"><b>Налоги и взносы</b><span>календарь платежей и резерв</span></div><div class="v">${fmtS(deadlines().filter(e=>e.tax&&e.d>=TODAY&&e.d<=new Date(TODAY.getFullYear(),11,31)).reduce((x,e)=>x+e.sum,0))}<small>до конца года</small></div>${chev}</button>
     <button class="row" data-open="src"><span class="stripe" style="background:var(--bad)"></span><div class="t"><b>Сверка учёта</b><span>что подтверждено документом</span></div><div class="v">${fmtS(PAY.filter(p=>(monthKeys.includes(p.k)||monthKeys.includes(dk(p)))&&!SRC_DOC.test(p.src||'')).reduce((x,p)=>x+p.sum,0))}<small>без документа</small></div>${chev}</button>
     ${ROLE==='admin'?`<button class="row" data-open="cash"><span class="stripe" style="background:var(--me)"></span><div class="t"><b>Касса наличных</b><span>снято, выдано людям, осталось</span></div><div class="v">${fmtS(cashOf().left)}<small>осталось</small></div>${chev}</button>`:''}</div>
-  ${(()=>{ /* направления не по матчам — из своей базы (в контуре ИП Романова кодов TTV/SERIAL/GRAPH нет, экран падал — 11.10.2026) */ const nm=Object.keys(DIRS).filter(c=>!MATCH_DIRS.has(c)&&DIRS[c].plan>0); return nm.length?`<div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${nm.map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним: оклады Трактор ТВ, за серию, правило по графике — считаются отдельно</div></div>`:''; })()}
+  ${(()=>{ /* направления не по матчам — из своей базы (в контуре ИП Романова кодов TTV/SERIAL/GRAPH нет, экран падал — 11.10.2026) */ const nm=nonMatchDirs(); return nm.length?`<div class="g pad"><div class="lbl c">Не по матчам · план сезона</div>${nm.map(c=>{const d=DIRS[c]; return `<div class="kv"><span>${d.name} · ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div>`;}).join('')}<div class="sub">выплаты по ним считаются отдельно: оклады, за серию, по приложениям</div></div>`:''; })()}
   </div>
-  <div class="sec">По месяцам<small>клубу · людям · мне</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played)); const cur=k===mkey(TODAY); const inc=PAY.filter(p=>p.inc&&p.k===k).reduce((s,p)=>s+p.sum,0), outs=PAY.filter(p=>p.kind==='out'&&p.k===k).reduce((s,p)=>s+p.sum,0); return `<button class="row${cur?' now':''}" data-open="month:${k}"><div class="t"><b>${mname(k)}</b><span>${m.n?plu(m.n,'матч')+' · мне '+fmtS(m.me):'не по матчам'}</span></div><div class="v">${fmtS(m.club+inc)}<small>${cur?'идёт':m.n?(mp.n===m.n?'сыграно':mp.n?mp.n+' из '+m.n:'план'):'факт'}</small></div>${chev}</button>`; }).join('')}</div>`;
+  <div class="sec">По месяцам<small>клубу · людям · мне</small></div><div class="g list" style="margin-top:10px">${monthKeys.map(k=>{ const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played)); const cur=k===mkey(TODAY); const inc=PAY.filter(p=>p.inc&&p.k===k).reduce((s,p)=>s+p.sum,0), outs=PAY.filter(p=>p.kind==='out'&&p.k===k).reduce((s,p)=>s+p.sum,0); return `<button class="row${cur?' now':''}" data-open="month:${k}"><div class="t"><b>${mname(k)}</b><span>${m.n?plu(m.n,'матч')+' · мне по матчам '+fmtS(m.me):'не по матчам'}</span></div><div class="v">${fmtS(m.club+inc)}<small>${cur?'идёт':m.n?(mp.n===m.n?'сыграно':mp.n?mp.n+' из '+m.n:'план'):'факт'}</small></div>${chev}</button>`; }).join('')}</div>`;
 }
 function monthSheet(k){
   const gs=CAL.filter(g=>mkey(g.date)===k), m=sum(gs), mp=sum(gs.filter(g=>g.played));
@@ -838,12 +840,14 @@ function debtFormSheet(id){ const [who,op0]=id.split('|'); const names=[...new S
     <label><div class="lbl">За что</div><input class="fio" id="df-note" placeholder="например: аванс за сентябрь, билет, зачёт из выплаты за сентябрь"></label>
     <button id="df-save" class="tile" style="background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Сохранить в базу</button>
   </div><div class="note">Зачёт — когда вычли из выплаты, возврат — когда человек вернул деньгами. Запись сразу уходит в лист «Долги» базы.</div>`; }
-function otherSheet(){ if(DEMO) return otherDemo(); const T=DIRS.TTV,S=DIRS.SERIAL,G=DIRS.GRAPH; const gr=(x)=>{const a=x/1.05,b=a*0.94,of=b*0.04,c=b-of,sh=c*0.6,comp=sh*0.07;return {of,sh:sh+comp,ip:c-sh-comp};}; const g=gr(G.price*(1+VAT));
+function otherGeneric(){ return `<div class="lt"><h1>Не по матчам</h1><p>план сезона по направлениям</p></div><div class="stack">${nonMatchDirs().map(c=>{ const d=DIRS[c]; return `<div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">${d.name}</div><span class="chip info">${d.unit}</span></div><div class="kv"><span>Заказчику за единицу, с НДС</span><b>${fmt(d.price*(1+VAT))}</b></div><div class="kv"><span>План сезона: ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div></div>`; }).join('')||'<div class="note">Направлений не по матчам в этой базе нет.</div>'}</div>`; }
+function otherSheet(){ if(DEMO) return otherDemo(); if(!DIRS.TTV||!DIRS.SERIAL||!DIRS.GRAPH) return otherGeneric(); const T=DIRS.TTV,S=DIRS.SERIAL,G=DIRS.GRAPH; const gr=(x)=>{const a=x/1.05,b=a*0.94,of=b*0.04,c=b-of,sh=c*0.6,comp=sh*0.07;return {of,sh:sh+comp,ip:c-sh-comp};}; const g=gr(G.price*(1+VAT));
   return `<div class="lt"><h1>Не по матчам</h1><p>считаются по единицам, сериям и приложениям</p></div><div class="stack">
   <div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">Трактор ТВ</div><span class="chip info">за единицу</span></div><div class="kv"><span>Клубу за единицу, с НДС</span><b>${fmt(T.price*(1+VAT))}</b></div><div class="kv"><span>План сезона, ${T.plan} ед.</span><b>${fmt(T.price*(1+VAT)*T.plan)}</b></div><div class="kv of"><span>В фонд «Офис» с единицы</span><b>406 ₽</b></div><div class="sub">людям: Архипов за единицу; Махиня и Михайлов — оклады, за август по 40 000, с сентября суммы ещё не определены. Абрамов в цену единицы не входит — разовые поездки оплачиваются отдельно. Единицы за месяц считает Мельников.</div></div>
   <div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">Сериал</div><span class="chip info">за серию</span></div><div class="kv"><span>Клубу за серию, с НДС</span><b>${fmt(S.price*(1+VAT))}</b></div><div class="kv"><span>Махиня, наличные</span><b>59 000 ₽</b></div><div class="kv"><span>Михайлов, наличные</span><b>48 400 ₽</b></div><div class="kv of"><span>В фонд «Офис»</span><b>6 600 ₽</b></div><div class="kv"><span>НДС и УСН</span><b>${fmt(S.price*VAT+S.price*USN)}</b></div><div class="kv me"><span>Мне, техника своя</span><b>${fmt(S.price-S.price*USN-114000)}</b></div><div class="sub">8 серий за сезон · допсоглашение с ценой 147 000 без НДС ещё не в проекте</div></div>
   <div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">Графика</div><span class="chip info">по приложениям</span></div><div class="kv"><span>Средний месяц 25-26, с НДС</span><b>${fmt(G.price*(1+VAT))}</b></div><div class="kv"><span>Шебельбайну 60 % + 7 %</span><b>${fmt(g.sh)}</b></div><div class="kv of"><span>В фонд «Офис» 4 %</span><b>${fmt(g.of)}</b></div><div class="kv me"><span>Мне</span><b>${fmt(g.ip)}</b></div><div class="sub">правило: приход → −НДС → −6 % УСН → −4 % офис → −заработок Некраша → 60 % Шебельбайну чистыми + 7 % сверху → остальное Мельникову. Оценка без Некраша; факт по месяцам — в «Деньгах».</div></div>
-  </div><div class="note">Профайлы игроков идут через ИП Романова — разберём отдельно.</div>`; }
+  ${nonMatchDirs().filter(c=>!['TTV','SERIAL','GRAPH'].includes(c)).map(c=>{ const d=DIRS[c]; return `<div class="g pad"><div class="tile-h"><div style="font-weight:800;font-size:16px">${d.name}</div><span class="chip info">${d.unit}</span></div><div class="kv"><span>Заказчику за единицу, с НДС</span><b>${fmt(d.price*(1+VAT))}</b></div><div class="kv"><span>План сезона: ${plu(d.plan,d.unit)}</span><b>${fmt(d.price*(1+VAT)*d.plan)}</b></div></div>`; }).join('')}
+  </div><div class="note">Профайлы «Уральское дерби» — договор ИП Мельникова с ООО «Би Эн Пи»; профайлы игроков (№19) идут через ИП Романова.</div>`; }
 function docsAll(){ return (DATA.docs||[]).map(d=>({sec:d.sec||'',doc:d.doc||'',field:d.field||'',value:String(d.value==null?'':d.value),note:d.note||''})); }
 const SECC={'Реквизиты':'var(--crew)','ИП':'var(--mhl)','Личные':'var(--bad)','Люди':'var(--office)','Договоры сезона':'var(--khl)'};
 function docsSheet(){ const all=docsAll(); if(!all.length) return `<div class="lt"><h1>Документы</h1><p>таблица «Документы ИП Мельников»</p></div><div class="g pad" style="display:flex;gap:12px;align-items:center"><span class="stripe" style="background:var(--warn)"></span><div style="font-size:13.5px">Данные ещё не загружены или недоступны этой роли.</div></div>`;
@@ -1045,7 +1049,7 @@ function homeNew(){
     ${tile('office','Фонд «Офис»','остаток на сегодня',signed(on.bal))}
     ${ROLE==='admin'&&!PERSON?'':tile('debts','Долги и авансы',plu(debtPeople().filter(x=>x.bal>0).length,'человек'),fmtS(debtTotal()))}
     ${(ROLE==='admin'||ROLE==='office')?tile('ttv:','Трактор ТВ','отчёт по дням'+(ttvWaiting()?' · ждут оценки: '+ttvWaiting():''),(()=>{ const l=TTV.filter(x=>ttvK(x)===CURK); return l.reduce((s,x)=>s+(x.units||0),0)+' ед.'; })()):''}
-    ${tile('other','Не по матчам','план сезона',fmtS(['TTV','SERIAL','GRAPH'].reduce((s,c)=>s+(DIRS[c]?DIRS[c].price*(1+VAT)*DIRS[c].plan:0),0)))}
+    ${nonMatchDirs().length?tile('other','Не по матчам','план сезона',fmtS(nonMatchPlan())):''}
     ${DEMO?'':tile('docs','Документы','реквизиты, ИП, люди',([...new Set(docsAll().map(d=>d.doc))].length||'—'))}
   </div>
   ${vidSwitch()}`;
