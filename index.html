@@ -236,7 +236,7 @@ html:is([data-vid="1"],[data-vid="2"]) .row .t b{white-space:normal}
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "";
-const BUILD = "20261019-1716";
+const BUILD = "20261019-1747";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -337,7 +337,8 @@ function debtTotal(project){ return debtPeople(project).reduce((s,x)=>s+(x.bal>0
 function pushDebt(row){ if(DATA.demo) return Promise.resolve(true); if(!window.DATA_URL||!window.KEY) return Promise.resolve(false); return fetch(window.DATA_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({k:window.KEY,base:window.BASE||'',action:'debt',row})}).then(r=>r.json()).then(j=>!!j.ok).catch(()=>false); }
 const EVENTS = (DATA.events||[]).map(e=>({date:new Date(e[0]),iso:e[0],title:e[1],kind:e[2],dir:e[3],sum:e[4]||0,note:e[5]||''}));
 /* отметки табеля, ждущие подтверждения */
-function todo(){ return played.filter(g=>g.dirs.some(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d)))&&!myPartOk(TAB[tabKey(g)],g)); }
+/* Контур ИП Романова: табель не ведётся (Мельников 19.10.2026: состав шоу постоянный, допы — по смете в конце месяца); матчи считаются сыгранными по календарю с составом из «Роли_шоу» — плитки и задач «подтвердить табель» нет */
+function todo(){ if(window.BASE==='rom') return []; return played.filter(g=>g.dirs.some(d=>DIRS[d]&&tabHas(d,g)&&tabelRows(d,g).some(r=>canFill(r,d)))&&!myPartOk(TAB[tabKey(g)],g)); }
 const MONTHS_G=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 /* Окно выплат людям (Мельников 05.10.2026, вместо «10–15» от 22.09): документы клубу до 10-го, клуб платит примерно 11–15-го, людям — через 1–2 дня после оплаты клуба, то есть 12–17 число следующего месяца; сроки могут сдвигаться. open — окно наступило; running — месяц ещё идёт. */
 function payWin(k){ if(!/^\d{4}-\d{1,2}$/.test(String(k))) return {open:true,running:false,text:''}; const [y,m]=k.split('-').map(Number); /* ключ месяца mkey: месяц 0-based */ const n=new Date(y,m+1,1); const start=new Date(n.getFullYear(),n.getMonth(),12); return {open:TODAY>=start, running:TODAY<n, text:`12–17 ${MONTHS_G[n.getMonth()]}`}; }
