@@ -245,7 +245,7 @@ button,.tab,.chip{touch-action:manipulation;-webkit-user-select:none;user-select
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "";
-const BUILD = "20261028-2253";
+const BUILD = "20261029-0825";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1350,7 +1350,7 @@ if(!window.__outOn){ window.__outOn=true; addEventListener('online',()=>{ outFlu
 try{ if(!DEMO&&navigator.setAppBadge){ const n=taskList().length; n?navigator.setAppBadge(n).catch(()=>{}):navigator.clearAppBadge().catch(()=>{}); } }catch(e){}
 }
 
-function gate(msg){ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
+function gate(msg){ document.querySelectorAll('.tabbar').forEach(n=>n.style.display='none'); /* на экране входа вкладок нет (ревизор 29.10.2026) */ document.getElementById('v-home').innerHTML=`<div class="lt" style="margin-top:40px"><h1>Трактор 26/27</h1><p>${msg||'Откройте приложение по своей личной ссылке или вставьте её сюда'}</p></div>
   <div class="g pad"><input id="klink" inputmode="url" placeholder="Вставьте сюда свою ссылку" style="width:100%;font:600 15px Manrope,sans-serif;padding:12px 14px;border:1px solid #DDE1E6;border-radius:14px;background:#F6F7F9">
   <button id="kgo" class="tile" style="margin-top:10px;background:var(--accent);color:#fff;font-weight:800;padding:13px;border-radius:14px;text-align:center">Открыть</button></div>`;
   document.getElementById('kgo').onclick=()=>{ const v=document.getElementById('klink').value.trim(); let k=v; try{ k=new URL(v).searchParams.get('k')||v; }catch(e){} location.href=location.pathname+'?k='+encodeURIComponent(k); }; }
@@ -1392,11 +1392,12 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   let prevKey=null; try{ prevKey=localStorage.getItem('tr.key'); }catch(e){}
   const url=new URL(location.href); let k=url.searchParams.get('k');
   if(k){ try{localStorage.setItem('tr.key',k);}catch(e){} } else { try{k=localStorage.getItem('tr.key');}catch(e){} }
-  if(!k){ gate(); return; }
+  if(!k){ gate(url.searchParams.has('gone')?'Ссылка не подошла. Вставьте свою личную ссылку целиком':''); return; }
   window.DATA_URL=DATA_URL; window.KEY=k; window.BASE=BASE;
   /* кэш и черновики привязаны к ключу: при входе по другой ссылке чужие данные с этого устройства стираются (01.10.2026) */
   try{ const was=localStorage.getItem('tr.datak')||prevKey; if(was&&was!==k) ['tr.data','tr.tabel2','tr.ttvq','tr.outq','tr.as','tr.myMonth','tr.peopleMonth'].forEach(x=>localStorage.removeItem(x)); localStorage.setItem('tr.datak',k); }catch(e){}
   let cached=null; try{ cached=JSON.parse(localStorage.getItem('tr.data')||'null'); }catch(e){}
+  if(cached&&cached.role==='office'){ gone(); return; } /* роль «офис» отключена 29.10.2026: её сохранённые цифры не показывать даже без сети */
   if(cached){ boot(toData(cached)); const p=document.querySelector('.proto'); if(p) p.textContent='обновляю цифры…'; }
   else document.getElementById('v-home').innerHTML='<div class="lt" style="margin-top:24px" aria-busy="true" aria-label="Загружаю данные"><div class="sk" style="width:38%;height:14px"></div><div class="sk" style="width:72%;height:38px;margin-top:12px"></div></div><div class="stack"><div class="sk" style="height:64px"></div><div class="sk" style="height:64px"></div><div class="sk" style="height:180px;border-radius:var(--r)"></div><div class="sk" style="height:120px;border-radius:var(--r)"></div></div>'; /* каркас экрана вместо надписи (28.10.2026) */
   /* новая сборка приложения: проверять при «Обновить» и при возврате в приложение — иначе открытое на телефоне остаётся старым кодом (23.09.2026) */
@@ -1406,9 +1407,11 @@ function jsonp(k){ return new Promise((res,rej)=>{ const cb='cb'+Date.now(); win
   const typingDone=()=>new Promise(res=>{ if(!typingNow()) return res(); let calm=0; const t=setInterval(()=>{ calm=typingNow()?0:calm+1; if(calm>=2){ clearInterval(t); res(); } },600); });
   /* «Обновить» проверяет и номер сборки страницы: новая сборка на сайте — страница перезагружается сама (Мельников 08.10.2026: «я делал обновление», а код остался старым, пока служебный файл лежал в кэше 10 минут) */
   async function newBuild(){ try{ const h=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.text():''); const m=/const BUILD = "([^"]+)"/.exec(h); return !!(m&&m[1]!==BUILD); }catch(e){ return false; } }
-  window.__refresh=async function(fresh){ swUpd(); if(fresh&&await newBuild()){ window.__reloading=true; location.reload(); return true; } try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
-  try{ let j; try{ j=await fetchData(k); }catch(e){ j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
-  catch(e){ if(!cached){ if(String(e.message)==='403'){ try{localStorage.removeItem('tr.key');}catch(x){} gate('Ссылка не подошла. Вставьте свою личную ссылку целиком'); } else gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
+  /* ссылка отключена или не подошла: стереть сохранённые цифры и ключ, показать вход (29.10.2026 — после отключения роли «офис» старый телефон не должен показывать данные из памяти) */
+  function gone(){ try{ Object.keys(localStorage).filter(x=>/^tr\./.test(x)&&x!=='tr.vid').forEach(x=>localStorage.removeItem(x)); }catch(x){} window.__reloading=true; const go=()=>location.replace(location.pathname+'?gone=1'); try{ if(!window.caches) return go(); Promise.race([caches.keys().then(ks=>Promise.all(ks.map(c=>caches.delete(c)))),new Promise(r=>setTimeout(r,1000))]).then(go,go); }catch(x){ go(); } }
+  window.__refresh=async function(fresh){ swUpd(); if(fresh&&await newBuild()){ window.__reloading=true; location.reload(); return true; } try{ let j; try{ j=await fetchData(k,fresh); }catch(e){ if(String(e.message)==='403') throw e; j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} await typingDone(); boot(toData(j)); return true; }catch(e){ if(String(e.message)==='403'){ gone(); return false; } const p=document.querySelector('.proto span'); if(p) p.textContent='нет связи · '+p.textContent; return false; } };
+  try{ let j; try{ j=await fetchData(k); }catch(e){ if(String(e.message)==='403') throw e; j=await jsonp(k); } try{ localStorage.setItem('tr.data',JSON.stringify(j)); }catch(e){} boot(toData(j)); }
+  catch(e){ if(String(e.message)==='403') gone(); else if(!cached){ gate('Нет связи с базой. Проверьте интернет и откройте ссылку ещё раз'); } else { const p=document.querySelector('.proto'); if(p) p.textContent='нет связи · цифры от '+(cached.generated||'…'); } }
   let hidAt=0; document.addEventListener('visibilitychange',()=>{ if(document.hidden) hidAt=Date.now(); else { swUpd(); if(hidAt && Date.now()-hidAt>10*60*1000 && window.__refresh) window.__refresh(); } });
   if('serviceWorker' in navigator && SW){ const had=!!navigator.serviceWorker.controller; navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(had && !window.__reloading){ window.__reloading=true; location.reload(); } }); navigator.serviceWorker.register('sw.js').then(r=>{ try{ r.update(); }catch(e){} }).catch(()=>{}); }
 })();
