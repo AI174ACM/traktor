@@ -256,7 +256,7 @@ button,.tab,.chip{touch-action:manipulation;-webkit-user-select:none;user-select
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
-const BUILD = "20261118-1218";
+const BUILD = "20261118-1240";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -1546,6 +1546,10 @@ window.__rerender=function(){ let tab='home'; try{ tab=LS.getItem('trr.tab')||'h
   const drafts={}; document.querySelectorAll('[data-ans]').forEach(i=>{ if(i.value) drafts[i.dataset.ans]=i.value; }); const keep=()=>document.querySelectorAll('[data-ans]').forEach(i=>{ if(drafts[i.dataset.ans]&&!i.value) i.value=drafts[i.dataset.ans]; }); const stack=STACK.slice(); const sc=$('#sheet-body').scrollTop; show(VIEWS[tab]?tab:'home'); keep(); if(stack.length){ STACK.length=0; stack.forEach(k=>STACK.push(k)); renderSheet(stack[stack.length-1]); $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=sc; keep(); } };
 
 if(PERSON&&!PAY_READ){ try{ const myL=new Set(CAL_FULL.filter(g=>!g.other&&myRate(g)>0).map(g=>g.league)); if(myL.size) CAL_ALL=CAL_ALL.filter(g=>myL.has(g.league)); }catch(e){} }
+
+window.__goHome=function(){ STACK.length=0; $('#sheet').classList.remove('open'); try{ calMonth=window.__calMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1); }catch(e){} show('home'); };
+if(!window.__homeOn){ window.__homeOn=true; let hidAt=0; const away=()=>{ hidAt=Date.now(); }; const back=()=>{ if(hidAt&&Date.now()-hidAt>=120000&&window.__goHome){ hidAt=0; window.__goHome(); } else hidAt=0; };
+  document.addEventListener('visibilitychange',()=>{ if(document.hidden) away(); else back(); }); addEventListener('pagehide',away); addEventListener('pageshow',e=>{ if(e.persisted) back(); }); }
 if(window.__booted){ window.__rerender(); } else { window.__booted=true; show('home'); }
 
 setTimeout(outFlush,4000); clearInterval(window.__outT); window.__outT=setInterval(()=>{ outFlush(); outPill(); },60000); outPill();
