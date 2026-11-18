@@ -256,7 +256,7 @@ button,.tab,.chip{touch-action:manipulation;-webkit-user-select:none;user-select
 const PLAIN = null;
 const DATA_URL = "https://script.google.com/macros/s/AKfycbxCbvLT3P1cEXYuEv2BH8S8xkbIUhY2CsCmjCh339Y8W1yte-hQJCC90o1vMMJbBAKM/exec";
 const BASE = "rom";
-const BUILD = "20261116-1522";
+const BUILD = "20261118-1218";
 const SW = true;
 function boot(DATA){
 const TODAY = (()=>{ const s=DATA.today; if(s){ const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d); } const n=new Date(); return new Date(n.getFullYear(),n.getMonth(),n.getDate()); })(); const VAT=0.05, USN=0.06;
@@ -330,7 +330,7 @@ const CAL = DATA.cal.map(calRow);
 
 const CAL_FULL = (PERSON&&DATA.calAll) ? DATA.calAll.map(c=>CAL.find(g=>g.iso===c[0]&&g.league===c[1])||Object.assign(calRow(c),{other:true})).sort((a,b)=>a.date-b.date) : CAL;
 
-const CAL_ALL = (PERSON&&!PAY_READ) ? CAL_FULL.filter(g=>g.home) : CAL_FULL;
+let CAL_ALL = (PERSON&&!PAY_READ) ? CAL_FULL.filter(g=>g.home) : CAL_FULL;
 if(PAY_READ) CAL.forEach(g=>{ if(!g.dirs.some(d=>MY_DIRS.has(d))) g.other=true; });
 const PEOPLE = DATA.people.map(p=>({name:p[0],st:p[1],form:p[2],note:p[3],card:p[4]||0,off:p[6]||0})); 
 const DEBTS = (DATA.debts||[]).map(d=>({date:d[0],project:d[1]||'Трактор',who:d[2],op:d[3],sum:d[4]||0,form:d[5]||'',note:d[6]||'',by:d[7]||'',when:d[8]||'',month:d[9]||''})); // month — за какой месяц зачёт (дата — день операции)
@@ -795,7 +795,7 @@ function calView(){
   return `<div class="lt"><h1>Календарь</h1><p>дни закрашены цветом лиги · нажмите день</p></div>
   <div class="mnav"><button data-cal="-1" aria-label="Предыдущий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7.5 1.5l-6 6 6 6"/></svg></button><b>${MONTHS_F[mo]} ${y}</b><button data-cal="1" aria-label="Следующий месяц"><svg viewBox="0 0 9 15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1.5 1.5l6 6-6 6"/></svg></button></div>
   <div class="cal"><div class="wd">${['пн','вт','ср','чт','пт','сб','вс'].map(w=>`<span>${w}</span>`).join('')}</div><div class="days">${cells}</div></div>
-  <div class="clegend nl"><span><i style="background:var(--khl-bg)"></i><i style="background:var(--mhl-bg)"></i><i style="background:var(--zhl-bg)"></i>КХЛ · МХЛ · ЖХЛ дома</span>${CAL_ALL.some(g=>!g.home)?`<span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:var(--card)"></i>выезд — рамка</span>`:''}<span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:var(--card)"></i>следующий матч</span><span><i style="background:var(--accent);border-radius:50%;width:8px;height:8px"></i>событие</span></div>
+  <div class="clegend nl"><span>${[['КХЛ','khl'],['МХЛ','mhl'],['ЖХЛ','zhl']].filter(x=>CAL_ALL.some(g=>g.league===x[0])).map(x=>`<i style="background:var(--${x[1]}-bg)"></i>`).join('')}${[['КХЛ','khl'],['МХЛ','mhl'],['ЖХЛ','zhl']].filter(x=>CAL_ALL.some(g=>g.league===x[0])).map(x=>x[0]).join(' · ')} дома</span>${CAL_ALL.some(g=>!g.home)?`<span><i style="box-shadow:inset 0 0 0 1.5px var(--khl-bg2);background:var(--card)"></i>выезд — рамка</span>`:''}<span><i style="box-shadow:inset 0 0 0 2px var(--accent);background:var(--card)"></i>следующий матч</span><span><i style="background:var(--accent);border-radius:50%;width:8px;height:8px"></i>событие</span></div>
   <div class="sec">Матчи месяца<small>${ms.n}${PERSON?(myMonth?(CAL_ALL!==CAL_FULL&&CAL.some(g=>!g.home&&g.date.getFullYear()===y&&g.date.getMonth()===mo)?' дома · план за месяц ':' · план ')+fmtS(myMonth):''):MONEY?' · клубу '+fmtS(ms.club)+' · мне '+fmtS(ms.me):''}</small></div><div class="g list" style="margin-top:10px">${list||`<div class="row"><div class="t"><span>${pastL.length?'все матчи месяца сыграны':'матчей нет'}</span></div></div>`}</div>
   ${pastL.length?`<details class="g arch" style="margin-top:12px"><summary style="padding:13px 16px;font-weight:800;cursor:pointer;list-style:none;display:flex;justify-content:space-between"><span>Прошедшие матчи</span><span style="color:var(--muted);font-weight:400">${pastL.length} ›</span></summary><div class="list">${pastL.map(gRow).join('')}</div></details>`:''}
   ${(()=>{const ev=EVENTS.filter(e=>e.date.getFullYear()===y&&e.date.getMonth()===mo); return ev.length?`<div class="sec">События<small>${ev.length}</small></div><div class="g list" style="margin-top:10px">${ev.map(e=>`<div class="row"><div class="dateb" style="background:var(--warn-bg)"><b style="color:var(--me)">${String(e.date.getDate()).padStart(2,'0')}</b><span>${WD[e.date.getDay()]}</span></div><div class="t"><b>${e.title}</b><span>${e.kind}${e.note?' · '+e.note:''}</span></div><div class="v">${e.sum&&!PERSON?fmtS(e.sum):''}</div></div>`).join('')}</div>`:'';})()}
@@ -1544,6 +1544,8 @@ let sx=0, sy=0; on($('#sheet'),'touchstart',e=>{ sx=e.target.closest('input,sele
 window.__rerender=function(){ let tab='home'; try{ tab=LS.getItem('trr.tab')||'home'; }catch(e){} if(!(tab in VIEWS)){ const cur=document.querySelector('.tab[aria-selected="true"]'); tab=cur?cur.dataset.tab:'home'; }
   
   const drafts={}; document.querySelectorAll('[data-ans]').forEach(i=>{ if(i.value) drafts[i.dataset.ans]=i.value; }); const keep=()=>document.querySelectorAll('[data-ans]').forEach(i=>{ if(drafts[i.dataset.ans]&&!i.value) i.value=drafts[i.dataset.ans]; }); const stack=STACK.slice(); const sc=$('#sheet-body').scrollTop; show(VIEWS[tab]?tab:'home'); keep(); if(stack.length){ STACK.length=0; stack.forEach(k=>STACK.push(k)); renderSheet(stack[stack.length-1]); $('#sheet').classList.add('open'); $('#sheet-body').scrollTop=sc; keep(); } };
+
+if(PERSON&&!PAY_READ){ try{ const myL=new Set(CAL_FULL.filter(g=>!g.other&&myRate(g)>0).map(g=>g.league)); if(myL.size) CAL_ALL=CAL_ALL.filter(g=>myL.has(g.league)); }catch(e){} }
 if(window.__booted){ window.__rerender(); } else { window.__booted=true; show('home'); }
 
 setTimeout(outFlush,4000); clearInterval(window.__outT); window.__outT=setInterval(()=>{ outFlush(); outPill(); },60000); outPill();
